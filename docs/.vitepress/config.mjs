@@ -7,6 +7,25 @@ export default defineConfig({
   description: '面向高校和训练营的 AI 课程体系',
   base,
   lang: 'zh-CN',
+  markdown: {
+    config(md) {
+      const defaultFence = md.renderer.rules.fence
+
+      md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+        const token = tokens[idx]
+        const info = token.info ? token.info.trim() : ''
+        const lang = info.split(/\s+/)[0]
+
+        if (lang === 'mermaid') {
+          return `<MermaidChart code="${encodeURIComponent(token.content.trim())}" />`
+        }
+
+        return defaultFence
+          ? defaultFence(tokens, idx, options, env, self)
+          : self.renderToken(tokens, idx, options)
+      }
+    }
+  },
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },

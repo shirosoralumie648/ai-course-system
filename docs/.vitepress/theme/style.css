@@ -21,3 +21,37 @@
 .vp-doc a {
   transition: color 0.2s;
 }
+
+.mermaid-chart {
+  margin: 24px 0;
+  padding: 20px;
+  overflow-x: auto;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+
+.mermaid-chart__canvas {
+  min-width: 640px;
+  text-align: center;
+}
+
+.mermaid-chart__canvas svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-chart__error {
+  display: grid;
+  gap: 8px;
+  color: var(--vp-c-danger-1);
+}
+
+.mermaid-chart__error pre {
+  margin: 0;
+  padding: 12px;
+  overflow-x: auto;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  border-radius: 6px;
+}

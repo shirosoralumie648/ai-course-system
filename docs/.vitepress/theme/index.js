@@ -18,6 +18,7 @@ import AiChat from './components/AiChat.vue'
 import AiChatMessage from './components/AiChatMessage.vue'
 import TextType from './components/TextType.vue'
 import RiskMatrix from './components/RiskMatrix.vue'
+import MermaidChart from './components/MermaidChart.vue'
 
 export default {
   extends: DefaultTheme,
@@ -39,5 +40,6 @@ export default {
     app.component('AiChatMessage', AiChatMessage)
     app.component('TextType', TextType)
     app.component('RiskMatrix', RiskMatrix)
+    app.component('MermaidChart', MermaidChart)
   }
 }
