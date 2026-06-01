@@ -20,6 +20,7 @@ export default defineConfig({
           text: '课程 A：产品原型 + Claude Code 高级技能',
           items: [
             { text: '课程介绍', link: '/course-a/' },
+            { text: '教学日历', link: '/course-a/teaching-calendar' },
             { text: '每周教程', items: [
               { text: 'Week 01：游戏热身', link: '/course-a/week-01' },
               { text: 'Week 02：AI IDE 入门', link: '/course-a/week-02' },

@@ -2,6 +2,10 @@
 
 面向高校和训练营的 AI 课程体系。当前仓库以 `docs/` VitePress 课程网站为发布主体，根目录保留教师备课材料、示例项目、评分表和共享资源。
 
+正式站点：
+
+- GitHub Pages: https://shirosoralumie648.github.io/ai-course-system/
+
 ## 当前入口
 
 - 课程网站首页：`docs/index.md`
@@ -24,6 +28,8 @@ npm run dev -- --host 0.0.0.0
 cd docs
 npm run build
 ```
+
+GitHub Pages 部署由 `.github/workflows/deploy-pages.yml` 自动执行。推送到 `main` 后，Actions 会以 `BASE=/ai-course-system/` 构建并发布 `docs/.vitepress/dist`。
 
 ## 课程结构
 
