@@ -1,0 +1,16 @@
+{
+  "name": "ai-course-system-docs",
+  "version": "0.1.0",
+  "description": "AI Course System Documentation",
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "element-plus": "^2.13.1",
+    "vitepress": "^2.0.0-alpha.16",
+    "vue": "^3.5.0"
+  }
+}

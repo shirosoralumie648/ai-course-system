@@ -1,0 +1,1320 @@
+# 第 4 周：后端基础——现代命令行与 Git 版本管理
+
+> 小哲做了三周前端原型，一直待在浏览器和图形界面里。这周他第一次被推到终端前面——后端开发的真正起点，是先学会在命令行里高效干活，再用规范的 Git 工作流管住每一次改动。这一周分两段走：前半段他学会用「现代 CLI」工具（尤其是直接跑在终端里的 AI 编程 Agent）高效操作命令行；后半段他用 Git 和 GitHub 把代码的每一个版本都管起来，并学会和别人协作。
+
+<ChapterIntroduction duration="2 课时（约 4 小时）" output="一套能熟练驱动的 CLI AI 编程工具（Claude Code / Codex / OpenCode 任选）+ 一个配好 SSH、能 clone / commit / push 的练习仓库" prerequisite="有基础编程经验；用过 Trae / Cursor 之类的 AI IDE；电脑能联网" :tags="['终端 / CLI', 'Claude Code', 'Codex', 'OpenCode', 'CLI AI 编程', 'Git', 'GitHub', 'SSH']">
+
+你会陪小哲走完「从不敢碰命令行，到把命令行变成主战场」的完整路径。前半段聚焦现代 CLI AI 编程工具：它们和 IDE 内置 Agent 有什么不同、怎么用兼容 Anthropic 接口的国产大模型把 Claude Code 跑起来、Codex 和 OpenCode 各自怎么配，以及怎么用它们写需求文档、管文件夹、部署开源项目。后半段走一遍 Git 工作流：安装配置、注册 GitHub、建仓库、绑 SSH，再用 Claude Code / Trae 把 clone / pull / commit / push 跑通。**重点不是死记命令，而是建立一套「让 AI 帮你敲、但每一步你都心里有数」的工作习惯。**
+
+</ChapterIntroduction>
+
+<StepBar :active="0" :items="[
+  { title: '① 从 CLI 说起', description: '终端是什么，为什么后端离不开它' },
+  { title: '② CLI AI 编程工具', description: 'Claude Code / Codex / OpenCode 配置与用法' },
+  { title: '③ 更多实战玩法', description: '写需求文档、管文件、部署开源项目' },
+  { title: '④ 安装与配置 Git', description: '三系统装 Git + 初始化身份' },
+  { title: '⑤ 用 GitHub 协作', description: '建仓库 / SSH 绑定 / clone / pull / push' }
+]" />
+
+---
+
+## 上节课回顾
+
+前三周小哲一直在做前端：写页面、调样式、让 vibe coding 工具帮他生成组件，所有操作都在浏览器和图形界面里完成，点点鼠标就行。这周任务变了——老师让他「把后端项目跑起来」，文档第一行就是一段黑底白字的命令：
+
+```bash
+npm install
+npm run dev
+```
+
+小哲卡住了。他不是不会写代码，而是从没正经用过命令行：命令太多记不住、敲错一个字符会不会把电脑搞坏、报错信息一长串完全看不懂。这周要解决的就是这个坎：**让他从「不敢碰命令行」变成「在终端里也能从容干活」，并养成用 Git 管住每一次改动的习惯。**
+
+::: tip 你将学到
+1. CLI 到底是什么，为什么后端开发大量发生在终端里
+2. CLI AI 编程工具与 AI IDE 内置 Agent 的差异
+3. 如何安装并配置 Claude Code、Codex、OpenCode（含多家兼容 Anthropic 接口的国产大模型）
+4. 用 CLI AI 编程工具写需求文档、管理文件夹、部署开源项目、讲解代码
+5. 如何安装配置 Git、注册 GitHub、创建仓库、绑定 SSH
+6. 如何用 Claude Code / Trae 完成 clone / pull / commit / push 等 Git 操作
+:::
+
+---
+
+## 1. 从 CLI 说起：终端没那么可怕
+
+老师告诉小哲，要进后端，第一件事是把命令行用熟。这一段他们先认识一类工具——直接在命令行里运行的 AI 编程 Agent。它们和小哲之前学过的 Trae、Cursor 中的 Agent 不同，CLI AI 编程工具只能在终端中使用。与集成在 AI IDE 里的 Agent 相比，它们通常具有更长的上下文窗口、更快的工具调用速度，并且可以兼容更多种类的大模型。在最新的 AI Vibe Coding 实战中，我们往往会优先使用 CLI AI 编程工具，而不是 IDE 内置的编码 Agent。
+
+CLI 指的是通过终端或命令提示符，用纯文本命令来操作软件应用，而不是依赖图形界面（GUI——你可以简单理解为电脑或手机上带按钮、可以点击操作的界面，不需要输入命令）。
+
+> 在 Windows 上，常见的终端有「命令提示符（cmd）」和「PowerShell」。你可以在电脑的运行/搜索框中输入「cmd」或「powershell」来启动这些命令行程序。
+
+![](week-04-images/cli-image1.png)![](week-04-images/cli-image2.png)
+
+CLI 天生适合文本命令操作，在一小部分极客（追求极致的编程爱好者）群体中，CLI 甚至比 GUI 更受欢迎——他们希望所有操作都通过键盘完成，觉得动鼠标反而会拖慢自己的编码效率。
+
+在工业界，CLI 往往也是最常见的接口形式，因为 GUI 需要操作系统额外绘制界面、管理窗口，对计算机资源的要求更高；而 CLI 只需要把收到的命令传给系统执行即可。因此，在连接大规模服务器集群时，我们通常只通过 CLI 进行交互。
+
+![](week-04-images/cli-image3.png)
+
+对于许多没有 CLI 经验的同学来说，可能会觉得 CLI 操作很复杂、命令太多，甚至担心「一不小心就把电脑搞坏」。不用担心。还记得我们在前面教程里，经常让 Trae 帮忙完成各种基础操作吗？这里也可以完全照搬这个思路——我们可以让 CLI 编程工具帮我们执行所有 CLI 操作：让它帮你进入指定文件夹、搜索和处理文件、运行或复制开源项目等。整个过程都可以通过和 CLI AI 编程工具的对话来完成。
+
+<InfoCard icon="💡" variant="tip">
+**别怕「把电脑搞坏」**
+
+小哲最担心的就是敲错命令出事。真相是：绝大多数日常命令（看文件、查状态、装依赖、跑服务）都是安全的，真正危险的是少数删除类命令。更重要的是，这一周他要学的 CLI AI 编程工具，本身就能替他把命令敲对——他只要在旁边看着、确认、学习就行。**心里有数，就不会乱怕。**
+</InfoCard>
+
+### 1.1 和 AI IDE 有什么不同
+
+我们可以把 CLI AI 编程工具类比成之前学过的 z.ai 和 Trae。某种意义上，CLI AI 编程工具可以看成是一种特殊的 z.ai：它们同样只需要一个简单的对话入口，就会自动为你执行所有需要的操作（只是有时你需要手动打开浏览器查看最终效果）。而如果类比 AI IDE，那么 CLI AI 编程工具可以被看作是 IDE 中的 Agent 模块——也就是侧边那块对话区域。
+
+![](week-04-images/cli-image4.png)![](week-04-images/cli-image5.png)
+
+不过，由于不同 AI IDE 对 Agent 的实现方式不同，能力差异也很大，AI 编程效果经常不稳定，因此 CLI AI 编程工具通常由大型科技公司直接开发，例如 Claude 背后的 Anthropic、ChatGPT 背后的 OpenAI 等。
+
+相比其他 AI 编程 Agent，直接使用这些大厂产品往往是较优的实践，尤其是 Claude Code 本身就是为 Anthropic 内部研发团队服务的工具，从一开始就围绕「满足工程师真实需求」来设计。
+
+为了更直观地对比，我们可以简单看看 Claude Code 和某款 AI IDE Agent 的差异（这里以 Cursor 为例）：
+
+| 功能特性          | Claude Code   | Cursor          | 更优者      |
+| ----------------- | ------------- | --------------- | ----------- |
+| 自动任务执行      | ✅ 非常强     | ❌ 能力有限     | Claude Code |
+| IDE 集成          | ❌ 仅命令行   | ✅ 原生 VS Code | Cursor      |
+| 实时代码补全      | ❌ 无         | ✅ 体验极佳     | Cursor      |
+| 多文件操作        | ✅ 非常强     | ⚠️ 还不错       | Claude Code |
+| GitHub 一体化操作 | ✅ 可直接提交 | ⚠️ 需要手动操作 | Claude Code |
+| 学习成本          | ⚠️ 中等       | ✅ 上手简单     | Cursor      |
+| 上下文长度        | ✅ 非常长     | ⚠️ 较好         | Claude Code |
+| 调试辅助          | ✅ 自动化     | ⚠️ 较多需手动   | Claude Code |
+
+表格来源：<https://northflank.com/blog/claude-code-vs-cursor-comparison>
+
+简单说，CLI AI 编程工具通常可以：
+
+- 支持更长时间的连续对话（甚至可以帮你「工作一整天」）。
+- 提供更长的上下文窗口（不再频繁需要你说「继续」）。
+- 响应速度更快（可以接入更多自定义模型 API）。
+
+在编码相关操作上，它们通常比大部分 IDE 内置 Agent 更聪明、更稳定。
+
+---
+
+## 2. 常见的 CLI AI 编程工具
+
+目前虽然有很多开源实现，但在实践中我们只推荐两大类型的 CLI AI 编程工具，作为「首选组合」。你可以根据自己的习惯任选其一，强烈建议都试一试，再选出最适合你的那一个。
+
+- Codex 使用 GPT-5，在整体能力上更强；
+- Claude Code 通过 GLM 4.6 转发 API，整体体验接近 Claude 4，但价格更便宜。
+- OpenCode 可以随意切换并搭配模型, 提供免费模型, 可以更好的控制成本。
+
+不过，哪一个在实际项目中更好用，只能通过亲自测试来判断。掌握多种 AI 编程工具始终是有益的：熟练以后，你可以在不同场景下灵活切换 Claude Code、Codex 或 Trae。如果尝试多次后发现某个工具效果一般，可以直接换一个工具或模型继续试验。
+
+同时，由于模型版本更新非常迅速，建议你优先选择在「性价比（效果 / 成本）」上表现最好的方案。
+
+### 2.1 Claude Code
+
+Claude Code 是由 Anthropic 基于 Claude 大模型能力开发的一款 AI 编程工具。它的主要交互场景在终端，同时也支持作为 VS Code 插件来使用。类似于 AI IDE 中的 Agent，它可以深度理解开发者的代码仓库，并通过自然语言指令完成端到端的开发任务——包括代码编辑、修复 Bug、执行和修复测试、管理 Git 工作流（例如解决合并冲突、创建 PR）、复杂代码讲解、执行终端命令等。
+
+![](week-04-images/cli-image6.png)
+
+Claude Code 的优势主要体现在：极长的上下文窗口（可以处理完整文件甚至小型项目）、可以主动澄清模糊需求、自动规划和分配执行任务，以及对整个代码库内容的深度理解和解释能力。与普通 IDE Agent 相比，它更适合「沉浸式 vibe coding」 的开发流程。
+
+在实际使用中，你可以通过对话指令，让它帮你创建新项目、执行 CLI 操作（例如整理文件夹、批量重命名文件、部署开源项目等）、配置开发环境（例如安装和调试 Python 环境）。如果觉得某段代码难以理解、某个目录结构不清晰，也可以直接让 Claude Code 生成结构化的分析文档，或者对特定内容进行分步骤讲解。
+
+![](week-04-images/cli-image7.png)![](week-04-images/cli-image8.png)
+
+![](week-04-images/cli-image9.png)![](week-04-images/cli-image10.png)
+
+如果你想系统地学习 Claude Code，可以参考 Andrew Ng 与 Anthropic 联合推出的课程：  
+<https://www.bilibili.com/video/BV176t2zSEpr>
+
+接下来，我们将学习如何使用 Claude Code。由于直接使用官方 Claude Code 的成本往往非常高（如下图所示），我们会转而使用兼容 Claude Code 协议、但基于其他大模型的 API 平台。
+
+![](week-04-images/cli-image11.png)
+
+你需要学习下面几种不同方案（最好都尝试一遍），最后选择最适合你的那一种作为主要实践路径。
+
+第一种方式是直接使用「兼容 Anthropic 接口」的 API。随着 Claude Code 的流行，越来越多的大模型服务商开始支持 Anthropic 风格的调用方式。常见的服务商包括 GLM、Kimi、DeepSeek 和 Siliconflow 等，它们都提供了兼容的 API 接口。关于具体配置，我们会在后文细讲。
+
+需要注意的是，Claude Code 通常会消耗大量 token，如果你担心 API 调用产生过高费用，可以考虑购买 GLM 的月度套餐（大约 20 元/月）来控制成本。如果你想先感受一下实际花费，也可以先充值 10 元做小规模试验。
+
+另一种方式是使用 「Claude Code Route」 项目。它是一个开源工具，不仅支持所有常见的 API 调用接口，还允许你针对不同场景精细配置要使用的模型，并且支持对接本地部署的大模型。但由于这一方案的配置相对复杂，建议你先从第一种方案入手。
+
+#### 使用智谱 GLM 作为后端（推荐）
+
+GLM（General Language Model）是智谱 AI 自主研发的一系列大型语言模型。GLM-4.6 是当前 GLM 系列的最新版本，其核心亮点是在代码能力上的优异表现（在公开基准和真实任务中对标 Claude Sonnet 4，在国内处于第一梯队）。
+
+![](week-04-images/cli-image12.png)
+
+它还将上下文窗口扩展到 200K，可以更加从容地处理长文本和大体量代码，同时加强了推理与工具调用能力，在性能和成本之间取得了不错的平衡。
+
+![](week-04-images/cli-image13.png)
+
+在接入 GLM 之前，我们需要先安装 Claude Code。
+
+如果你觉得命令行安装步骤麻烦，或者中途出现错误，可以直接让 Trae 的 Agent 帮你完成安装。
+
+```python
+# 安装 Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# 进入你的项目
+cd your-awesome-project
+
+# 启动 Claude Code
+claude
+
+# 按 Ctrl+C 退出 Claude
+```
+
+接下来，我们需要修改 Claude Code 的默认 API 请求地址，使其支持 GLM 的 API 服务。你可以直接复制下面的内容，让 Trae 帮你创建对应的环境变量；也可以选择把它们永久写入系统环境变量（如果出现问题，同样可以让 Agent 帮忙修改）。
+
+首先，你需要先获取 GLM 的 API Key，并用你自己觉得最方便的方式保存好。
+
+国内版地址：<https://bigmodel.cn/usercenter/proj-mgmt/apikeys>  
+国际版地址：<https://z.ai/manage-apikey/apikey-list>
+
+如果你使用的是 **国内版 GLM**，请使用以下变量配置：
+
+```python
+# 在 Cmd 中运行以下命令
+# 注意将 `your_zhipu_api_key` 替换为你刚刚获取到的 API Key
+setx ANTHROPIC_AUTH_TOKEN your_zhipu_api_key
+setx ANTHROPIC_BASE_URL https://open.bigmodel.cn/api/anthropic
+```
+
+如果你使用的是 **国际版 GLM**，请使用下面的配置：
+
+```python
+# 在 Cmd 中运行以下命令
+# 同样注意替换掉 `your_zai_api_key`
+setx ANTHROPIC_AUTH_TOKEN your_zai_api_key
+setx ANTHROPIC_BASE_URL https://api.z.ai/api/anthropic
+```
+
+你可以直接在 Trae 中输入类似下面的提示词：
+
+⚠️ 如果你是通过 Trae 帮你配置「永久环境变量」，那么配置完成后 **必须重启 Trae**，否则它内置终端里的环境变量不会更新，可能导致登录失败或网络连接错误。
+
+```python
+Based on my environment variable settings:
+setx ANTHROPIC_AUTH_TOKEN your_zai_api_key
+setx ANTHROPIC_BASE_URL https://api.z.ai/api/anthropic
+
+and my key(Replace it with your own key):
+681fea485851d29060cc.13gfaendggaFOhb
+
+please help me configure and start Claude Code
+```
+
+你会看到类似下面的过程输出：
+
+![](week-04-images/cli-image14.png)
+
+![](week-04-images/cli-image15.png)
+
+> 💡 什么是环境变量？
+>
+> 环境变量本质上是一组存储在操作系统中的「键值对」配置信息，通常以 「变量名 = 具体值」 的形式存在。只要提前在终端或系统设置中配置好，程序就可以随时读取这些变量来获取相关信息。由于环境变量可以直接在终端中写入，而无需修改代码本身，我们通常会把访问大模型所需的密钥存放在环境变量里，以避免泄露。程序只需要读取对应环境变量，就能完成大模型调用。
+>
+> 在 Windows 系统中，环境变量除了用于存储大模型的访问密钥，还常常用来保存命令行工具的「调用路径」。
+>
+> 我们知道终端本身也是一个程序。有时我们希望在终端里启动某个外部程序，例如在终端中输入 `claude` 来启动 Claude Code。之所以可以直接输入 `claude` 就运行，是因为终端会读取系统的环境变量，其中的 PATH 变量里包含了 Claude Code 可执行文件所在的目录，所以终端能够找到并执行它（等价于在终端中粘贴那段程序的绝对路径再按回车）。
+>
+> 一个典型的环境变量可能长这样：`PATH=C:\Windows\system32;C:\Program Files\Python`。这样我们就可以在任何路径下执行系统中的这些程序，例如直接在命令行键入 `python` 启动 Python 解释器。
+>
+> 如果你想查看系统当前的环境变量，可以在 Windows 搜索中输入「环境变量」，在弹出的「编辑系统环境变量」窗口中就能看到所有变量及其值。有的变量用于存储大模型密钥，有的则用于添加程序目录，方便在任意路径下调用。
+
+现在，你就可以使用最新的 GLM 来进行 Claude Code 开发了。你可以尝试重新跑一遍之前的项目，或者重新挑战那些 Trae 没有完成好的任务，对比看看体验上的差异。
+
+🎉 反复「推倒重来」并不是浪费时间——你每重做一遍，技能都会更扎实一分。
+
+用和 GLM 完全相同的思路，也可以轻松接入其他支持 Anthropic 兼容格式的接口。
+
+<InfoCard icon="🔑" variant="warning">
+**API Key 也是密钥，别提交进仓库**
+
+上面这些 `ANTHROPIC_AUTH_TOKEN`、各家平台的 API Key，本质和后半段要讲的 SSH 私钥一样，都是你的身份凭证。把它们写进环境变量、不要硬编码进代码，更不要随手提交到 GitHub。一旦泄露，别人就能用你的额度刷费用。这条安全底线，贯穿这一整周。
+</InfoCard>
+
+
+#### 使用 Kimi K2 作为后端（推荐）
+
+Kimi K2 是月之暗面（Moonshot AI）推出的新一代大语言模型，在代码理解和生成能力上表现出色。Kimi K2 支持超长上下文窗口（最高可达 200K tokens），能够轻松处理大型代码库和复杂项目。
+
+**核心优势：**
+
+- **超长上下文**：支持 200K 上下文窗口，可以一次性处理整个项目的代码
+- **代码能力强**：在代码生成、重构和调试方面表现优异
+- **中文理解好**：对中文编程需求的理解更加准确
+- **工具调用稳定**：支持稳定的函数调用和工具使用
+
+**获取 API Key：**
+
+访问 <https://platform.moonshot.cn/console/account> 注册并获取 API Key。
+
+**配置方法：**
+
+参考文档：<https://platform.moonshot.cn/docs/guide/agent-support>
+
+```bash
+export ANTHROPIC_BASE_URL=https://api.moonshot.cn/anthropic
+export ANTHROPIC_AUTH_TOKEN=sk-YOURKEY
+```
+
+#### 使用 Minimax 作为后端（推荐）
+
+Minimax 是稀宇科技（MiniMax）推出的新一代大语言模型，在编程任务上表现优异。Minimax 模型以其出色的推理能力和代码生成质量而闻名，特别适合复杂的编程场景。
+
+**核心优势：**
+
+- **推理能力强**：在复杂逻辑推理和代码架构设计方面表现出色
+- **代码质量高**：生成的代码结构清晰、可读性好
+- **多语言支持**：支持多种编程语言的代码生成和转换
+- **响应速度快**：API 响应速度快，适合高频调用场景
+
+**获取 API Key：**
+
+访问 <https://platform.minimax.io/> 注册并获取 API Key。
+
+**配置方法：**
+
+```bash
+export ANTHROPIC_BASE_URL=https://api.minimax.io/anthropic
+export ANTHROPIC_AUTH_TOKEN=YOUR_MINIMAX_API_KEY
+export ANTHROPIC_MODEL=MiniMax-M2.7
+```
+
+#### 使用 DeepSeek 作为后端（推荐）
+
+DeepSeek 是深度求索推出的开源大语言模型，以其出色的代码能力和高性价比受到开发者欢迎。DeepSeek Coder 专门针对编程任务进行了优化训练。
+
+**核心优势：**
+
+- **代码能力突出**：在代码生成、代码理解和 Bug 修复方面表现优异
+- **开源可定制**：模型开源，可以根据需求进行微调
+- **性价比高**：API 价格相对较低，适合高频使用
+- **中文支持好**：对中文编程场景理解准确
+
+**获取 API Key：**
+
+访问 <https://platform.deepseek.com/usage> 注册并获取 API Key。
+
+**配置方法：**
+
+```bash
+export ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic
+export ANTHROPIC_AUTH_TOKEN=YOU_DEEPSEEK_API_KEY
+export API_TIMEOUT_MS=600000
+export ANTHROPIC_MODEL=deepseek-chat
+export ANTHROPIC_SMALL_FAST_MODEL=deepseek-chat
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+```
+
+#### 使用火山引擎 Coding Plan 作为后端（推荐）
+
+火山引擎（Volcano Engine）是字节跳动旗下的云服务平台，提供企业级的 AI 模型服务。火山引擎的 Coding Plan 专门为编程场景优化，提供稳定、高效的代码生成能力。
+
+**核心优势：**
+
+- **企业级稳定性**：提供服务等级协议（SLA），保障服务稳定性
+- **代码场景优化**：针对编程任务进行了专门优化
+- **丰富模型选择**：支持多种模型，包括 Doubao-pro、Doubao-lite 等
+- **国内访问快**：国内节点部署，访问速度快
+
+**获取 API Key：**
+
+访问 <https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey> 注册并获取 API Key。
+
+**配置方法：**
+
+```bash
+export ANTHROPIC_BASE_URL=https://ark.volces.com/api/anthropic
+export ANTHROPIC_AUTH_TOKEN=YOUR_VOLCANO_API_KEY
+export ANTHROPIC_MODEL=doubao-pro-32k
+```
+
+#### 其他兼容 Anthropic 的 API
+
+Siliconflow：
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.siliconflow.cn/"
+export ANTHROPIC_MODEL="moonshotai/Kimi-K2-Instruct-0905"    # 可以自行修改所需模型
+export ANTHROPIC_API_KEY="YOUR_SILICONCLOUD_API_KEY"    # 请替换 API Key
+```
+
+阿里云 DashScope（Aliyuncs）：<https://help.aliyun.com/zh/model-studio/get-api-key>
+
+```python
+export ANTHROPIC_BASE_URL="https://dashscope.aliyuncs.com/apps/anthropic"
+export ANTHROPIC_API_KEY="YOUR_DASHSCOPE_API_KEY"
+```
+
+::: details 使用 Claude Code Route 作为后端（进阶用法）
+
+上面我们讲解了如何用 GLM 官方 API 替换 Claude Code 的 Anthropic 接口。接下来，我们来看一下 Claude Code Router 这个工具是如何让 Claude Code 适配更多模型 API 的。
+
+[Claude Code Router](https://github.com/musistudio/claude-code-router) 是一款专门为 Claude Code 设计的智能路由增强工具。它的核心作用，是帮助用户按需将 AI 请求分发到不同平台上的模型，并可以高度自定义。它支持接入几十个平台，包括 OpenRouter、DeepSeek、Ollama、Gemini 等，也可以按场景将任务路由到特定模型，比如 GLM-4.5、Kimi-K2、Qwen3-Coder 等。举例来说，你可以将后台任务自动交给本地 Ollama，以节省成本；将长文本 / 长代码任务交给 Gemini-2.5-Pro；把代码讲解交给 DeepSeek。
+
+![](week-04-images/cli-image16.png)
+
+该工具还提供了方便的 UI/CLI 配置管理能力，并通过「转换器（converter）」适配不同平台的 API 格式。它支持 GitHub Actions 等自动化集成以及自定义扩展，解决了「单一模型无法覆盖所有场景」以及「频繁切换平台很麻烦」的问题，帮助用户更灵活、低成本地利用 AI 工具。
+
+![](week-04-images/cli-image17.png)
+
+下面我们简单介绍如何安装 Claude Code Router。大致需要以下步骤（同样可以让 Trae 帮你执行），以准备好相关环境：
+
+```markdown
+npm install -g @anthropic-ai/claude-code
+npm install -g @musistudio/claude-code-router
+```
+
+安装完成后，你需要确认本地可以使用 `ccr` 命令。如果看到类似下面的输出，说明安装成功：
+
+![](week-04-images/cli-image18.png)
+
+接下来，有两种方式来初始化和配置模型：
+
+- 使用 CCR 自带的 UI，在浏览器中打开它提供的配置页面进行操作；
+- 直接修改 CCR 的默认配置文件（本质上 UI 也是在修改配置文件，只是提供了更直观的界面）。
+
+如果选择使用 CCR UI，你会看到类似下面的界面：
+
+![](week-04-images/cli-image19.png)
+
+此时点击 "Add Provider" 按钮，就会看到如下界面。你需要：
+
+1. 在 Name 中输入模型提供商的名字；
+2. 在 API Full URL 中填写该提供商的 OpenAI 兼容接口地址；
+3. 在 API Key 中填写对应平台的 API Key；
+4. 在 Models 区域中填写模型名称，点击 "Add Model" 添加；
+5. 最后点击 "Save" 保存配置。
+
+（界面往下滚动还有很多高级选项，但目前你可以先忽略它们。）
+
+![](week-04-images/cli-image20.png)
+
+下面是 DeepSeek 与 Kimi 的配置示例：
+
+![](week-04-images/cli-image21.png)
+
+![](week-04-images/cli-image22.png)
+
+保存模型配置后，还需要在右侧 Router 区域中指定默认模型（Default）。点击对应的下拉选择，将其设置为 `kimi`（推荐），然后在右上角点击 `Save and Restart`。
+
+![](week-04-images/cli-image23.png)
+
+之后，只需在终端中输入 `ccr code`，即可通过 Claude Code Router 启动 Claude Code 的编码工作流。
+
+![](week-04-images/cli-image24.png)
+
+:::
+
+
+#### Claude Code 的进阶用法
+
+很多人最开始使用 Claude Code 时，只把它当成普通对话工具来用。但实际上，它内置了很多丰富的能力，能够让你使用起来更高效、灵活。下面是一些常见命令和用法示例：
+
+参考文档：
+
+<https://docs.claude.com/en/docs/claude-code/cli-reference>  
+<https://docs.claude.com/en/docs/claude-code/slash-commands>
+
+| 命令              | 作用                                      | 示例                                     |
+| ----------------- | ----------------------------------------- | ---------------------------------------- |
+| claude            | 启动交互模式                              | `claude`                                 |
+| claude "query"    | 执行一次性任务并输出结果                  | `claude "explain this project"`          |
+| claude -p "query" | 执行一次性问题并在结束后自动退出          | `claude -p "explain this function xxxx"` |
+| claude -c         | 继续最近的一次会话                        | `claude -c`                              |
+| claude -r         | 恢复上一段会话                            | `claude -r`                              |
+| /resume           | 在当前聊天中切换回上一段会话              | `claude -c`、`/resume`                   |
+| /plugin           | 管理插件，可安装提交与审查类扩展能力     | `/plugin`                                |
+| /init             | 用 CLAUDE.md 初始化项目说明               | `/init`                                  |
+| /clear            | 清空当前会话上下文，防止信息过载          | `/clear`                                 |
+| /compact          | 压缩会话历史，减少上下文 token 占用       | `/compact`                               |
+| /cost             | 查看当前消费情况                          | `/cost`                                  |
+| /model            | 切换使用的模型（用兼容 API 时一般可忽略） | `/model`                                 |
+| /memory           | 管理 CLAUDE.md 记忆文件                   |                                          |
+| /help             | 显示可用命令列表                          | `/help`                                  |
+| exit or Ctrl+C    | 退出 Claude Code                          | `exit` 或 `Ctrl+C`                       |
+| /agents           | 高级功能，后文会说明                      |                                          |
+| /mcp              | 高级功能，后文会说明                      |                                          |
+
+**CLAUDE.md**
+
+参考： <https://www.anthropic.com/engineering/claude-code-best-practices>
+
+`CLAUDE.md` 是 Claude 在开始对话时会自动读取并加入上下文的特殊文件。因此，它非常适合用来记录：
+
+- 常用 bash 命令
+- 核心文件和工具函数
+- 代码风格约定
+- 测试方式说明
+- 仓库协作规范（例如分支命名、是用 merge 还是 rebase 等）
+- 开发环境配置说明（例如是否使用 pyenv、推荐哪种编译器等）
+- 项目中需要特别注意的行为或坑点
+- 任何你希望 Claude 「记住」的信息
+
+`CLAUDE.md` 本身没有强制格式要求，只要简洁、便于人类阅读即可。例如：
+
+```
+# Bash commands
+- npm run build: Build the project
+- npm run typecheck: Run the typechecker
+
+# Code style
+- Use ES modules (import/export) syntax, not CommonJS (require)
+- Destructure imports when possible (eg. import { foo } from 'bar')
+
+# Workflow
+- Be sure to typecheck when you're done making a series of code changes
+- Prefer running single tests, and not the whole test suite, for performance
+```
+
+> 💡 这里出现的 `# Workflow`、分支命名、merge / rebase 这些词，正是这一周后半段要讲的 Git 工作流。`CLAUDE.md` 里写清楚仓库协作规范，能让 AI 帮你提交代码时也守规矩——前半段的 CLI AI 工具和后半段的 Git，在这里第一次连了起来。
+
+#### Claude Code 的内部原理
+
+参考： <https://github.com/shareAI-lab/analysis_claude_code>
+
+如果你好奇为什么 Claude Code 在很多场景下比 Trae 或 Cursor 等 Agent 编程工具更好用，我们可以简单看一下它的内部工作机制。
+
+其他 CLI AI 编程工具的整体实现方式也大体类似。
+
+![](week-04-images/cli-image25.png)
+
+Claude Code 会把编程任务拆解成一个持续的「感知—思考—行动—验证」循环，并在其中调用不同工具完成任务。它模仿人类开发者的工作流：不断「写代码 → 运行 → 看结果 → 再改进」。系统内部通过一个主任务循环不断执行步骤，在每一轮循环中，Claude 都可以调用不同工具——例如读写文件、执行命令、搜索代码等——再根据工具返回的真实结果决定下一步行动。
+
+其中有几个关键特性值得注意：
+
+- **流式处理（Stream Processing）**：Claude 可以一边思考一边输出结果，而不是必须等所有代码写完再执行。
+- **智能压缩（Intelligent Compression）**：长对话容易导致上下文过长，Claude 通过将历史压缩成关键信息来减少「遗忘」的概率，并通过区分长短期记忆保证高效运行。
+- **并发控制（Concurrency Control）**：内部并行设计可以让多个任务同时进行，互不干扰。
+- **子 Agent 管理（Sub-agent Management）**：实际工作中并不只相当于一个「角色」处理所有事情，你可以管理多个子 Agent 协作处理代码，每个 Agent 负责不同任务，比如专门负责测试、专门负责写文档等。
+
+### 2.2 Codex
+
+![](week-04-images/cli-image26.png)
+
+![](week-04-images/cli-image27.png)
+
+和 Claude Code 类似，Codex 是由 OpenAI 开发的一款 AI 协作编程工具，你可以把它理解成 「OpenAI 版的 Claude Code」。它最大的优势是对 GPT-5 的高效适配。
+
+从实际体验来看，GPT-5 目前响应速度更快、犯错率更低（在多轮复杂任务中正确完成的概率更高）。它的一个缺点是解释往往偏「学术」和「技术」，有时显得过于严谨、信息量很大，对初学者来说可能略微难懂。
+
+你可以通过下面的命令安装 Codex：
+
+```
+npm i -g @openai/codex
+```
+
+#### 使用 OpenAI 官方 API 作为后端
+
+如果直接使用 OpenAI 官方的 Codex 入口，配置会非常简单：当你已经开通 OpenAI 订阅或申请到了相应 API 配额之后，只需要在命令行中输入 `codex` 启动程序，并按提示完成登录即可。
+
+![](week-04-images/cli-image28.png)
+
+![](week-04-images/cli-image29.png)
+
+#### 使用转发 OpenAI API 的方式作为后端
+
+由于官方 OPENAI API 可能存在价格较高、网络要求严格等问题，为了避免这些限制，我们也可以通过其他 API 网关服务来转发调用。
+
+在这种方式下，我们只需要在第三方转发平台上购买对应的 Codex API 配额，就能获得接近原生 OpenAI Codex 的使用体验。
+
+参考： <https://open-dev.feishu.cn/wiki/PAqUwWG4IiuwTvkQ2sGcaQuPnXc>  
+充值地址： <https://api.zyai.online/account/topup/recharge>
+
+需要注意的是，在拿到 token 配额后，我们还需要在本地配置好 API Key。
+
+在密钥分组设置中，要注意选择专门用于 Codex 的那一项。
+
+![](week-04-images/cli-image30.png)
+
+接下来，我们需要把获取到的 Key 填入下面的提示词中，并把整段提示词交给 Trae，让它帮你完成整个配置过程：
+
+````bash
+My API key is: [Paste your obtained sk-xxxxx key here]
+
+Please help me complete the following configuration tasks:
+
+1. Create configuration directory
+   - Create a `.codex` folder under my user directory
+   - Windows path should be: `C:\Users\[My Username]\.codex`
+2. Backup existing configuration (if exists)
+   - Check if `.codex\config.toml` exists
+   - If it exists, rename it to `config.toml.bak.[current timestamp]` (timestamp format: yyyyMMddHHmmss)
+3. Create configuration file
+   - Create `config.toml` in the `.codex` directory
+   - Write the following complete content:
+   ```toml
+   preferred_auth_method = "apikey"
+
+   [model_providers.myrelay]
+   name = "My Relay Station"
+   base_url = "https://api.zyai.online/v1"
+   env_key = "MYRELAY_API_KEY"
+   wire_api = "responses"
+   request_max_retries = 4
+   stream_max_retries = 10
+   stream_idle_timeout_ms = 300000
+
+   [profiles.myrelay]
+   model_provider = "myrelay"
+   model = "gpt-5"
+   model_reasoning_effort = "medium"
+
+   [tools]
+   web_search = true
+
+4. Set system environment variable
+Variable name: MYRELAY_API_KEY
+Variable value: The key I gave you
+
+5. Confirm completion and report back:
+
+The full path of the configuration file
+Whether the environment variable was set successfully
+I can use the command `codex --profile myrelay` to run it
+````
+
+配置完成后，你就可以通过 `codex --profile myrelay` 启动使用转发 API 的 Codex 了。之后的使用方式与 Claude Code 类似：只需要在对话框中随时输入你的想法和需求即可。
+
+
+### 2.3 OpenCode
+
+![](week-04-images/cli-image32.png)
+
+![](week-04-images/cli-image33.png)
+
+OpenCode 是一款面向开发者的开源 AI Coding Agent 平台，定位类似于 「多模型版的 Claude Code」。它以 Terminal 为核心交互入口，同时也支持编辑器集成（如 VS Code、Neovim 等），能够深度接入本地代码仓库，并通过自然语言完成从代码理解到工程执行的一整套开发流程。
+
+它不是绑定单一模型的 AI 编程工具，而是一个可自由切换 GPT、Claude、Gemini 乃至本地模型的开放式 AI Coding Agent 平台。就连 OpenAI 官方也持 OpenCode 接入 Codex / OpenAI 订阅。
+
+![](week-04-images/cli-image34.png)
+
+你可以通过下面的命令安装 OpenCode:
+
+```bash
+# Linux / Unix
+curl -fsSL https://opencode.ai/install | bash
+
+# Windows
+npm i -g opencode-ai
+```
+
+#### 使用 OpenCode 中的免费模型
+
+在 OpenCode 中不定期会提供免费模型可以进行使用, 配置也非常简单。你可以在你需要使用 OpenCode 的位置在命令行输入 `opencode` 启动 Opencode 程序进入聊天面板。输入 `/models`命令搜索 free 关键词就可以看到带有 free 字眼的免费模型
+
+![](week-04-images/cli-image35.png)
+
+在一般情况下免费模型完成编码任务会比付费 / 订阅模型要慢一些，这通常取决于模型线路是否阻塞, 是否编码高峰期以及模型本身的能力。
+
+#### 使用第三方模型来作为 OpenCode 的主编码模型
+
+这是 OpenCode 的核心优势, 它可以在使用同样的 MCP, Skills, 上下文的情况下允许你自由切换模型来完成不同的编码任务。下文以 OpenAI 官方的 GPT-5.3 Codex 为例，接入 OpenCode 作为主编码模型。
+
+在 OpenCode 的聊天窗口中输入 `/connect` 命令选中第一条最相关指令按下 enter 键，就可以进行选择第三方模型提供商的认证授权。
+
+![](week-04-images/cli-image36.png)
+
+这里以选择 OpenAI 为例,进行回车选择认证方式。
+
+![](week-04-images/cli-image37.png)
+
+选哪种都可以,只是认证方式不同。这里选择第一种进行浏览器登录。
+
+![](week-04-images/cli-image38.png)
+
+复制此链接到浏览器上进行正常的 OpenAI 登录操作，浏览器上出现 Authorization Successful 后 OpenCode 客户端会自动跳转至选择 OpenAI 的模型界面。
+
+![](week-04-images/cli-image39.png)
+
+![](week-04-images/cli-image40.png)
+
+#### 安装 Oh My OpenAgent 插件
+
+OpenCode 的强大之处还在于他有非常活跃的社区生态，你可以在 Github 上搜索出非常多与 OpenCode 相关的插件。如果说 OpenCode 是一款可以任意切换模型的 AI 协作工具的话，那么 Oh-My-OpenAgent 就是一款运行在 OpenCode 之上的 "多 Agent AI 编程指挥系统"。它可以将一个复杂任务拆给多个子任务分给不同的模型进行各司其职的工作。
+
+![](week-04-images/cli-image41.png)
+
+你可以将以下话术复制之后粘贴给上文在 OpenCode 中配置好的模型进行安装 OpenCode。
+
+```text
+Install and configure oh-my-openagent by following the instructions here:
+https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/refs/heads/dev/docs/guide/installation.md
+```
+
+以下是 Oh-My-OpenAgent 的特性以及功能说明。
+
+| 特性 | 功能说明 |
+| :-------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **自律军团 (Discipline Agents)** | Sisyphus 负责调度 Hephaestus、Oracle、Librarian 和 Explore。一支完整的 AI 开发团队并行工作。 |
+| **Team Mode** (v4.0, 选择性启用) | 领导 Agent + 最多 8 个并行成员，实时 tmux 可视化，专用 `team_*` 工具家族。驱动 `hyperplan`(5 个敌对评论者) 和 `security-research`(3 个猎手 + 2 个 PoC 工程师)。[文档 →](https://github.com/code-yeongyu/oh-my-openagent) |
+| **`ultrawork` / `ulw`** | 一键触发，所有智能体出动。任务完成前绝不罢休。 |
+| **[IntentGate 意图门](https://factory.ai/news/terminal-bench)** | 真正行动前，先分析用户的真实意图。彻底告别被字面意思误导的 AI 废话。 |
+| **基于哈希的编辑工具** | 每次修改都通过 `LINE#ID` 内容哈希验证、0% 错误修改。灵感来自 [oh-my-pi](https://github.com/can1357/oh-my-pi)。[The Harness Problem →](https://blog.can.ac/2026/02/12/the-harness-problem/) |
+| **LSP + AST-Grep** | 工作区级别的重命名、构建前诊断、基于 AST 的重写。为 Agent 提供 IDE 级别的精度。 |
+| **后台智能体** | 同时发射 5+ 个专家并行工作。保持上下文干净，随时获取成果。 |
+| **内置 MCP** | Exa（网络搜索）、Context7（官方文档）、Grep.app（GitHub 源码搜索）。默认开启。 |
+| **Ralph Loop / `/ulw-loop`** | 自我引用闭环。达不到 100% 完成度绝不停止。 |
+| **Todo 强制执行** | Agent 想要摸鱼？系统直接揪着领子拽回来。你的任务，必须完成。 |
+| **注释审查员** | 剔除带有浓烈 AI 味的冗余注释。写出的代码就像老练的高级工程师写的。 |
+| **Tmux 集成** | 完整的交互式终端支持。跑 REPL、用调试器、用 TUI 工具，全都在实时会话中完成。 |
+| **Claude Code 兼容** | 你现有的 Hooks、命令、技能、MCP 和插件？全都能无缝迁移过来。 |
+| **技能内嵌 MCP** | 技能自带其所需的 MCP 服务器。按需开启，不会撑爆你的上下文窗口。 |
+| **Prometheus 规划师** | 动手写代码前，先通过访谈模式做好战略规划。 |
+| **`/init-deep`** | 在整个项目目录层级中自动生成 `AGENTS.md`。不仅省 Token，还能大幅提升 Agent 理解力。 |
+
+Sisyphus (claude-opus-4-7 / kimi-k2.6 / glm-5.1) 是你的主指挥官。他负责制定计划、分配任务给专家团队，并以极其激进的并行策略推动任务直至完成。他从不半途而废。
+
+Hephaestus (gpt-5.5) 是你的自主深度工作者。你只需要给他目标，不要给他具体做法。他会自动探索代码库模式，从头到尾独立执行任务，绝不会中途要你当保姆。名副其实的正牌工匠。
+
+Prometheus (claude-opus-4-7 / kimi-k2.6 / glm-5.1) 是你的战略规划师。他通过访谈模式，在动一行代码之前，先通过提问确定范围并构建详尽的执行计划。
+
+了解完这些, 你就可以使用装好 Oh-My-OpenAgent 插件之后的 OpenCode 来完成编码任务了。
+
+#### 配置模型与 API（进阶）
+
+通过 `/connect` 可以在聊天界面中快速接入模型，但如果你需要更精细的控制——比如为不同任务指定不同模型、配置多个 API Provider 备用——就可以直接编辑 OpenCode 的配置文件 `opencode.json`。
+
+这个文件位于 `~/.config/opencode/opencode.json`（Windows 路径：`C:\Users\你的用户名\.config\opencode\opencode.json`），首次启动 OpenCode 时会自动生成。
+
+以下是一个接入百炼平台（阿里云）Qwen 模型的配置示例：
+
+```json
+{
+  "model": "bailian-coding-plan/qwen3.5-plus",
+  "small_model": "bailian-coding-plan/qwen3.5-plus",
+  "provider": {
+    "bailian-coding-plan": {
+      "options": {
+        "apiKey": "sk-你的API密钥"
+      }
+    }
+  }
+}
+```
+
+> 💡 `model` 字段的格式为 `提供商/模型名称`。你可以在对应平台注册并获取 API Key 后，替换上面的 `apiKey` 值。
+
+如果你想同时配置多个模型，可以在配置中指定不同任务分类：
+
+```json
+{
+  "model": "bailian-coding-plan/qwen3.5-plus",
+  "categories": {
+    "visual-engineering": {
+      "model": "bailian-coding-plan/qwen3.5-plus",
+      "description": "前端、UI/UX、设计、样式"
+    },
+    "ultrabrain": {
+      "model": "bailian-coding-plan/qwen3-coder-next",
+      "description": "复杂逻辑、算法、架构决策"
+    },
+    "quick": {
+      "model": "opencode-go/minimax-m2.5",
+      "description": "简单修改、拼写修复"
+    }
+  }
+}
+```
+
+这样，OpenCode 就会根据任务类型自动选择最合适的模型：简单修改用快模型节省成本，复杂架构问题用更强模型保证质量。
+
+#### 使用 MCP 服务器扩展 OpenCode
+
+MCP（Model Context Protocol）是一个开放协议，让 AI 编程工具可以调用外部工具——比如操作浏览器、搜索网络、分析图片等。OpenCode 原生支持 MCP，配置方式和 Claude Code 类似。
+
+在 `opencode.json` 的 `mcp` 字段中添加服务器配置：
+
+```json
+{
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    },
+    "zai-mcp-server": {
+      "type": "local",
+      "command": ["npx", "-y", "@z_ai/mcp-server"]
+    }
+  }
+}
+```
+
+配置完成后重启 OpenCode，AI 就能在对话中自动调用这些工具——比如帮你打开浏览器截图、分析 UI 设计图、搜索网页信息等。
+
+> 🎯 **实用场景**：当你需要 AI 帮你分析一个网页的布局问题时，配上 chrome-devtools MCP，直接说「帮我打开这个页面，看看为什么按钮位置不对」，AI 就能自动打开浏览器、截图、分析并给出修复建议。
+
+#### 日常使用技巧与常见问题
+
+**使用 AGENTS.md 指导 AI 行为**
+
+在项目根目录创建 `AGENTS.md` 文件，可以告诉 OpenCode 你的项目约定和偏好。AI 每次启动时会自动读取这个文件：
+
+```markdown
+## 项目约定
+- 使用 TypeScript 严格模式
+- API 响应必须符合 JSON Schema
+- 错误处理使用自定义 Error 子类
+
+## 开发流程
+1. 修改前先理解现有代码
+2. 小步提交，每次提交一个逻辑单元
+3. 完成后运行 npm test 验证
+
+## 禁止事项
+- 不要使用 any 类型
+- 不要删除测试文件
+```
+
+**并行探索代码库**
+
+当你不熟悉一个项目时，可以让 OpenCode 同时搜索多个方面：
+
+> 帮我同时做这几件事：
+> 1. 搜索项目中所有处理 HTTP 请求的地方
+> 2. 找出数据库相关的代码
+> 3. 列出项目的目录结构和各模块职责
+
+OpenCode 会并行执行这些探索任务，一次性给你完整的代码库地图。
+
+**常见问题**
+
+| 问题 | 解决方法 |
+|------|---------|
+| `opencode` 命令找不到 | npm 全局目录不在 PATH 中。在终端执行：`[Environment]::SetEnvironmentVariable("Path", "$env:Path;$env:USERPROFILE\AppData\Roaming\npm", "User")` 后重启终端 |
+| AI 响应很慢 | 简单任务使用 quick 分类（自动路由到快模型）；对话历史太长时可以开新会话 |
+| API 调用失败 | 检查 API Key 是否正确、模型名称拼写是否准确（provider/model-name 格式）、账户余额是否充足 |
+| 技能（Skills）不生效 | 确认 SKILL.md 文件格式正确（需要 YAML frontmatter），且 description 字段准确描述了触发条件 |
+| 对话上下文太长 | 开启新会话，或在 AGENTS.md 中定义关键约定让新会话也能继承 |
+
+
+---
+
+## 3. CLI AI 编程工具的更多用法
+
+把工具配好之后，小哲发现真正的乐趣才开始。CLI AI 编程工具能做的远不止「写代码」。下面这几种玩法，是他这一周练得最多的。
+
+### 3.1 用 AI 写需求文档：学会「具体化需求」
+
+对于大语言模型来说，抽象需求需要被「具体化」。比如：「我很饿」是一个抽象需求，我们需要把它变成：「我肚子有点饿，可能需要吃一个红豆面包，再配一杯豆浆。」——这才是一种可以被执行的、具体的需求。
+
+但把抽象需求变具体，其实是一个很花精力的过程。如果我们没有见过足够多的案例，很难快速联想到该如何把抽象问题拆解成细致的模块。这种时候，最好的办法就是让 AI 帮你完成「具体化」这一步。  
+比如，我想开发一个「每日计划」应用，最朴素的想法可能是：
+
+`Please help me write a daily planning app where I can write my plans each day and get reminders.`
+
+AI 确实可以在这个需求基础上直接拆分任务，然后一步步完成，但中间容易出错或理解偏差。为了降低风险，我们可以让 AI 帮我们先扩写需求：
+
+`Based on my needs, please elaborate and provide a more detailed Product Requirement Document for reference. My idea is: Please help me write a daily planner app that supports daily plan-writing and provides reminders .`
+
+这时，AI 可能会给出类似下面这样完整的 PRD：
+
+```
+Product Requirements Document (PRD): "Today's Plan" App
+Document Version: 1.0
+Creation Date: October 27, 2023
+Author: (Your Name/Product Manager)
+
+1. Product Introduction
+1.1 Product Name
+Today's Plan
+1.2 Product Vision
+"Today's Plan" is a minimalist and highly efficient daily planning and reminder tool, dedicated to helping users eliminate procrastination and forgetfulness, plan every day clearly, and ensure tasks are carried out through an intelligent reminder system—ultimately enabling users to gain a stronger sense of control and achievement over their time.
+1.3 Target Users (User Personas)
+We mainly serve three types of users:
+Students (Xiao Ming):
+Characteristics: Multiple tasks such as courses, assignments, club activities, exam prep, needing organized time arrangement.
+Pain Points: Easily forget small tasks or assignment deadlines; feel overwhelmed switching between tasks; want to build regular study and life habits.
+Needs: A simple tool to list daily to-dos and provide reminders before class/self-study.
+Office Workers (Zhang Wei):
+Characteristics: Fast-paced work, many meetings, reports, project milestones, and personal affairs (fitness, picking up children).
+Pain Points: Easily forget important meetings or work milestones; get interrupted by urgent tasks and forget the original plan; feel busy but inefficient at end of day.
+Needs: Need a tool to quickly record and schedule daily work and send strong reminders at key times (e.g., 15 minutes before meetings).
+Freelancers/Self-disciplined Seekers (Li Na):
+Characteristics: High freedom of time, but strong self-management required for work output and personal growth.
+Pain Points: Easily procrastinate, lack external supervision; start the day without a clear plan, leading to low time utilization.
+Needs: Need a tool to help build a daily fixed routine (Morning Routine) and review daily achievements for positive feedback.
+
+2. User Stories
+As a user, I want to quickly create today's plan list so I have an overview of all my tasks for the day.
+As a user, I want to set specific start and end times for each task so I can create a visual timeline.
+As a user, I want to receive push notification reminders before a task starts so I won't miss any important arrangements.
+As a user, I want to customize the reminder time (such as 5, 15, or 60 minutes in advance) so reminders better fit my habits.
+As a user, I want to easily mark completed tasks so I can feel accomplished and clearly see my progress.
+As a user, I want to see a summary of my completed plans at the end of each day for reviewing and self-motivation.
+As a user, I want to conveniently edit and delete tasks to handle last-minute changes.
+As a user, I want to view plans and achievements from previous days to review my efficiency and habits.
+
+3. Feature Breakdown
+Core Features (MVP - Minimum Viable Product)
+Module 1: Plan Management
+3.1.1 Daily Plan Homepage
+Interface: "Today" as the core view, current date shown at the top.
+View: Timeline list, clearly showing tasks scheduled from morning to evening. Tasks without a time can be listed in the top or bottom "To-do List" section.
+Interactions:
+Click the "+" button in the bottom right to quickly create a new task.
+Pull down to refresh the page.
+Swipe left/right to view yesterday's and tomorrow's plans.
+3.1.2 Create/Edit Task
+Entry: Click "+" on the homepage or a time slot in the list.
+Fields:
+Task title (required): Briefly describe the task, e.g., "10 AM Weekly Product Meeting."
+Task time (optional):
+Set "start time" and "end time."
+Provide "all-day" option for unspecified time tasks.
+Default time picker should be quick and convenient.
+Reminder setting (required, with default value): See Module 2.
+Notes (optional): Add further descriptions, links, or location info.
+Actions: Save, cancel, delete task.
+3.1.3 Task Interaction
+Mark as complete: Checkbox before each task; checking adds a strikethrough and gray background, indicating completion. Can unmark if needed.
+Edit task: Click the task itself to enter edit page.
+Delete task: Swipe left on a task to reveal "Delete" button.
+Module 2: Smart Reminder System
+3.2.1 Reminder Trigger
+Mechanism: Based on task's set "start time" and the user's "reminder lead time," send a push notification from device.
+Offline Support: Locally scheduled reminders must trigger even if user is offline.
+3.2.2 Reminder Content & Format
+Notification title: App name "Today's Plan."
+Body: "Reminder: [Task Title] will start at [Start Time]." E.g., "Reminder: Product Meeting will start at 10:00."
+Sound: Use system default or offer several simple, effective tones.
+3.2.3 Reminder Settings
+Global Settings (in Settings page):
+User can set a default reminder time, e.g., "15 minutes before task starts." New tasks adopt this by default.
+Single Task Settings (in create/edit page):
+Users can override global settings for important tasks, choosing specific reminder times like "on time," "5 minutes early," "30 minutes early," or "1 hour early."
+Provide "no reminder" option.
+Subsequent Features (V1.1, V2.0)
+3.3 Daily Review & Statistics
+Push a summary notification at a set time every night (e.g., 22:00): "How was your day? Take a look at your achievements!"
+Generate a simple daily report card: shows total planned tasks, completed tasks, completion rate, plus an encouraging message.
+3.4 History Review
+Calendar view to click on any past day and check its plans and completion status. Days with high completion rates marked with a special color.
+3.5 Templates
+Allow users to save a successful daily plan as a template, e.g., "Efficient Workday," "Relaxing Weekend."
+When creating tomorrow's plan, one-click import a template, modify slightly to save time.
+3.6 Themes & Personalization
+Offer dark mode.
+Allow changing several primary color themes.
+
+4. Non-Functional Requirements
+4.1 Performance
+Response: App launch time under 2 seconds; adding/editing tasks must be smooth and lag-free.
+Resource Use: Low battery and memory consumption in background; do not over-consume resources waiting for reminders.
+4.2 Usability
+Minimal & intuitive: UI must be minimal, primary functions accessible within 3 clicks. No tutorial needed for new users.
+Error tolerance: Offer undo (e.g. brief undo after mistakenly deleting a task).
+4.3 Reliability
+Reliable reminders: Reminder function is the product's lifeline; must guarantee 99.99% timely and accurate delivery.
+Data loss-free: User plans must be reliably stored locally. Future versions can support cloud sync to prevent data loss on device change.
+4.4 Compatibility
+Platform: Support major iOS and Android versions (latest 3-4 releases).
+Screen: Layout must fit various phone screen sizes.
+
+5. Roadmap
+V1.0 (MVP):
+Goal: Validate core value—planning & reminders.
+Features: Complete all "Core Features" described above (Plan management, smart reminders).
+V1.1 (Quick Optimization):
+Goal: Improve retention and achievement.
+Features: Add "Daily Review & Statistics," "History Review."
+V2.0 (Enhanced Experience):
+Goal: Increase efficiency and personalization.
+Features: Add "Templates," "Themes & Personalization," and start developing "Cloud Sync."
+```
+
+对比我们最开始那句「帮我写一个每天可以记计划并提醒的应用」，现在这份文档已经详细得多了。你可以根据自己的真实需求，对其中的内容进行增删修改；对于某些你不确定的模块，也可以继续让 AI 提供更多备选方案，你再挑选、合并成最终版本。
+
+通过这种方式，我们可以很轻松地把抽象想法变成具体描述。对 AI 开发来说，「具体」就是生产力：需求越具体，越容易得到结构稳定、质量较高的项目。你可以尝试用这种方式重做一下之前的某个小项目，对比一下效果差异。
+
+如果你觉得这类「需求提示词」太长，非常自然的做法，是把它单独写进一个 markdown 文档中，作为你的「需求文档 / 开发文档 / PRD」。之后每次让 AI 写项目时，只需要让它「参考这份文档」，而不是每次都重打一遍长提示。你也可以在迭代中不断完善这份文档，让后续项目直接受益。
+
+下面是一些其他常见的使用场景：
+
+### 3.2 管理文件夹
+
+我们可以尝试用 CLI AI 编程工具来管理当前文件夹中的各种文件。比如，你有一堆杂乱无章的文件，需要整理归类，就可以对 Claude Code 或 Codex 说：
+
+`Please help me organize the contents of the current folder. I want to group files with the same content together & I want to group files from the same time period together. Please help me handle this.`
+
+### 3.3 开发新项目
+
+这和我们之前在 z.ai、Trae 中的用法几乎完全一样——我们也可以直接用 CLI AI 编程工具来从零开发新项目。当然，最好提前准备好一份需求文档。
+
+需求文档越细致，最终效果越好。你可以根据不断变化的想法，对文档做多轮优化；文档越完善，代码实现就越稳定、越成熟。
+
+### 3.4 部署开源项目（例如 Dify）
+
+对于刚接触计算机的同学来说，从 GitHub 上部署一个开源项目往往很有难度。但我们完全可以把这件事交给 Claude Code，就像我们在 Dify 教程中做的那样：
+
+<https://github.com/langgenius/dify>
+
+如果我想在本地跑起自己的 Dify，只需要把这个链接扔给 Claude Code，然后输入：
+
+`I want to deploy this GitHub project ``https://github.com/langgenius/dify`` . Please help me clone the project and run it.`
+
+收到你的请求后，Claude Code 会自动完成一系列操作，包括从 GitHub 拉取代码、配置运行环境、启动项目等。如果中间某一步出错或项目启动状态不正常，你再根据提示进行少量人工处理即可。除了 Dify，你也可以用 Claude Code 帮你部署大部分常见的 GitHub 开源项目——你只需要一个对话框，再加上喝一杯咖啡的时间 ☕️。
+
+![](week-04-images/cli-image31.png)
+
+> 💡 注意到这里出现了 `clone`、「从 GitHub 拉取代码」这些字眼了吗？这正是这一周后半段要正式学习的 Git / GitHub 工作流。CLI AI 工具能帮你跑这些命令，但要真正看懂它在做什么、把代码推到正确的仓库，你还得自己理解 Git 的原理。下面我们就来补上这一课。
+
+### 3.5 讲解代码与撰写文档
+
+对于一些复杂项目，或者 AI 自动生成的大型项目，你可能会觉得代码太长、逻辑太多，很难看懂。这时就可以让 CLI AI 编程工具帮你「读代码」。你可以这样提问：
+
+- 请帮我解释这个项目：如何运行、如何使用、后续如何修改和继续开发？
+- 请帮我说明这个项目的整体流程：程序是怎样运行的？用户在界面中可以做哪些操作？
+- 请帮我为这个项目写一份完整的文档，包括开发文档和运行文档等。
+- 请基于我当前文件夹里的所有内容，写一份详细说明，并保存到指定的 markdown 文档中。
+
+### 3.6 更多玩法
+
+当然，CLI AI 编程工具能做的远不止上面这些。不要只把它当作「写代码工具」，而是把它看作一个具有独立行动能力的智能 Agent。你可以让它帮你：
+
+- 管理和整理本地文件；
+- 写日记、写总结；
+- 分析和修复系统错误；
+- 执行各种重复性命令行任务等。
+
+也许在不久的将来，它会变成你电脑上最重要、也最懂你的 AI 伙伴。
+
+
+---
+
+## 4. 过渡：终端用熟了，接下来管好代码版本
+
+> 这一周走到一半，小哲已经能在终端里让 AI 帮他装环境、跑项目、整理文件了。但他很快撞上一个新问题：项目越改越大，每次让 AI 改完一版，他都想留个「存档」，万一改崩了能退回去。前几周做前端时，他靠 vibe coding 工具「每次对话存一个版本」凑合着用；可后端项目代码多、改动频繁，他需要一套真正可靠的办法。
+>
+> 这套办法就是 **Git**。终端是干活的地方，Git 则是给你在终端里的每一步改动「拍快照、留存档」的工具。下半周，小哲要把 Git 和 GitHub 彻底走通。
+
+在之前的课程中，我们学习了如何使用基于 Web 的 vibe coding 工具编写代码。每次对话都会创建一个新版本的代码。但是，让我们思考一个问题：如果我们想恢复到之前的修改，有没有方便的方法？有没有一种工具可以记录我们在不同阶段的代码，使我们能够随时在不同版本之间切换和修改？
+
+为了满足这一需求，版本控制软件应运而生。在这篇文章中，我们将介绍最著名的版本控制程序——Git——以及最好的代码托管平台——GitHub。我们将学习如何使用 Git 进行代码管理，如何从 GitHub 获取他人的代码，如何上传我们自己的代码，以及如何与他人合作进行大型项目。
+
+![](week-04-images/git-image1.png)![](week-04-images/git-image2.png)
+
+无论是个人项目的版本跟踪，团队协作中的代码同步，还是为开源社区做贡献，Git 和 GitHub 都是现代开发者的必备工具。通过掌握它们，你将能够更高效地管理代码，根据需要创建检查点，在代码的不同阶段之间自由切换，并轻松处理从单个文件更改到开发大型项目的所有事务——使每一次代码迭代都可控且可追溯。
+
+![](week-04-images/git-image3.png)![](week-04-images/git-image4.png)
+
+> 💡 **前置知识**
+> 
+> 在学习 Git 之前，建议你先了解以下概念：
+> - 什么是终端/命令行 - 学习如何使用命令行与计算机交互（本周前半段已经带你走过）
+> - 什么是 Git - 了解 Git 版本控制系统的核心概念
+>
+> 本节将重点介绍 GitHub 工作流和实际操作，上述基础知识可结合本周前半段的命令行内容一起理解。
+
+---
+
+## 5. Git 快速开始
+
+在开始使用 Git 之前，请确保你已经理解了前面关于命令行的内容，以及 Git 版本控制的基本概念。本节将假设你已经具备这些基础知识，并直接讲解如何安装配置 Git 以及使用 GitHub 进行协作。
+
+### 5.1 如何安装 Git
+
+我们将演示在不同计算机操作系统上安装 Git 的三种方法。请根据你的系统版本按照说明进行操作：
+
+#### Windows
+
+1. 前往 [Git 官方下载页面](https://git-scm.com/download/win) 并下载适合你系统的安装程序：[安装包](https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-64-bit.exe)。默认情况下，推荐使用 x64 安装程序。
+2. 双击安装程序并按照安装向导说明进行操作：
+   ![](week-04-images/git-image5.png)
+   1. 建议保持默认选项。如果你需要自定义，请注意以下几点：（在大多数情况下，你可以一直点击"Next"）
+      - 选择 Git 使用的默认编辑器：选择你喜欢的编辑器（如 VS Code）。你可以默认选择第一个选项，即 Vim（一个文本编辑器），或选择"Visual Studio Code as Git's default editor"选项（需要预先安装 VS Code）。你可以保持默认选择并点击"Next"继续。
+        ![](week-04-images/git-image6.png)
+      - 选择如何使用 Git：这三个选项控制 Git 在系统中的可访问性。建议选择选项 2（"from command line and 3rd-party software"）——它将基本的 Git 工具添加到 PATH 中，让你可以在 Git Bash、命令提示符、PowerShell 和 IDE 中使用 Git，而不会使系统混乱。
+        ![](week-04-images/git-image7.png)
+
+3. 安装后，在桌面上右键单击。如果在菜单中看到"Git Bash Here"，则安装成功。
+
+![](week-04-images/git-image8.png)
+
+#### MacOS
+
+对于 macOS，你可以首先在终端中输入 `git --version` 来检查是否已经安装了 Git。如果没有，系统会提示你安装——只需按照说明完成安装即可。
+
+1. 方法 1：通过 Homebrew 安装
+   如果你安装了 [Homebrew](https://brew.sh/)（Mac 包管理器），请打开终端并输入
+   ```bash
+   brew install git
+   ```
+2. 方法 2：（推荐）通过 Xcode 安装： https://developer.apple.com/xcode/ ，Xcode 内置了 Git。安装后，只需按照说明继续操作。
+
+#### Linux
+
+大多数 Linux 发行版可以通过其包管理器安装 Git：
+
+- Ubuntu/Debian:
+
+```bash
+sudo apt update
+sudo apt install git
+```
+
+- CentOS/RHEL:
+
+```bash
+sudo yum install git
+```
+
+- 验证安装：在终端中输入 git --version。如果显示版本号，则安装成功。
+
+### 5.2 Git 初始化
+
+安装 Git 后，你首先需要配置你的用户信息——这是使用 Git 进行版本控制的基本步骤。在终端中执行以下命令（将括号中的内容替换为你自己的信息）：
+
+```bash
+# 设置全局用户名（将显示在提交记录中）
+git config --global user.name "Your Name"
+
+# 设置全局邮箱（建议使用在 GitHub/GitLab 等平台上注册的邮箱）
+git config --global user.email "your.email@example.com"
+```
+
+Git 会将此信息嵌入到每个提交记录中，作为每次修改的"作者信息"。查看版本历史记录（例如，使用 git log）时，你可以清楚地看到谁修改了每一行代码，便于追溯责任和沟通。在协作项目中，统一的身份信息使团队成员能够快速识别谁做了哪些更改，从而提高协作效率（例如通过提交记录找到相关开发人员讨论问题）。
+
+你可以通过在命令行中输入 `git config --list` 来查看当前的 Git 配置信息，以确认设置成功。
+
+<InfoCard icon="🧭" variant="tip">
+**提交信息要写给「未来的自己」看**
+
+小哲一开始想随手把提交都写成 `update`、`fix`、`改了点东西`，过两天自己都看不懂。配好身份只是第一步，真正的好习惯是每次提交都写清楚「这次干了什么」，比如 `fix: 修复登录接口空指针`。提交信息是写给未来的自己和队友的，**别偷懒。**
+</InfoCard>
+
+
+---
+
+## 6. 什么是 GitHub
+
+GitHub 是一个基于 Git 的代码托管平台。它不仅为 Git 仓库提供远程存储，还包括协作工具（如 Issues、Pull Requests、Projects），使开发者更容易分享代码和协作。简而言之，Git 是一个本地版本控制工具，而 GitHub 是一个远程"代码仓库云盘 + 协作社区"。
+
+GitHub 不仅是世界上最大的代码托管平台，也是全球最活跃、最具影响力的开源社区。这里"开源"的核心思想是任何人都可以下载并运行软件的源代码。这种模式允许世界各地的人们检查彼此的代码并进行修改，或基于此创建新项目。例如，你可以在 GitHub 上找到各种学习教程以及用于训练 GPT 模型的框架（如 PyTorch）的完整源代码。每天，无数人在全球范围内协作审查和改进代码。
+
+![](week-04-images/git-image9.png)
+
+许多大公司在 GitHub 上开源他们的程序或教程，以获得行业竞争优势——这也可以看作是一种广告形式。在 GitHub 社区中，项目获得的"星标 (stars)"数量是衡量其价值的主要指标；项目或组织拥有的星标越多，其可信度和影响力就越大。
+
+![](week-04-images/git-image10.png)
+
+在我们的课程中，支持资源和作业也将上传到专用的 GitHub 仓库。通过上传作业的过程，你将逐渐熟悉并掌握 GitHub 的使用，为未来应用程序开发中的版本控制打下坚实的基础。
+
+### 6.1 注册 GitHub 账号
+
+1. 访问 [GitHub 官网](https://github.com/) 并点击右上角的"Sign up"。
+   ![](week-04-images/git-image11.png)
+2. 输入你的电子邮件地址（建议使用常用邮箱，因为验证和通知将发送到那里），设置密码（必须包含字母、数字和特殊字符）。
+3. 完成人工验证，按照提示验证邮箱，你的账号就创建好了。
+
+### 6.2 在 GitHub 上创建你的第一个仓库
+
+接下来，我们将创建第一个存储文件夹，也称为仓库或"repo"。
+
+![](week-04-images/git-image12.png)![](week-04-images/git-image13.png)
+
+![](week-04-images/git-image14.png)
+
+1. Repository name：向他人显示的仓库名称。
+2. Description：仓库的详细描述。
+3. Choose visibility：对于个人仓库，如果设置为 private，只有你和特别邀请的人可以看到。如果设置为 public，所有人都可以看到。
+   对于组织内的仓库，如果是 Private，只有组织内的人可以看到。
+   如果是 Public，组织外的人也可以看到。
+4. README：通常的惯例是每个仓库都应该有一个 README 文件。你可以把它看作是仓库的完整介绍，包括使用说明、文件列表和操作方法。
+5. Add .gitignore and license：
+   1. .gitignore 文件告诉 Git 在上传到 GitHub 时忽略某些文件夹或文件，因此它们不会被跟踪或添加到暂存区。这对于临时测试文件、依赖包或大文件很有用。一旦指定，这些文件将不再被跟踪。
+   2. license 指的是你选择的开源许可证类型。不同的许可证详细规定了他人是否可以将你的代码用于商业目的，并包含其他条款和条件。
+
+建议勾选"Add README"，将仓库可见性设置为"Private"，并根据自己的喜好填写仓库名称和描述，然后点击"Create repository"完成创建第一个远程仓库。
+
+![](week-04-images/git-image15.png)
+
+之后，你将拥有一个没有任何额外文件的干净仓库。接下来你可以开始上传文件了。
+
+![](week-04-images/git-image16.png)
+
+获取仓库的命令是 `git clone`，但它需要仓库地址。你可以通过点击绿色的"Code"按钮找到仓库地址，你会看到 HTTPS 和 SSH 选项。通常，你可以使用这两种方法中的任何一种将仓库下载到本地机器（只有这样你才能修改和上传文件）。
+
+![](week-04-images/git-image17.png)
+
+一般来说，通过 HTTP 克隆的仓库适合临时下载和测试他人的仓库，但不建议用于自己的开发。为了更好的学习体验，你应该先设置 SSH 认证。
+
+
+---
+
+## 7. 绑定本地 SSH
+
+在 GitHub 中，"SSH 协议绑定"本质上意味着将你本地设备的 SSH 公钥与你的 GitHub 账号关联，允许 GitHub 通过 SSH 协议识别你的设备。这使你能够安全地操作远程仓库，而无需密码（如 clone、push 或 pull 代码）。
+
+简单来说：这就像给你的设备一张"GitHub 专属门禁卡"。绑定后，当你的设备通过 SSH 协议访问 GitHub 仓库时，GitHub 会验证这张"门禁卡"（你的 SSH 公钥）。一旦确认为你的授权设备，你就可以直接操作——不需要每次都输入账号密码。
+
+> 💡 什么是 SSH
+
+### 7.1 为什么需要 SSH 协议绑定？
+
+GitHub 支持两种主要的仓库操作协议：HTTPS 协议和 SSH 协议：
+
+- HTTPS 协议：每次操作（如 push）都需要输入 GitHub 账号密码（或个人访问令牌 PAT）。验证过程繁琐，且存在密码泄露风险。
+- SSH 协议：身份验证通过"密钥对"完成，因此不需要重复输入密码，且加密传输更加安全。
+
+"SSH 协议绑定"是启用 GitHub SSH 认证的前提步骤——只有将本地 SSH 公钥"绑定"到 GitHub 账号后，GitHub 才能识别你的设备并允许对仓库进行 SSH 操作。
+
+### 7.2 "绑定"的核心逻辑：SSH 密钥对的作用
+
+SSH 认证依赖于密钥对（公钥 + 私钥），它们是匹配的加密文件。生成后，你需要将"公钥"提供给 GitHub（"绑定"），而"私钥"留在本地设备上：
+
+1. 私钥：存储在本地设备（如电脑）的指定目录中（通常是 ~/.ssh/），充当"你的专属钥匙"，绝不能与任何人分享。
+2. 公钥：这是一把可以公开分享的"锁"——你需要将其复制到 GitHub 账号的"SSH keys list"中（"绑定"操作）。
+
+当你通过 SSH 操作 GitHub 仓库时（例如 git push git@github.com:xxx/xxx.git）：
+
+- 你的本地设备使用私钥加密"操作请求"并发送给 GitHub；
+- 收到请求后，GitHub 尝试使用你之前绑定的公钥进行解密；
+- 如果解密成功，你的设备被确认为已授权，操作被允许；否则，访问被拒绝。
+
+### 7.3 "绑定"的具体步骤（核心流程）
+
+一旦你理解了原理，实际操作就很简单——核心是"生成密钥对 → 上传公钥到 GitHub"：
+
+1. 本地生成 SSH 密钥对
+   1. 使用 Trae 获取公钥（推荐）
+      提示词：`Help me create the SSH key needed for GitHub login. My email is your_email@gmail.com , Please return the public key for me to copy`
+
+   ![](week-04-images/git-image18.png)
+
+   输入提示词后，你还需要在左侧终端按 Enter 键，否则命令会一直等待而不执行。由于 Trae 无法帮你执行任何条件判断，我们只需要一直按 Enter 即可。
+
+   最后，你会看到右侧的 Trae 返回了它读取的公钥。你只需复制它并准备在下一步中粘贴。
+
+   ![](week-04-images/git-image19.png) 2. 手动获取公钥
+   打开你的本地终端（在 Windows 上使用 Git Bash 或 PowerShell；在 macOS/Linux 上使用终端），输入以下命令（将 your_email@example.com 替换为你注册 GitHub 账号时使用的邮箱）：
+
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+
+   1. 按 Enter 接受默认值（默认文件路径，无密码，或根据需要设置密码）。这将在 ~/.ssh/ 目录中生成两个文件：
+      - id_ed25519：私钥（本地保存，**绝不分享**）；
+      - id_ed25519.pub：公钥（需要上传到 GitHub）。
+
+2. 将公钥"绑定"到你的 GitHub 账号
+
+这是核心绑定步骤——将本地公钥添加到 GitHub 账号的"SSH keys list"中：
+
+1. 复制公钥内容：
+   1. Trae：
+   2. Windows：用记事本打开 C:\Users\<your>\.ssh\id_ed25519.pub 并复制其所有内容；
+   3. macOS/Linux：在终端运行 cat ~/.ssh/id_ed25519.pub 并复制所有输出（从开头的 SSH-ed25519 到结尾的邮箱）。
+2. 登录 GitHub 并进入"SSH Key Management"页面：
+   1. 点击右上角头像 → Settings → 左侧菜单 SSH and GPG keys → 点击 New SSH key。
+      ![](week-04-images/git-image20.png)![](week-04-images/git-image21.png)
+   2. 输入任何标题（例如，your local computer's SSH），然后将你刚刚获取的 SSH 公钥粘贴到这里。
+
+![](week-04-images/git-image22.png)
+
+![](week-04-images/git-image23.png)
+
+3. 验证绑定是否成功
+
+在终端中输入以下命令（**Trae 也可以做以下操作**）来测试 GitHub 是否能识别你的设备：
+
+```bash
+ssh -T git@github.com
+```
+
+- 如果你看到类似 Hi [your GitHub username]! You've successfully authenticated... 的内容，说明你已成功绑定密钥；
+- 如果遇到错误，通常是因为公钥复制不完整、私钥权限过高（你的本地 ~/.ssh/ 目录应仅由你读写）等。根据需要检查这些问题。
+
+### 7.4 重要注意事项
+
+如果你有多个设备（如笔记本电脑和台式机），你需要为每个设备生成单独的 SSH 密钥对，并将每个公钥绑定到同一个 GitHub 账号——每个设备都有自己的"门禁卡"。
+
+切勿分享你的私钥（不要上传到 GitHub 或与他人分享），否则有人可能会冒充你操作你的仓库。如果私钥泄露，请立即从 GitHub 删除相应的公钥并生成新的密钥对。
+
+绑定 SSH 后，使用 SSH 格式的仓库地址（例如 git@github.com:username/repository.git）进行操作，而不是 HTTPS 格式（例如 https://github.com/username/repository.git）。如果你之前用 HTTPS 克隆了仓库，可以用 git remote set-url origin `<new>` 切换协议。
+
+<InfoCard icon="🔒" variant="warning">
+**私钥绝不能外传**
+
+私钥（`id_ed25519`，没有 `.pub`）就是你的身份凭证。**绝不要上传到 GitHub、贴进聊天框、或交给任何人。** 一旦泄露，别人就能冒充你操作仓库。这和前半段强调的「API Key 不能提交进仓库」是同一条安全底线：凡是密钥类的东西，都只留在本地或服务端，绝不外泄。
+</InfoCard>
+
+
+---
+
+## 8. 使用 Trae / Claude Code 进行 GitHub 操作
+
+我们已经解释了什么是 Git，什么是 GitHub，什么是 SSH，以及如何配置它。现在你可以自由使用 Trae（或本周前半段配好的 Claude Code、Codex、OpenCode）执行 Git 操作。首先，让我们学习如何将远程仓库克隆到本地机器。
+
+### 8.1 Git clone：下载现有仓库
+
+你可以直接告诉它你想克隆的仓库地址
+
+![](week-04-images/git-image24.png)
+
+### 8.2 Git pull：从远程仓库获取更新
+
+每次更新仓库之前，由于它可能由多人维护，你需要先拉取最新的更改。之后，你可以修改并推送文件。
+
+**记得包含文件夹名称及其相对或绝对路径，以避免推送到错误的仓库。**
+
+prompt:`Help me pull this repository AIID-TEST in ./AIID-TEST.`
+
+::: warning 协作里最容易翻车的一步
+**改动前一定先 `git pull`。** 后端项目往往多人同时在改，如果你不先拉取最新代码就埋头改，推送时很容易撞上冲突。养成「先拉取、再动手、最后推送」的顺序，能省掉大量麻烦。即便是让 AI 帮你操作，也要让它先 pull 再 push。
+:::
+
+### 8.3 Git commit & Git push：暂存更新并推送到 GitHub
+
+一切准备就绪后，你可以尝试修改本地文件，在文件夹中添加或删除项目。然后，让 Trae 检测更改并帮你推送到 GitHub。
+
+prompt:`I finished. Commit and push to the repository AIID-TEST in ./AIID-TEST.`
+
+![](week-04-images/git-image25.png)
+
+推送成功。现在你可以在 GitHub 上看到更新的内容了。
+
+小哲也发现，他这周前半段装的 CLI AI 编程工具（Claude Code、Codex、OpenCode）可以帮他把这些 Git/GitHub 操作全部跑完——生成密钥、clone、commit、push 都能交给它。但他记住了老师的话：**让 AI 代劳可以，但每一步推到了哪个仓库、提交了什么内容，自己心里必须有数。** 这正是本周一以贯之的态度——借 AI 的力，但不当甩手掌柜。
+
+### 8.4 参考资料
+
+- Pro Git book https://git-scm.com/book/en/v2
+- GitHub Docs https://docs.github.com/en
+
+---
+
+## 9. 小哲这周的转变
+
+> 小哲回头看自己周一的状态：连 `npm install` 都不敢敲，生怕把电脑弄坏，更别提在终端里干活。到了周末，他已经能用 Claude Code / Codex / OpenCode 在终端里装环境、跑项目、整理文件、部署开源项目；还配好了 Git 和 SSH，能给每一步改动打检查点，把代码推到 GitHub 和同学协作。
+>
+> 他在速查表最上面写了一句话：**「命令行不是要背下所有命令，而是建立一套能借 AI 的力、又对每一步心里有数的工作习惯。前半周我学会了让 AI 帮我敲命令，后半周我学会了用 Git 把每一步都存档——现在我终于敢动手了。」**
+
+---
+
+## 本周回顾
+
+<ProgressTracker title="第 4 周学习进度" :items="[
+  { title: '搞懂了 CLI 与现代命令行', description: '理解后端工作大量发生在终端里，CLI vs GUI', done: false },
+  { title: '会配会用 CLI AI 编程工具', description: 'Claude Code / Codex / OpenCode + 多家兼容 Anthropic 接口', done: false },
+  { title: '练了更多 CLI 实战玩法', description: '写需求文档 / 管文件夹 / 部署开源项目 / 讲解代码', done: false },
+  { title: '装好并初始化了 Git', description: '三系统安装 + git config 配置身份', done: false },
+  { title: '跑通了 GitHub 协作链路', description: '建仓库 / SSH 绑定 / clone / pull / commit / push', done: false }
+]" />
+
+**自测问题：**
+
+1. CLI AI 编程工具和 AI IDE 内置的 Agent 相比，主要差异体现在哪几个方面？为什么后端开发者比前端更离不开命令行？
+2. 为什么我们通常不直接用官方 Claude Code，而是接入兼容 Anthropic 接口的国产大模型（如 GLM、Kimi）？配置时 `ANTHROPIC_BASE_URL` 和 `ANTHROPIC_AUTH_TOKEN` 分别起什么作用？
+3. `git commit` 和 `git push` 分别解决了什么问题？为什么协作时要先 `git pull`？
+4. SSH 绑定为什么比每次输密码更安全？私钥和公钥分别该怎么处理？为什么说 API Key 和 SSH 私钥是同一条安全底线？
+
+---
+
+## 下周预告
+
+终端和 Git 都用顺了，下周小哲要给后端接上「记忆」：**数据库与 Supabase。** 你会理解后端为什么需要数据库来持久化数据，学会用 Supabase 快速搭起一个带表结构、能注册登录的后端服务，并把这周练熟的 Git 工作流和 CLI AI 编程工具用起来——把每一次数据库改动都规规矩矩地提交、推送。我们下周见。
