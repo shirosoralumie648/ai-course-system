@@ -11,7 +11,7 @@
         <div class="card-tag" v-if="card.tag">{{ card.tag }}</div>
         <h3 class="card-title">{{ card.title }}</h3>
         <p class="card-desc">{{ card.description }}</p>
-        <a v-if="card.link" :href="card.link" class="card-link">
+        <a v-if="card.link" :href="withBase(card.link)" class="card-link">
           {{ card.linkText || '了解更多' }} →
         </a>
       </div>
@@ -21,6 +21,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+import { withBase } from 'vitepress'
 
 defineProps({
   cards: {
