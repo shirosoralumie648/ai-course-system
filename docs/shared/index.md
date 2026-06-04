@@ -11,6 +11,16 @@
 | [Git 与 GitHub](/shared/git-github) | Git 基础操作和作业提交 |
 | [工具对比](/shared/tool-comparison) | Claude Code vs Codex 对比 |
 
+## 课程共用方法
+
+| 资源 | 说明 |
+|---|---|
+| [参考项目读法](/shared/reference-reading) | 把 `reference/` 转成课堂 Demo、作业、验收标准和期末证据 |
+| [课程 A reference 融入方案](/course-a/reference-integration) | 16 周逐周说明非 CS 产品原型课如何轻量借鉴 reference |
+| [课程 B reference 融入方案](/course-b/reference-integration) | 16 周逐周说明全栈产品工程课如何把 reference 落到 Demo、作业和证据 |
+| [图片需求清单](/shared/image-requirements) | 规划每周教程需要补充的教学图片 |
+| [周图片计划](/shared/week-image-plan) | 跟踪课程 A/B 图片素材补齐状态 |
+
 ## 工具不可用怎么办？
 
 如果 Claude Code 或 Codex 无法安装或使用：

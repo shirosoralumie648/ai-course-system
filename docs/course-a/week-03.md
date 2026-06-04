@@ -1,10 +1,10 @@
 # Week 03：Claude Code 快速上手——从终端开始的 AI 协作
 
-> 小林完成产品原型后，开始思考下一步：如何更高效地把想法变成代码？她听说过很多 AI 编程工具，但大多需要切换编辑器、学习新界面。直到她发现 Claude Code——一个直接在终端里工作的 AI 助手。不用离开命令行，不用改变工作流，只需要用自然语言说出需求，代码就写好了。
+> 小林完成 Lab 02 的本地项目后，开始思考下一步：如何更高效地把一个能运行的小项目继续改下去？她听说过很多 AI 编程工具，但大多需要切换编辑器、学习新界面。直到她发现 Claude Code——一个直接在终端里工作的 AI 助手。不用离开命令行，不用改变工作流，只需要用自然语言说出需求，就能让 AI 帮她读文件、写文档、改小功能。
 
-<ChapterIntroduction duration="约 2.5 小时" output="完成 Claude Code 安装配置，掌握核心操作技巧，能用自然语言驱动完整开发工作流" prerequisite="完成产品原型阶段，熟悉基本终端操作" :tags="['Claude Code', 'AI 编程', '终端工具', '自然语言编程', '开发效率']">
+<ChapterIntroduction duration="约 2.5 小时" output="完成 Claude Code 安装配置，掌握核心操作技巧，能用自然语言驱动低风险开发练习" prerequisite="完成 Lab 02，能在本地打开并启动一个小项目；熟悉最基本的终端操作" :tags="['Claude Code', 'AI 编程', '终端工具', '自然语言编程', '开发效率']">
 
-本章带你从零开始掌握 Claude Code 这个强大的 AI 编程助手。我们不只讲安装和命令，更重要的是教你如何用自然语言与 AI 协作，如何配置项目让 AI 更懂你的代码，如何把 Claude Code 融入日常开发工作流。学完这章，你将拥有一个 24 小时在线、永不疲倦的编程搭档。
+本章带你从零开始掌握 Claude Code 这个强大的 AI 编程助手。我们不要求你已经有完整产品原型，只需要你在 Week 02 跑通过一个本地项目。我们会从安全的小实验开始，学习如何用自然语言与 AI 协作，如何配置项目让 AI 更懂你的代码，如何把 Claude Code 融入日常开发工作流。
 
 </ChapterIntroduction>
 
@@ -17,11 +17,11 @@
 
 ---
 
-## 小林的故事：从产品原型到工具精通
+## 小林的故事：从本地项目到工具精通
 
-小林用 Bolt 做完产品原型后，心里有了底气——原来 AI 真能帮她把想法变成可运行的应用。但她也发现了问题：
+小林在 Lab 02 里已经把一个 AI IDE 生成的小项目跑到了本地，心里有了底气——原来 AI 真能帮她把想法变成可运行的应用。但她也发现了问题：
 
-**Bolt 的局限：**
+**只靠浏览器原型或 AI IDE 的局限：**
 - 只能在浏览器里用，不能操作本地项目
 - 生成的代码要手动复制粘贴
 - 无法接入 Git、数据库等开发工具
@@ -81,9 +81,9 @@
 | **Cursor** | AI IDE | 完整开发环境 | 功能强大但学习成本高 |
 
 **小林的选择逻辑：**
-1. 用 Bolt 快速做原型，验证想法
-2. 用 Claude Code 在本地深度开发
-3. 需要时配合 Copilot 提高编码速度
+1. 先用 AI IDE 跑通本地项目，确认自己能启动、修改、预览
+2. 再用 Claude Code 在这个本地项目里做低风险实验
+3. 后续有产品原型后，再把 Claude Code 带进真实项目迭代
 
 <InfoCard icon="🎯" variant="success">
 
@@ -96,6 +96,10 @@
 Claude Code 正好满足这两点——入门简单，但功能足够专业。
 
 </InfoCard>
+
+![Claude Code 终端界面四个关键区域示意](./week-03-images/claude-code-terminal-overview.png)
+
+*真实截图补齐前，先用这张示意图理解 Claude Code 的工作台：输入、计划、文件改动、执行结果。*
 
 ---
 
@@ -236,9 +240,10 @@ source ~/.bashrc  # 或 source ~/.zshrc
 ```
 我购买了 XXX 服务商的 Anthropic API，
 API 地址是 https://api.xxx.com，
-密钥是 sk-xxx。
+密钥已经保存在本机环境变量 ANTHROPIC_API_KEY 中。
 
 请帮我配置 Claude Code 的环境变量，
+不要在对话、截图或 Git 里写出真实密钥，
 确保能正常使用。
 ```
 
@@ -259,6 +264,10 @@ API 地址是 https://api.xxx.com，
 ## 快速开始：三个小实验
 
 安装完成后，不要急于在正式项目中使用。小林建议先做三个小实验，分别体验 Claude Code 的三种核心能力。
+
+![Claude Code 三个小实验的学习路径](./week-03-images/three-experiments-map.png)
+
+*先用低风险实验观察 Claude Code 的理解、创作和执行能力，再把它带进正式项目。*
 
 ### 实验 1：对话——感受 AI 的理解能力
 
@@ -681,6 +690,10 @@ Token 使用：45,230 / 200,000 (22.6%)
 ## 核心配置：让 Claude 更懂你的项目
 
 合理的配置能让 Claude Code 更好地适应你的项目。
+
+![CLAUDE.md 与 .claudeignore 如何影响 Claude Code 上下文](./week-03-images/project-memory-files.png)
+
+*一个文件负责告诉 Claude 项目规则，另一个文件负责告诉 Claude 哪些内容不要读。*
 
 ### CLAUDE.md - 项目记忆
 
@@ -1168,8 +1181,8 @@ export ANTHROPIC_BASE_URL="https://api.your-provider.com/v1"
 ```
 我购买了 XXX 的 API 服务，
 地址是 https://api.xxx.com，
-密钥是 sk-xxx。
-请帮我配置环境变量。
+密钥已经保存在本机环境变量 ANTHROPIC_API_KEY 中。
+请帮我配置环境变量，不要在对话、截图或 Git 里写出真实密钥。
 ```
 
 ---

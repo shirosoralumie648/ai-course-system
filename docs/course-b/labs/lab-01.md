@@ -1,120 +1,140 @@
-# Lab 01：Claude Code Bugfix
+# Lab 01：从设计原型到可运行前端代码
 
-> **完成比完美重要。** 这个实验不要求你一次做对，只要求你真实记录每一步。
+<ChapterIntroduction duration="2-3 小时" output="一个从设计稿还原出来的可运行页面 + 三种路径对比笔记 + 截图与 diff 证据" prerequisite="能手写基础 HTML/CSS；用过浏览器开发者工具；装好了一个支持 AI 的编辑器" :tags="['Design to Code', '多模态 AI', 'Figma', 'MasterGo', 'MCP', '前端验证']">
 
-<ChapterIntroduction duration="2-3 小时" output="实验记录 + 修复前后测试日志 + Git diff + 复盘" prerequisite="已安装 Claude Code；能使用 Git 和命令行" :tags="['Claude Code', 'diff 审查', '测试验证', '人工判断']">
-
-- Claude Code 如何阅读项目、理解错误、提出修复计划
-- 如何审查 Agent 的 diff，而不是盲目接受
-- 如何运行测试并用证据证明修改正确
+- 用设计稿、截图或文字原型生成一个真实可运行页面
+- 比较多模态 AI、平台导出、MCP 直连三种从原型到代码的路径
+- 用本地 URL、截图和 diff 证明 AI 输出经过人工把关
 
 </ChapterIntroduction>
 
 <StepBar :active="0" :items="[
-  { title: '① 运行失败测试', description: '观察错误，保存日志' },
-  { title: '② 让 Claude Code 分析', description: '观察它如何理解问题' },
-  { title: '③ 审查修复计划', description: '决定是否批准' },
-  { title: '④ 审查 diff + 测试', description: '逐行看改动，运行测试' },
-  { title: '⑤ 记录复盘', description: '总结收获和教训' }
+  { title: '准备原型', description: '整理设计稿、截图或页面规格' },
+  { title: '路径一实验', description: '用多模态 AI 从图生成代码' },
+  { title: '路径二实验', description: '尝试平台能力或导出插件' },
+  { title: '路径三评估', description: '评估 MCP 直连是否适合当前项目' },
+  { title: '本地运行', description: '启动页面并检查响应式' },
+  { title: '人工修订', description: '审查 diff，修正布局和文案' }
 ]" />
 
-## 实验背景
+## 实验目标
 
-本实验使用课程仓库内置示例项目 `repo-01-small-bugfix`，一个小型 Python 成绩工具库，包含故意保留的 bug。测试初始状态应失败。
+把一个设计原型转成浏览器里能运行的前端页面。重点不是让 AI 一次生成完美代码，而是学会判断：哪种路径适合当前设计稿，生成代码哪里可用，哪里必须由你接管。
 
-重点不是"让 Claude Code 直接改完"，而是观察和记录 Agentic Development 的工程过程。
+## 实验任务
 
-## 实验步骤
+为你的课程项目制作一个 landing page、登录页、dashboard 或核心业务表单页。页面必须来自明确设计输入，可以是 Figma、MasterGo、截图、手绘草图或文字原型。
 
-### 第一步：进入项目，运行失败测试
+必须完成：
+
+- 至少 1 个可运行页面
+- 至少 3 个页面区块，例如导航、主操作区、表单、卡片列表、结果预览
+- 桌面端和移动端各 1 张截图
+- 一份三种路径对比笔记
+- 一次人工修订 diff
+
+## 操作步骤
+
+### 1. 准备设计输入
+
+选择一种输入：
+
+- Figma 或 MasterGo 低保真页面
+- 竞品截图加结构说明
+- 手绘草图照片
+- 文字页面规格
+
+页面规格至少写清楚：页面目标、主要用户动作、核心文案、需要展示的数据、移动端布局要求。
+
+### 2. 路径一：多模态 AI 直接还原
+
+把设计稿截图或草图发给 AI 工具，要求它生成当前项目技术栈可用的页面代码。记录 prompt、生成结果和你观察到的问题。
+
+检查点：
+
+- 视觉层级是否接近原型
+- 布局是否响应式
+- 是否生成了无关依赖
+- 文案是否保留了产品含义
+
+### 3. 路径二：平台能力或插件导出
+
+如果使用 Figma、MasterGo 或类似工具，尝试平台自带 AI 生成、代码导出或插件能力。若暂时无法使用，写明原因，并用截图或文档链接说明你评估过哪种方式。
+
+记录：
+
+- 导出方式
+- 导出代码质量
+- 是否需要大量整理
+- 和多模态 AI 的差异
+
+### 4. 路径三：MCP 直连评估
+
+如果你的环境支持设计工具 MCP 或类似直连能力，尝试让 AI 读取设计文件结构；如果不支持，完成评估说明。
+
+评估重点：
+
+- 是否能读取 Frame、Auto Layout、组件层级
+- 是否比截图方式更准确
+- 是否适合团队长期使用
+
+### 5. 本地运行页面
+
+在你的项目中运行：
 
 ```bash
-cd ai-course-system/course-b-agentic-development/examples/repo-01-small-bugfix
-python -m unittest discover -s tests -v
+npm install
+npm run dev
 ```
 
-保存失败日志，记录你观察到的错误信息。
+保存终端输出和本地 URL，例如 `http://localhost:5173` 或 `http://localhost:3000`。
 
-### 第二步：让 Claude Code 分析问题
+### 6. 响应式检查和人工修订
 
-启动 Claude Code，让它阅读项目并分析测试失败原因。
+检查桌面端和移动端：
 
-**关键**：要求它先给计划，不要直接修改。
+- 文案不重叠
+- 按钮和输入框可点击
+- 页面没有横向滚动
+- 第一屏能看出产品主题
 
-### 第三步：审查修复计划
-
-Claude Code 给出计划后，你决定：
-- 批准：计划合理，继续执行
-- 修改：计划有部分问题，要求调整
-- 拒绝：计划方向错误，重新描述任务
-
-### 第四步：审查 diff，运行测试
-
-Claude Code 修改代码后：
-1. 用 `git diff` 查看所有改动
-2. 逐行审查：改了什么？为什么改？有没有改错？
-3. 运行测试：`python -m unittest discover -s tests -v`
-4. 记录测试结果
-
-**审查 diff 示例：**
-
-<DiffViewer title="示例：修复 calculate_average 函数" diff="@@ -10,7 +10,7 @@
- def calculate_average(scores):
-     if not scores:
--        return 0
-+        return None
-     total = 0
-     for score in scores:
--        total += score
--    return total / len(scores)
-+        if isinstance(score, (int, float)):
-+            total += score
-+    count = len([s for s in scores if isinstance(s, (int, float))])
-+    return total / count if count > 0 else None" />
-
-<InfoCard icon="🔍" variant="tip">
-**审查要点：**
-- 改动是否符合修复计划？
-- 是否引入了新的 bug？
-- 边界情况是否处理了？
-- 代码风格是否一致？
-</InfoCard>
-
-### 第五步：写实验记录和复盘
-
-<InfoCard icon="⚠️" variant="warning">
-**不要做的事：**
-- 不要跳过 diff 审查直接看测试结果
-- 不要测试没跑就声称通过
-- 不要在实验开始前看 `solution-notes.md`
-</InfoCard>
+至少做一次人工修订，例如调整间距、修正移动端布局、替换空泛文案、增加加载或错误状态。保存 `git diff`。
 
 ## 提交要求
 
-1. 初始测试失败日志
-2. Claude Code 的分析和修复计划记录
-3. 你的审批决定和理由
-4. Git diff 输出
-5. 修复后测试通过日志
-6. 复盘：这次实验让你对 Agentic Development 有什么新理解？
+- 设计输入截图、链接或页面规格
+- 本地运行 URL 和启动日志
+- 桌面端截图
+- 移动端截图
+- 三种路径对比笔记
+- AI prompt 或任务描述
+- `git diff` 或 PR diff 截图
 
-## 工具不可用怎么办？
+## 验收标准
 
-- 记录错误截图或日志（如 `claude --version` 输出）
-- 手动完成修复，保留完整 diff 和测试结果
-- 在报告中写明"Claude Code 不可用，以下为手动流程"
-- 这会被视为 Alpha 反馈，不会直接判零分
+- 页面可以本地运行
+- 页面主题和设计输入一致
+- 桌面端和移动端无明显错位、遮挡、横向滚动
+- 对三种路径有基于证据的比较
+- 至少有一次人工修订 diff
 
-<InfoCard icon="💡" variant="tip">
-**关键教训：** Agentic Development 的核心不是"让 AI 做完"，而是"让 AI 做，你审查"。如果你跳过了 diff 审查，你就不知道 AI 到底改了什么——这比不用 AI 更危险。
-</InfoCard>
+## 常见问题
+
+**没有 Figma 或 MasterGo 怎么办？**
+可以用截图、手绘草图或文字规格。关键是输入要具体，不能只写“帮我做个好看的页面”。
+
+**三种路径都必须实际跑通吗？**
+至少跑通多模态 AI 路径。平台导出和 MCP 如果环境不支持，可以提交评估说明和限制记录。
+
+**页面功能可以是假数据吗？**
+可以，但假数据必须符合产品场景。不要使用无关模板内容。
 
 ## 评分标准
 
 | 维度 | 分值 | 说明 |
-|---|---|---|
-| Bug 理解 | 20 分 | 是否准确描述了问题和原因 |
-| Diff 审查 | 25 分 | 是否逐行审查，是否有审批判断 |
-| 测试证据 | 25 分 | 是否有修复前后完整测试日志 |
-| 复盘质量 | 20 分 | 是否有真实收获 |
-| 提交完整性 | 10 分 | 6 项是否齐全 |
+|---|---:|---|
+| 设计输入质量 | 15 | 输入是否具体，可转成页面 |
+| 页面完成度 | 25 | 页面是否可运行，区块是否完整 |
+| 路径对比 | 20 | 是否比较三种 design-to-code 路径 |
+| 人工修订 | 20 | diff 是否体现真实审查和改进 |
+| 证据完整性 | 20 | 截图、日志、prompt、diff 是否齐全 |

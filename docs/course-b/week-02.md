@@ -189,6 +189,10 @@
 
 组件库数量很多,但小哲只需要先认识这几个最具代表性的。他用 React,所以重点看这一栏:
 
+![主流组件库视觉差异](week-02-images/component-library-comparison.png)
+
+*同样是按钮和卡片，不同组件库会带来不同的信息密度、定制空间和视觉气质。*
+
 | 组件库 | 框架 | 一句话定位 | 官网 |
 | :--- | :--- | :--- | :--- |
 | [Ant Design](https://ant.design) | React | 蚂蚁集团出品,企业级中后台的事实标准,组件覆盖面极广 | ant.design |
@@ -378,6 +382,10 @@ export default function WriterApp() {
 ## 5. 光有组件库还不够:设计 token 才是统一的关键
 
 小哲的写作助手界面搭好了,看起来很专业。他很满意。
+
+![设计 Token 系统](week-02-images/design-token-system.png)
+
+*设计 token 把颜色、字体、间距和圆角变成统一规则，再喂给不同产品。*
 
 然后他打开第二个项目「任务看板」,准备用同样的方法搭界面。
 

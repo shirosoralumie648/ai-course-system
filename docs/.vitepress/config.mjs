@@ -40,6 +40,7 @@ export default defineConfig({
           items: [
             { text: '课程介绍', link: '/course-a/' },
             { text: '教学日历', link: '/course-a/teaching-calendar' },
+            { text: 'Reference 融入方案', link: '/course-a/reference-integration' },
             { text: '每周教程', items: [
               { text: 'Week 01：游戏热身', link: '/course-a/week-01' },
               { text: 'Week 02：AI IDE 入门', link: '/course-a/week-02' },
@@ -58,10 +59,23 @@ export default defineConfig({
               { text: 'Week 15：Claude Agent SDK', link: '/course-a/week-15' },
               { text: 'Week 16：Agent Teams', link: '/course-a/week-16' }
             ]},
-            { text: '实验报告', items: [
-              { text: 'Lab 01：Prompt 对比实验', link: '/course-a/labs/lab-01' },
-              { text: 'Lab 02：AI 辅助写作修订', link: '/course-a/labs/lab-02' },
-              { text: 'Lab 03：个人 AI 工作流', link: '/course-a/labs/lab-03' }
+            { text: '逐周实验', items: [
+              { text: 'Lab 01：AI 原生游戏热身', link: '/course-a/labs/lab-01' },
+              { text: 'Lab 02：AI IDE 本地项目', link: '/course-a/labs/lab-02' },
+              { text: 'Lab 03：Claude Code 快速上手', link: '/course-a/labs/lab-03' },
+              { text: 'Lab 04：需求发现', link: '/course-a/labs/lab-04' },
+              { text: 'Lab 05：创意验证', link: '/course-a/labs/lab-05' },
+              { text: 'Lab 06：单页产品原型', link: '/course-a/labs/lab-06' },
+              { text: 'Lab 07：真实 AI 能力接入', link: '/course-a/labs/lab-07' },
+              { text: 'Lab 08：完整原型迭代', link: '/course-a/labs/lab-08' },
+              { text: 'Lab 09：Workflow 工作流', link: '/course-a/labs/lab-09' },
+              { text: 'Lab 10：自定义 Skill', link: '/course-a/labs/lab-10' },
+              { text: 'Lab 11：MCP 使用场景', link: '/course-a/labs/lab-11' },
+              { text: 'Lab 12：Superpowers 流程', link: '/course-a/labs/lab-12' },
+              { text: 'Lab 13：Spec Coding', link: '/course-a/labs/lab-13' },
+              { text: 'Lab 14：长运行任务', link: '/course-a/labs/lab-14' },
+              { text: 'Lab 15：Agent SDK 设计', link: '/course-a/labs/lab-15' },
+              { text: 'Lab 16：Agent Teams', link: '/course-a/labs/lab-16' }
             ]},
             { text: '期末项目', link: '/course-a/final-project' },
             { text: '评分标准', link: '/course-a/rubric' }
@@ -74,6 +88,7 @@ export default defineConfig({
           items: [
             { text: '课程介绍', link: '/course-b/' },
             { text: '教学日历', link: '/course-b/teaching-calendar' },
+            { text: 'Reference 融入方案', link: '/course-b/reference-integration' },
             { text: '每周教程', items: [
               { text: 'Week 01：从设计到代码', link: '/course-b/week-01' },
               { text: 'Week 02：组件库与多产品 UI', link: '/course-b/week-02' },
@@ -84,17 +99,31 @@ export default defineConfig({
               { text: 'Week 07：支付与部署', link: '/course-b/week-07' },
               { text: 'Week 08：Dify 知识库', link: '/course-b/week-08' },
               { text: 'Week 09：RAG 入门', link: '/course-b/week-09' },
-              { text: 'Week 10：高级 RAG', link: '/course-b/week-10' },
-              { text: 'Week 11：跨平台开发', link: '/course-b/week-11' },
+              { text: 'Week 10：高级 RAG 与企业知识库', link: '/course-b/week-10' },
+              { text: 'Week 11：跨平台 PWA', link: '/course-b/week-11' },
               { text: 'Week 12：小程序入门', link: '/course-b/week-12' },
               { text: 'Week 13：小程序后端', link: '/course-b/week-13' },
-              { text: 'Week 14：综合项目', link: '/course-b/final-project' }
+              { text: 'Week 14：跨平台整合', link: '/course-b/week-14' },
+              { text: 'Week 15：Agent 工程', link: '/course-b/week-15' },
+              { text: 'Week 16：期末评审', link: '/course-b/week-16' }
             ]},
             { text: '实验', items: [
-              { text: 'Lab 01：Claude Code Bugfix', link: '/course-b/labs/lab-01' },
-              { text: 'Lab 02：Codex Code Change', link: '/course-b/labs/lab-02' },
-              { text: 'Lab 03：Project Rules', link: '/course-b/labs/lab-03' },
-              { text: 'Lab 04：Code Review Skill', link: '/course-b/labs/lab-04' }
+              { text: 'Lab 01：设计到代码', link: '/course-b/labs/lab-01' },
+              { text: 'Lab 02：组件库与设计 token', link: '/course-b/labs/lab-02' },
+              { text: 'Lab 03：设计资产生成', link: '/course-b/labs/lab-03' },
+              { text: 'Lab 04：CLI、Git 与 AI 工程流', link: '/course-b/labs/lab-04' },
+              { text: 'Lab 05：Supabase 数据库', link: '/course-b/labs/lab-05' },
+              { text: 'Lab 06：AI 后端接口', link: '/course-b/labs/lab-06' },
+              { text: 'Lab 07：支付与部署', link: '/course-b/labs/lab-07' },
+              { text: 'Lab 08：Dify 知识库', link: '/course-b/labs/lab-08' },
+              { text: 'Lab 09：最小 RAG', link: '/course-b/labs/lab-09' },
+              { text: 'Lab 10：企业知识库评测', link: '/course-b/labs/lab-10' },
+              { text: 'Lab 11：PWA 跨平台', link: '/course-b/labs/lab-11' },
+              { text: 'Lab 12：小程序前端', link: '/course-b/labs/lab-12' },
+              { text: 'Lab 13：小程序后端', link: '/course-b/labs/lab-13' },
+              { text: 'Lab 14：跨平台最小实现', link: '/course-b/labs/lab-14' },
+              { text: 'Lab 15：Agent 工程规则', link: '/course-b/labs/lab-15' },
+              { text: 'Lab 16：期末技术评审', link: '/course-b/labs/lab-16' }
             ]},
             { text: '模板', items: [
               { text: 'CLAUDE.md 模板', link: '/course-b/templates/CLAUDE' },
@@ -115,6 +144,7 @@ export default defineConfig({
             { text: 'Codex CLI 安装', link: '/shared/codex-cli' },
             { text: 'Git 与 GitHub', link: '/shared/git-github' },
             { text: '工具对比', link: '/shared/tool-comparison' },
+            { text: '参考项目读法', link: '/shared/reference-reading' },
             { text: '图片需求清单', link: '/shared/image-requirements' }
           ]
         }

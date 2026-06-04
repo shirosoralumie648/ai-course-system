@@ -2,47 +2,17 @@
 
 > 小林用 Claude Code 做了几个月项目后，发现一个规律：越是随口说一句就让 AI 开干，后面改起来越费劲；反而是那些她提前想清楚、写成文档的需求，AI 一次就能做对。直到她看到 OpenAI 研究员 Sean Grove 的演讲，才明白这背后有个名字——Spec Coding（规范驱动开发）。那一刻她意识到，写代码的方式正在改变：规范本身就是代码。
 
-🎯学习目标
-
-Spec Coding规范驱动CLAUDE.mdRules工程化开发
+<ChapterIntroduction duration="约 2.5 小时" output="一份完整的功能规范文档、基于规范生成的生产级代码、以及从 Vibe Coding 到 Spec Coding 的渐进式工作流" prerequisite="学完前几章 Claude Code 基础和 MCP" :tags="['Spec Coding', '规范驱动', 'CLAUDE.md', 'Rules', '工程化开发']">
 
 本章带你理解 Spec Coding 的核心思想——为什么「代码是意图的有损投影」、为什么规范才是真正的「新代码」，以及如何在 Claude Code 中用 CLAUDE.md、Rules 目录、/plan 命令实践这套方法论。我们不只讲理念，更会通过完整案例对比 Vibe Coding 和 Spec Coding 的差异，让你看到规范驱动如何把 AI 编程从「碰运气」变成「按图施工」。
 
-⏱️
+</ChapterIntroduction>
 
-预计时长
-
-约 2.5 小时
-
-📦
-
-核心产出
-
-一份完整的功能规范文档、基于规范生成的生产级代码、以及从 Vibe Coding 到 Spec Coding 的渐进式工作流
-
-📋
-
-前置条件
-
-学完前几章 Claude Code 基础和 MCP
-
-0
-
-① 理解 Spec Coding
-
-Sean Grove 的「The New Code」与核心理念
-
-0
-
-② Claude Code 实践
-
-CLAUDE.md、Rules、/plan 工作流
-
-0
-
-③ 实战与策略
-
-完整案例、混合策略、最佳实践
+<StepBar :active="0" :items="[
+  { title: '① 理解 Spec Coding', description: 'Sean Grove 的「The New Code」与核心理念' },
+  { title: '② Claude Code 实践', description: 'CLAUDE.md、Rules、/plan 工作流' },
+  { title: '③ 实战与策略', description: '完整案例、混合策略、最佳实践' }
+]" />
 
 * * *
 
@@ -55,6 +25,10 @@ CLAUDE.md、Rules、/plan 工作流
 核心思路：**先写清楚规范，再让 AI 根据规范生成代码。规范是 source of truth，代码只是规范的实现产物。**
 
 小林的理解方式：如果说 Vibe Coding 是「边走边看」——想到哪说到哪，AI 跟着你的思路即兴发挥；那 Spec Coding 就是「按图施工」——先把设计图（规范）画好，AI 照着图纸精确实现。前者快但容易跑偏，后者慢一点但一次到位。
+
+![Vibe Coding 与 Spec Coding 流程对比](week-13-images/spec-vs-vibe-flow.png)
+
+*Vibe Coding 适合快速探索，Spec Coding 适合把探索结果沉淀成可验收的交付流程。*
 
 ## Sean Grove 的「The New Code」：一场改变思维的演讲
 
@@ -251,6 +225,10 @@ Brad Jolicoeur 指出：
 ## Spec Coding 的三层规范结构
 
 小林看了几篇文章后，发现业界对规范的组织方式有个共识：分三层写，从抽象到具体。
+
+![Spec Coding 三层结构](week-13-images/spec-three-layers.png)
+
+*三层规范先回答做什么，再回答怎么设计，最后约束具体实现细节。*
 
 0
 

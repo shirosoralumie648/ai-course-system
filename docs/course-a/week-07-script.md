@@ -438,7 +438,7 @@ VLM（Vision-Language Model）= 视觉 + 语言模型
 用户上传商品图片后，自动生成电商卖点文本和关键词。
 
 以下参考资料：
-API Key: sk-xxxxxx
+API Key 已保存在本机环境变量 SILICONFLOW_API_KEY 中，不要在对话、截图或 Git 里粘贴真实 Key。
 模型: Qwen/Qwen3-VL-8B-Instruct
 接口地址: https://api.siliconflow.cn/v1/chat/completions
 ```

@@ -320,6 +320,10 @@ MasterGo 的 AI 生成页面，本质上就是"输入一句话需求，模型先
 
 这一节，我们要解决的就是**设计素材的生产问题**。小哲会学到：用 AI 生成模型（如 NanoBanana）快速产出设计素材，并且保持风格一致。
 
+![AI 生成设计素材第一次出图界面](week-03-images/nanobanana-first-result.png)
+
+*占位界面展示了从提示词、生成结果到下载按钮的最小闭环，后续可以替换成真实平台截图。*
+
 ### 4.1 认识 NanoBanana：你的第一个 AI 绘图工具
 
 在开始讨论设计风格、提示词工程之前，我们先解决一件更重要的事：**确认你真的可以生成一张图片。**
@@ -562,31 +566,6 @@ shallow depth of field, bokeh background, 8k resolution, macro photography."
 ---
 
 ## 6. 小哲这周的转变
-
-> 小哲回头看自己第一天还原设计稿的那个下午：切图、量尺寸、抠标注，忙了半天还被一次改稿全部推翻。
->
-> 这周结束时他在笔记里写：**「设计稿从来不是一张图，而是一份结构化数据。我先在 Figma 和 MasterGo 里亲手把这层结构搭出来——Frame 是容器、Auto Layout 是 Flex、组件就是组件。等到要让工具把它转成代码时，我心里会有底：因为这层结构是我自己搭的，工具转出来对不对、漏没漏，我一眼就能看出来。」**
-
----
-
-## 本周回顾
-
-<ProgressTracker title="第 3 周学习进度" :items="[
-  { title: '搞懂了为什么先用设计工具', description: '设计工具解决信息分布与协作，写代码之前先想清楚', done: false },
-  { title: '会用 Figma 搭页面', description: 'Frame / 文字与元素 / Auto Layout / 可复用组件', done: false },
-  { title: '会用 MasterGo 搭页面', description: '与 Figma 的异同 + AI 生成页面', done: false },
-  { title: '看懂设计稿背后的结构', description: 'Frame 是容器、Auto Layout 是 Flex、组件就是组件，为把设计稿转代码打底', done: false }
-]" />
-
-**自测问题：**
-
-1. 为什么在写代码之前值得先用设计工具？它解决的到底是什么问题，和直接写 HTML/CSS 有什么区别？
-2. Figma 里的 Frame、Auto Layout、组件，分别对应前端代码里的什么？为什么说"设计稿本来就带着代码结构"？
-3. MasterGo 的 AI 生成页面是怎么工作的？它给出的结果为什么只能当初稿、还需要你来确认和调整？
-
----
-
-## 7. 小哲这周的转变
 
 > 小哲回头看自己第一天还原设计稿的那个下午：切图、量尺寸、抠标注，忙了半天还被一次改稿全部推翻。
 >

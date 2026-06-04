@@ -2,17 +2,17 @@
 
 > 小林一路从「不懂技术、靠 AI 做产品原型」走到现在，已经能让 Claude Code 帮她把想法落成可跑的代码。但她最近撞到一堵新墙：**AI 写出来的东西「能跑」，却谈不上「工程级」——没测试、没规划、需求一模糊就埋头乱写。** 这一周，她要给 Claude Code 装上一套叫 Superpowers 的技能框架，把它从一个「聪明的实习生」，升级成一支「有纪律的开发团队」。
 
-<ChapterIntroduction duration="2 课时（约 4 小时）" output="一套装好 Superpowers 的 Claude Code 工作环境 + 一份「从需求到交付」的完整技能流程笔记，可在自己的项目里反复套用" prerequisite="装过并能日常使用 Claude Code；理解 prompt / 上下文 / Skill 的基本概念；做过至少一个能跑的小项目" :tags="['Superpowers', 'Claude Code', 'TDD', 'Brainstorming', 'Writing Plans', 'Code Review', 'Subagent', 'Git Worktrees', '工程级开发']">
+<ChapterIntroduction duration="课堂核心约 2 小时，扩展阅读约 2 小时" output="一份「澄清需求 → 制定计划 → 完成前验证」的流程笔记，可在自己的项目里反复套用" prerequisite="装过并能日常使用 Claude Code；理解 prompt / 上下文 / Skill 的基本概念；做过至少一个能跑的小项目" :tags="['Superpowers', 'Claude Code', 'Clarify', 'Writing Plans', 'Verification', '工程纪律']">
 
-你会跟着小林走一遍「给 Claude Code 装纪律」的完整路径：先搞清楚 Superpowers 到底解决了什么问题，再亲手安装并体验第一个技能，然后逐类拆解它内置的 20 多个技能，最后用一个完整的「用户认证系统」案例把这些技能串成一条工程流水线。重点不是背技能名字，而是建立一种判断力：**什么时候该让 AI 慢下来想清楚、什么时候该强制它走流程、哪些环节必须有纪律兜底。**
+你会跟着小林走一遍「给 Claude Code 装纪律」的完整路径：先搞清楚 Superpowers 到底解决了什么问题，再亲手体验澄清需求、编写计划、完成前验证三个核心动作。TDD、worktrees、subagents、代码审查会作为选读拓展出现。重点不是背 20 多个技能名字，而是建立一种判断力：**什么时候该让 AI 慢下来想清楚、什么时候该写出计划、什么时候必须用验证证据说话。**
 
 </ChapterIntroduction>
 
 <StepBar :active="0" :items="[
   { title: '① 认识 Superpowers', description: '从实习生到开发团队' },
-  { title: '② 快速开始', description: '安装与第一个技能' },
-  { title: '③ 核心技能全景', description: '测试 / 调试 / 协作 / 审查' },
-  { title: '④ 完整工作流实战', description: '用认证系统串起来' },
+  { title: '② 课堂核心', description: '澄清 / 计划 / 验证' },
+  { title: '③ 选读技能', description: 'TDD / 调试 / 子代理 / worktrees' },
+  { title: '④ 小功能实战', description: '用一个低风险改动串起来' },
   { title: '⑤ 安装配置与避坑', description: '落地与最佳实践' }
 ]" />
 
@@ -35,13 +35,13 @@
 ::: tip 你将学到
 1. Superpowers 是什么、它到底解决了 AI 编程中的哪些痛点
 2. 如何安装 Superpowers，并体验第一个技能（brainstorming 头脑风暴）
-3. Superpowers 内置的 20 多个核心技能：测试、调试、协作、代码审查四大类
-4. 如何把多个技能串成一条「从需求到交付」的完整开发工作流
+3. Course A 的核心三步：clarify / plan / verify
+4. TDD、调试、代码审查、subagents、worktrees 的适用边界
 5. 安装配置的三种方式、常用技能速查、以及落地时的最佳实践与避坑
 
 最终产出：
-- 一套装好 Superpowers、能按工程流程干活的 Claude Code 工作环境
-- 一份可复用的「Superpowers 工作流」笔记，供后续任意项目直接套用
+- 一份可复用的「澄清 - 计划 - 验证」工作流笔记，供后续任意项目直接套用
+- 选做：安装并体验 1-2 个 Superpowers 技能
 :::
 
 ---
@@ -59,6 +59,10 @@
 
 小林刚听到这个比喻时很有共鸣：她之前让 Claude Code 做东西，确实像在带一个反应飞快、但没什么规矩的实习生——你不盯着，它就跳过测试、跳过规划，直接给你一坨「看起来能跑」的代码。Superpowers 要做的，就是给这个实习生配个「导师」，把流程纪律补上。
 </InfoCard>
+
+![Superpowers 纪律化工作流](week-12-images/superpowers-workflow.png)
+
+*Superpowers 把澄清、计划、TDD、调试和验收变成固定流程，减少 AI 随意发挥。*
 
 ### 1.2 为什么需要 Superpowers？
 
@@ -203,7 +207,31 @@ Superpowers 不是「魔法开关」，它是一组**技能集合**。了解技�
 
 ---
 
-## 3. Superpowers 核心技能详解
+## 3. Course A 核心：澄清、计划、验证
+
+对 Course A 来说，本周不需要把 Superpowers 的所有技能都学完。课堂核心只抓三件事：
+
+1. **澄清 Clarify**：需求模糊时，先问目标用户、输入输出、成功标准和限制条件。
+2. **计划 Plan**：超过 30 分钟的任务，先写任务分解、涉及文件、验收标准和风险点。
+3. **验证 Verify**：完成前必须拿出证据，例如运行命令、截图、diff、检查清单或人工走查记录。
+
+<InfoCard icon="🧭" variant="tip">
+
+**小林的课堂模板**
+
+```
+请先不要写代码。
+1. 用 3 个问题帮我澄清需求。
+2. 等我回答后，写一个 5 步以内的实施计划。
+3. 每一步都写出验证方式。
+4. 完成前不要说「完成」，先展示验证证据。
+```
+
+这就是本周必会内容。后面的 TDD、调试、worktrees、subagents 都是把这三件事进一步工程化的工具。
+
+</InfoCard>
+
+## 4. 选读：Superpowers 核心技能详解
 
 Superpowers 包含 **20+ 个可组合技能**，覆盖整个软件开发生命周期。让我们按类别了解它们。
 
@@ -215,6 +243,8 @@ Superpowers 包含 **20+ 个可组合技能**，覆盖整个软件开发生命�
   { icon: '🤝', tag: '协作', title: '协作类技能', description: 'brainstorming、writing-plans、executing-plans、并行代理、子代理、Git worktrees。', gradient: 'linear-gradient(135deg,#60a5fa,#2563eb)' },
   { icon: '👀', tag: '审查', title: '代码审查类技能', description: 'requesting-code-review 请求审查；receiving-code-review 接收并处理反馈。', gradient: 'linear-gradient(135deg,#c084fc,#7c3aed)' }
 ]" />
+
+> **选读说明：** 以下技能适合已经能稳定使用 Claude Code 的同学。Course A 作业只要求提交一次澄清-计划-验证记录，不要求走完整 TDD、创建 worktree 或启动 subagent。
 
 ### 🧪 测试类技能
 
@@ -437,9 +467,9 @@ Claude 会：
 
 ---
 
-## 4. Superpowers 完整工作流程
+## 5. Superpowers 完整工作流程（选读）
 
-Superpowers 的真正威力在于将多个技能组合成完整的开发流程。
+Superpowers 的真正威力在于将多个技能组合成完整的开发流程。下面这条是工程项目里的理想路径，不是 Course A 本周作业的硬性要求。课堂作业只需要跑通「澄清 → 计划 → 验证」。
 
 ### 标准开发流程
 
@@ -568,6 +598,10 @@ Claude 会：
 | **代码质量** | 依赖 AI 判断 | 强制代码审查 |
 | **可预测性** | 结果不稳定 | 流程可重复 |
 | **适用场景** | 简单任务、原型验证 | 复杂项目、生产代码 |
+
+![直接使用 Claude Code 与 Superpowers 对比](week-12-images/superpowers-vs-direct.png)
+
+*直接对话更快，纪律化流程更稳；任务越复杂，流程带来的收益越明显。*
 
 ### 形象比喻
 
@@ -745,11 +779,11 @@ Superpowers 的作用是**强化流程纪律**，而不是凭空创造能力。
 
 ## 11. 小林这周的转变
 
-> 小林回看这一周：她从「AI 写的东西能跑但不工程级」起步，最后给 Claude Code 装上了一套强制纪律——需求先澄清、任务先拆分、开发走 TDD、提交前过审查。
+> 小林回看这一周：她从「AI 写的东西能跑但不工程级」起步，最后给 Claude Code 装上了一套基本纪律——需求先澄清、任务先拆分、完成前先验证。TDD 和代码审查很重要，但对她这门入门课来说，先把这三步做稳更关键。
 >
 > 她在笔记里写下一句话：**「Superpowers 没有让 AI 变得更聪明，而是让它变得更有纪律。以前我得自己盯着它别跳过测试、别需求没想清就乱写；现在这些好习惯被内置成了技能，AI 会主动慢下来、按流程走。我终于不用一个人扮演那个『催它讲规矩』的角色了。」**
 
-而真正让她安心的，是这套框架背后那条和整门课一以贯之的主线：**AI 很能干，但方向盘和纪律得握在人手里。** 她现在的判断力比一周前更清晰了——简单脚本直接写、复杂项目上流程；需求模糊就让 brainstorming 来问、出 bug 就让 systematic-debugging 走四步、提交前一定过 code-review。这套「先完成、再完美」的节奏，加上对流程纪律的敬畏，就是这周最值钱的收获。
+而真正让她安心的，是这套框架背后那条和整门课一以贯之的主线：**AI 很能干，但方向盘和纪律得握在人手里。** 她现在的判断力比一周前更清晰了——简单脚本直接写、复杂项目先澄清和计划；需求模糊就让 AI 先问问题，完成前一定拿出验证证据。这套「先完成、再验证」的节奏，加上对流程纪律的敬畏，就是这周最值钱的收获。
 
 Superpowers 是一组**工程级开发技能集合**，让 Claude Code 从「聪明的实习生」变成「有纪律的开发团队」。把这一周的要点收束成三条，方便随时回看：
 
@@ -767,10 +801,10 @@ Superpowers 是一组**工程级开发技能集合**，让 Claude Code 从「聪
 
 <ProgressTracker title="Week 12 学习进度" :items="[
   { title: '搞懂了 Superpowers 解决什么问题', description: '从「能跑」到「工程级」，治的是 AI 缺纪律的四个痛点', done: false },
-  { title: '装好并体验了第一个技能', description: 'marketplace / 手动 / 项目级三种安装，跑通 brainstorming', done: false },
-  { title: '盘清了核心技能全景', description: '测试 / 调试 / 协作 / 代码审查四大类 20+ 技能', done: false },
-  { title: '串起了完整开发工作流', description: 'Brainstorming → 设计 → 计划 → 子代理 → TDD → 审查', done: false },
-  { title: '掌握了落地最佳实践', description: '触发关键词、技能组合、何时不必上纪律', done: false }
+  { title: '完成了一次需求澄清', description: 'AI 至少问过 3 个关键问题，你给出明确回答', done: false },
+  { title: '写出了一份短计划', description: '5 步以内，每步都有验收方式', done: false },
+  { title: '留下了验证证据', description: '命令输出、截图、diff 或人工走查记录至少一种', done: false },
+  { title: '知道哪些是选读', description: 'TDD、worktrees、subagents、代码审查属于进阶流程，可课后继续学', done: false }
 ]" />
 
 **自测问题：**

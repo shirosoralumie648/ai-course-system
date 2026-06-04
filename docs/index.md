@@ -21,7 +21,7 @@ features:
     link: /course-a/
   - icon: 🧩
     title: 课程 B：AI 全栈开发实战
-    details: 面向有编程基础的学生。覆盖前端、组件库、数据库、AI 接口、支付部署、RAG、跨平台和 Agent 工程。12 周课程。
+    details: 面向有编程基础的学生。覆盖前端、组件库、数据库、AI 接口、支付部署、RAG、跨平台和 Agent 工程。16 周课程。
     link: /course-b/
   - icon: 📚
     title: 共享资源
@@ -60,7 +60,7 @@ features:
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     tag: '课程 B',
     title: 'AI 全栈开发实战',
-    description: '12 周课程。完成前端、数据库、AI 接口、支付部署、Dify、RAG、跨平台和 Agent 工程实践。',
+    description: '16 周课程。完成前端、数据库、AI 接口、支付部署、Dify、RAG、跨平台和 Agent 工程实践。',
     link: '/course-b/',
     linkText: '查看课程 B'
   },

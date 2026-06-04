@@ -46,6 +46,10 @@ npm run dev
 
 CLI 指的是通过终端或命令提示符，用纯文本命令来操作软件应用，而不是依赖图形界面（GUI——你可以简单理解为电脑或手机上带按钮、可以点击操作的界面，不需要输入命令）。
 
+![终端结构标注](week-04-images/terminal-anatomy.png)
+
+*终端可以拆成当前位置、提示符、输入命令和输出结果四块来看。*
+
 > 在 Windows 上，常见的终端有「命令提示符（cmd）」和「PowerShell」。你可以在电脑的运行/搜索框中输入「cmd」或「powershell」来启动这些命令行程序。
 
 ![](week-04-images/cli-image1.png)![](week-04-images/cli-image2.png)
@@ -532,10 +536,11 @@ npm i -g @openai/codex
 
 ![](week-04-images/cli-image30.png)
 
-接下来，我们需要把获取到的 Key 填入下面的提示词中，并把整段提示词交给 Trae，让它帮你完成整个配置过程：
+接下来，不要把真实 Key 填进聊天。先把 Key 放入本机环境变量或本地配置文件，再把变量名和配置目标交给 Trae，让它帮你完成整个配置过程：
 
 ````bash
-My API key is: [Paste your obtained sk-xxxxx key here]
+My API key is already stored locally as the environment variable CODEX_API_KEY.
+Do not print, paste, screenshot, or commit the real key.
 
 Please help me complete the following configuration tasks:
 

@@ -2,47 +2,17 @@
 
 > 小林用了几周 Claude Code，发现每次都要重复解释「代码风格要怎样」「提交信息要符合什么规范」。直到她听说有个叫 Skills 的东西，可以把这些要求写成「技能包」，让 Claude Code 一次学会、永久记住。那一刻她意识到，AI 编程不只是对话，更是知识沉淀。
 
-🎯学习目标
-
-SkillsClaude Code知识管理工作流自动化团队协作
+<ChapterIntroduction duration="约 2.5 小时" output="至少 3 个自定义 Skill，一份可提交到 Git 的 .claude/skills/ 目录，以及用自然语言驱动技能的实操流程" prerequisite="学完前几章 Claude Code 基础" :tags="['Skills', 'Claude Code', '知识管理', '工作流', '自动化', '团队协作']">
 
 本章带你搞懂 Skills 到底是什么、为什么它能让 Claude Code 从「通用助手」变成「团队专家」，以及怎么一步步创建、安装、管理自己的技能包。我们不只讲概念，而是把每一个 SKILL.md 的字段、每一种触发方式、每一个实战案例都过一遍。学完这章，你的 Claude Code 就不再需要重复指令，而是一个「有经验、懂规矩」的数字员工。
 
-⏱️
+</ChapterIntroduction>
 
-预计时长
-
-约 2.5 小时
-
-📦
-
-核心产出
-
-至少 3 个自定义 Skill，一份可提交到 Git 的 .claude/skills/ 目录，以及用自然语言驱动技能的实操流程
-
-📋
-
-前置条件
-
-学完前几章 Claude Code 基础
-
-0
-
-① 认识 Skills
-
-理解技能包本质与价值
-
-0
-
-② 安装与使用
-
-find-skills、社区技能、实战体验
-
-0
-
-③ 创建自定义 Skills
-
-SKILL.md 结构、创建方法、最佳实践
+<StepBar :active="0" :items="[
+  { title: '① 认识 Skills', description: '理解技能包本质与价值' },
+  { title: '② 安装与使用', description: 'find-skills、社区技能、实战体验' },
+  { title: '③ 创建自定义 Skills', description: 'SKILL.md 结构、创建方法、最佳实践' }
+]" />
 
 * * *
 
@@ -305,6 +275,10 @@ SKILL.md 结构、创建方法、最佳实践
 
 体验过几个 Skills 后，小林开始想深入理解它的工作原理。
 
+![Skill 目录结构](week-10-images/skill-folder-structure.png)
+
+*一个 Skill 通常由入口说明、辅助脚本、模板和参考资料组成，按需加载进对话。*
+
 ### Skills 是什么？
 
 **Skills 是存储在文件系统中的「技能包」**，包含：
@@ -480,6 +454,10 @@ tags:                         # 标签
 ## Skills vs MCP：有什么区别？
 
 很多初学者会混淆 Skills 和 MCP，小林一开始也搞不清。后来她发现，它们是完全不同的两个东西。
+
+![Skills 与 MCP 边界对比](week-10-images/skills-vs-mcp.png)
+
+*Skills 告诉 AI 怎么做，MCP 给 AI 接上能用的工具和外部服务。*
 
 ### 核心区别
 

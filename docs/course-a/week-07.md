@@ -2,49 +2,19 @@
 
 > 小林做完前几周的原型后，兴奋地给朋友演示。朋友点了「生成文案」按钮，页面显示「AI 正在思考中...」，然后——什么都没发生。小林尴尬地解释：「哦，这个按钮还没接真的 AI，只是个样子。」朋友笑了：「那不就是个假按钮吗？」那一刻小林意识到，原型再漂亮，不能真正工作就只是个空壳。这周她要让原型「活」起来。
 
-🎯学习目标
-
-API 调用密钥管理文本生成图像 AI安全实践
+<ChapterIntroduction duration="约 3-4 小时" output="一个可验证的 AI 原型功能：文本生成优先，包含 Mock 与真实调用两种验证记录" prerequisite="完成前几周的原型开发" :tags="['API 调用', '密钥管理', '文本生成', 'Mock 验证', '安全实践']">
 
 前几周我们做出了能点击、能交互的原型，但它还不能真正「工作」——按钮点了没反应，数据都是写死的。这周我们要跨过关键的一步：接入真实的 AI 能力。
 
-你会学到什么是 API、如何安全地管理密钥、怎么让 Claude Code 帮你把 AI 服务接进原型里。我们会接入三种 AI 能力：文本生成（DeepSeek）、图像理解（Qwen3 VL）、图像生成（Seedream）。学完这周，你的原型就不再是演示品，而是真正能解决问题的应用。
+你会学到什么是 API、如何安全地管理密钥、怎么让 Claude Code 帮你把一个 AI 服务接进原型里。课堂核心只做 **1 个 AI 能力**，建议从文本生成（DeepSeek 或 MiniMax）开始；图像理解、图像生成作为选读扩展。学完这周，你的原型至少有一个从前端到后端、从 Mock 到真实调用都能验证的 AI 功能。
 
-⏱️
+</ChapterIntroduction>
 
-预计时长
-
-约 3-4 小时
-
-📦
-
-核心产出
-
-一个能真正调用 AI 服务的原型，包含文本生成、图像理解、图像生成功能
-
-📋
-
-前置条件
-
-完成前几周的原型开发
-
-0
-
-① 理解 API
-
-API 是什么、为什么需要它
-
-0
-
-② 接入文本 AI
-
-DeepSeek 文本生成实战
-
-0
-
-③ 接入图像 AI
-
-图像理解与生成
+<StepBar :active="0" :items="[
+  { title: '① 理解 API', description: 'API 是什么、为什么需要它' },
+  { title: '② 接入一个文本 AI', description: 'DeepSeek 文本生成实战' },
+  { title: '③ 验证链路', description: 'Mock / 真实调用 / 成本日志' }
+]" />
 
 * * *
 
@@ -81,6 +51,10 @@ DeepSeek 文本生成实战
 你不能直接冲进厨房喊「给我做个菜」，你得通过服务员。你告诉服务员「我要一份宫保鸡丁」（发送请求），服务员把单子递给厨房，厨房做好后，服务员把菜端给你（返回结果）。
 
 API 就是这个「服务员」——它规定了你怎么点菜（请求格式）、厨房怎么回应（响应格式）。
+
+![AI API 调用链路：前端、后端代理与模型 API](./week-07-images/api-call-data-flow.png)
+
+*前端负责收集输入和展示结果，后端代理负责保护密钥、校验参数、调用模型 API。*
 
 ### API 的核心要素
 
@@ -145,7 +119,7 @@ AI 助手
 -   ✅ 定期更换密钥
 -   ✅ 如怀疑泄露，立即重置
 
-**本周练习说明：** 我们会直接把 API Key 粘贴到 Claude Code 对话中让它帮我们集成。这只是为了学习方便！真实项目中绝不能这样做，要用配置文件 + 环境变量的方式。
+**本周练习说明：** 不把真实 API Key 粘贴到 Claude Code、群聊、作业截图或 Git。你可以告诉 Claude Code「我已经把 Key 放进 `.env.local` 的 `DEEPSEEK_API_KEY` 里」，让它只读取环境变量名和后端路由，不接触真实密钥。
 
 0
 
@@ -155,15 +129,15 @@ API 是什么、为什么需要它
 
 0
 
-② 接入文本 AI
+② 接入一个文本 AI
 
 DeepSeek 文本生成实战
 
 0
 
-③ 接入图像 AI
+③ 验证链路
 
-图像理解与生成
+Mock / 真实调用 / 成本日志
 
 * * *
 
@@ -220,7 +194,7 @@ DeepSeek 文本生成实战
 -   点击左侧菜单「API Keys」
 -   点击「Create new API key」
 -   给 Key 起个名字（比如「学习测试」）
--   复制生成的 Key（格式类似：`sk-8573341c39fc44315aadc071c53rh7d2`）
+-   复制生成的 Key，保存到密码管理器或本机环境变量中；课堂文档、聊天记录和截图只写 `DEEPSEEK_API_KEY` 这个变量名
 
 ![创建 API Key](./week-06-images/index-2026-01-20-13-58-32.png)
 
@@ -270,15 +244,20 @@ curl https://api.deepseek.com/v1/chat/completions \
 
 ### 第 3 步：让 Claude Code 帮你集成
 
-这是最神奇的一步。小林不需要自己写代码，只需要把需求、API Key、官方示例一起告诉 Claude Code。
+这是最神奇的一步。小林不需要自己写太多代码，但她必须守住安全边界：**只把需求、环境变量名和官方示例告诉 Claude Code，不把真实 API Key 发进对话**。
 
 **打开 Claude Code，输入：**
 
 ```
 参考这个调用方法，帮我支持文案生成功能，可以基于商品信息点击后生成对应抖音电商文案，多种风格。
 
+安全要求：
+1. 真实 API Key 已经写入本机 .env.local，变量名是 DEEPSEEK_API_KEY
+2. 不要在代码、对话、截图或 Git 里写出真实 Key
+3. 前端只能调用我们自己的后端路由，不允许直接请求模型平台
+4. 先实现 mock 模式，再接真实调用，方便课堂验证
+
 以下参考资料：
-api key：sk-8573341c39fc44315aadc071c53rh7d2
 api 请求参考：
 curl https://api.deepseek.com/v1/chat/completions \
   -H "Content-Type: application/json" \
@@ -305,14 +284,31 @@ curl https://api.deepseek.com/v1/chat/completions \
 
 几分钟后，你的「生成文案」按钮就真正能工作了！
 
+<InfoCard icon="🧪" variant="warning">
+
+**参考卡片：AI 调用的安全验证标准**
+
+参考 `vercel/ai-chatbot` 的后端路由思路、OpenAI Cookbook 的环境变量写法，以及常见生产项目的日志习惯，本周只认这 4 条证据：
+
+1. **环境边界**：真实 Key 只在 `.env.local` 或部署平台环境变量中，代码和聊天记录只出现 `DEEPSEEK_API_KEY`。
+2. **后端路由**：前端请求 `/api/generate-copy` 这类自己的后端接口，由后端再调用模型平台。
+3. **错误与成本日志**：后端至少记录请求时间、模型名、是否成功、错误类型、token/费用估算；日志里不打印用户隐私和完整 Key。
+4. **Mock 回退**：没有 Key、余额不足或课堂网络不稳定时，后端返回 mock 文案，并在界面标注「模拟结果」，保证原型可演示、可验证。
+
+参考资料：`vercel/ai-chatbot`、OpenAI Cookbook、OpenAI 兼容 Chat Completions 示例。
+
+</InfoCard>
+
 ### 实际效果展示
 
-**src/api/deepseek.js - 新增 DeepSeek API 调用：**
+**后端路由或服务端函数 - 新增 DeepSeek API 调用：**
+
+> 注意：下面代码只能放在后端路由、Server Action、云函数或本地服务端文件里。浏览器端代码不能读取 `process.env.DEEPSEEK_API_KEY`，也不能直接请求模型平台。
 
 ```diff
 @@ -0,0 +1,38 @@
 +// DeepSeek API 配置
-+const DEEPSEEK_API_KEY = 'sk-8573341c39fc44315aadc071c53rh7d2'
++const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
 +const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions'
 +
 +/**
@@ -326,6 +322,10 @@ curl https://api.deepseek.com/v1/chat/completions \
 +  const userPrompt = `请为以下商品生成${style}风格的抖音电商文案：\n\n${productInfo}`
 +
 +  try {
++    if (!DEEPSEEK_API_KEY) {
++      throw new Error('缺少 DEEPSEEK_API_KEY 环境变量')
++    }
++
 +    const response = await fetch(DEEPSEEK_API_URL, {
 +      method: 'POST',
 +      headers: {
@@ -461,6 +461,11 @@ curl https://api.deepseek.com/v1/chat/completions \
 
 ![DeepSeek 使用记录](./week-06-images/index-2026-01-20-14-43-10.png)
 
+4.  **切换 Mock / Real 模式**
+    -   将环境变量 `AI_MODE=mock` 时，页面仍能返回固定示例文案
+    -   将 `AI_MODE=real` 且本机有 `DEEPSEEK_API_KEY` 时，再走真实模型调用
+    -   两种模式都要截图，证明你能区分「原型演示」和「真实计费调用」
+
 小林试了一下，发现每次生成的文案确实不同，而且都很贴合商品信息。她兴奋地截图发给表姐：「这次是真的 AI 了！」
 
 ### 其他文本模型选择：MiniMax
@@ -515,6 +520,8 @@ DeepSeek 文本生成实战
 * * *
 
 ## 接入图像理解：Qwen3 VL
+
+> **选读扩展：** 下面的图像理解内容适合已经完成文本生成主线的同学。Course A 本周必做只要求 1 个 AI 能力；如果课堂时间有限，到这里可以先跳到「本周回顾与自测」。
 
 文本生成搞定后，小林发现了新问题：她的原型里用户可以上传商品图片，但只用文本模型的话，AI 看不懂图片内容，生成的文案可能会文不对题。
 
@@ -593,7 +600,7 @@ DeepSeek 文本生成实战
 基于下面的图生文接口 API，帮我实现：用户上传商品图片后，自动生成电商卖点文本和关键词。
 
 以下参考资料：
-API Key: sk-xxxxxx
+API Key 已经保存在本机环境变量 SILICONFLOW_API_KEY 中，不要在对话或 Git 里写出真实值。
 模型: Qwen/Qwen3-VL-8B-Instruct
 接口地址: https://api.siliconflow.cn/v1/chat/completions
 
@@ -629,6 +636,8 @@ API Key: sk-xxxxxx
 * * *
 
 ## 接入图像生成：Seedream
+
+> **选读扩展：** 图像生成通常涉及更高成本、更复杂的素材版权和内容审核问题。Course A 本周不要求接入 Seedream；可以只阅读调用链路和安全边界。
 
 小林的原型还有一个功能：根据商品生成营销海报。这需要「文生图」能力——输入文字描述，AI 生成图片。
 
@@ -690,13 +699,13 @@ API Key: sk-xxxxxx
 请你基于下面 API，帮我实现电商业务的常见功能（例如海报生成、抖音电商首图生成等）
 
 以下参考资料：
-API Key: xxxxxx
+API Key 已经保存在本机环境变量 ARK_API_KEY 中，不要在对话或 Git 里写出真实值。
 模型: doubao-seedream-4-5-251128
 
 参考代码：
 curl -X POST https://ark.cn-beijing.volces.com/api/v3/images/generations \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer xxxxxxx" \
+  -H "Authorization: Bearer ${ARK_API_KEY}" \
   -d '{
     "model": "doubao-seedream-4-5-251128",
     "prompt": "将图1的服装换为图2的服装",
@@ -730,7 +739,7 @@ curl -X POST https://ark.cn-beijing.volces.com/api/v3/images/generations \
 + * @returns {Promise<string>} 生成的图片 URL
 + */
 +export async function generateProductPoster(prompt, referenceImages = []) {
-+  const API_KEY = 'xxxxxx'
++  const API_KEY = process.env.ARK_API_KEY
 +  const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/images/generations'
 +
 +  const requestBody = {
@@ -933,21 +942,21 @@ Week 07 学习进度
 
 3
 
-接入文本生成 API
+接入一个 AI 能力
 
-成功接入 DeepSeek 或 MiniMax，实现文案生成功能
+优先接入 DeepSeek 或 MiniMax 文本生成；图像理解/图像生成作为选做
 
 4
 
-接入图像理解 API
+完成 Mock / Real 验证
 
-成功接入 Qwen3 VL，实现图片分析功能
+能说明何时返回模拟结果、何时产生真实模型调用和费用记录
 
 5
 
-接入图像生成 API
+守住后端与密钥边界
 
-成功接入 Seedream，实现海报生成功能
+真实 Key 不进聊天、不进 Git、不进前端代码
 
 6
 
@@ -977,7 +986,7 @@ Week 07 学习进度
 
 **4\. 安全实践**
 
--   为什么本周练习中我们直接把 Key 粘贴给 Claude Code，但真实项目不能这样做？
+-   为什么本周练习也不能把真实 Key 粘贴给 Claude Code？正确的替代表达是什么？
 -   正确的密钥管理方式是什么？
 
 **5\. 调试能力**
@@ -997,7 +1006,7 @@ Week 07 学习进度
 2.  **Claude Code 是好帮手**：不需要自己写代码，把需求和示例给它就行
 3.  **安全第一**：API Key 就是钱包钥匙，绝对不能泄露
 
-下周要把这些 AI 能力串起来，做一个完整的业务流程！
+下周要在这个安全边界上，把 AI 功能嵌进更完整的业务流程！
 
 * * *
 
@@ -1007,11 +1016,17 @@ Week 07 学习进度
 
 **任务目标：** 为你的原型接入至少一个 AI 能力
 
-**必做（三选一）：**
+**必做：选择 1 个 AI 能力**
 
-1.  **文本生成**：接入 DeepSeek 或 MiniMax，实现文案生成功能
-2.  **图像理解**：接入 Qwen3 VL，实现图片分析功能
-3.  **图像生成**：接入 Seedream 或 Recraft，实现海报生成功能
+1.  **推荐：文本生成**，接入 DeepSeek 或 MiniMax，实现文案生成功能
+2.  **可选替代：图像理解**，接入 Qwen3 VL，实现图片分析功能
+3.  **可选替代：图像生成**，接入 Seedream 或 Recraft，实现海报生成功能
+
+无论选择哪一种，都必须提供：
+
+-   Mock 模式截图：没有真实调用也能演示流程
+-   Real 模式截图：至少 1 次真实调用或平台用量记录
+-   密钥安全截图：`.env.local` 被 `.gitignore` 忽略，代码只出现环境变量名
 
 **选做（加分项）：**
 
@@ -1111,7 +1126,7 @@ A: 常见原因：
 
 **Q4: 可以在前端直接调用 API 吗？**
 
-A: 本周练习中我们在前端直接调用，但**真实项目不推荐这样做**，原因：
+A: 不建议。即使是本周练习，也应该通过后端路由调用模型平台，原因：
 
 -   API Key 会暴露在浏览器中
 -   用户可以在开发者工具中看到你的 Key

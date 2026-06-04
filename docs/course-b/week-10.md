@@ -15,6 +15,10 @@
 
 </ChapterIntroduction>
 
+![企业级 RAG 治理图](week-10-images/enterprise-rag-governance.png)
+
+*企业级 RAG 不是把文档全塞进去，而是先治理知识，再编排检索，最后让回答可追溯。*
+
 <StepBar :active="0" :items="[
   { title: '① 最小 RAG 为什么翻车', description: '演示能用 ≠ 真实能用' },
   { title: '② 业务侧:先想清楚要解决什么', description: '知识库不是上传页面' },

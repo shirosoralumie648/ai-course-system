@@ -324,6 +324,10 @@ task-manager/
 
 在日常开发中，我们会遇到各种不同的任务。下面介绍几种最常见任务的 AI 辅助工作流。
 
+![AI 协作工作流总览](week-09-images/ai-workflow-overview.png)
+
+*AI 协作工作流：把输入、分解、执行、验证和复盘串成可检查的闭环。*
+
 ### 任务 1：开发新功能
 
 **场景：** 产品经理给了你一个新需求，需要实现一个新功能。
@@ -830,6 +834,10 @@ router.post('/register', async (req, res) => {
 ## 第四步：建立项目知识库
 
 为了让 AI 更好地理解你的项目，建议在项目中建立知识库。这样 AI 就能按照你的规范和习惯工作。
+
+![项目知识库关系图](week-09-images/project-knowledge-base.png)
+
+*项目知识库把 README、FAQ、ADR 和 CLAUDE.md 连接起来，让 AI 既懂项目现状，也懂团队约定。*
 
 ### 创建 CLAUDE.md 文件
 

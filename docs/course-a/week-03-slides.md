@@ -19,7 +19,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 # 小林的进化
 
-> 用 Bolt 做完产品原型后
+> 完成 Lab 02 本地项目后
 > 她发现了新的问题：
 > 只能在浏览器里用，无法操作本地项目
 
@@ -32,7 +32,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 - ⏱️ **学习时长**：约 2.5 小时
 - 🎯 **产出物**：完成 Claude Code 安装配置，掌握核心操作
-- 📚 **前置要求**：完成产品原型阶段，熟悉基本终端操作
+- 📚 **前置要求**：完成 Lab 02，能在本地启动一个小项目，熟悉基本终端操作
 - 🏷️ **关键词**：Claude Code、AI 编程、终端工具、自然语言编程
 
 ---
@@ -60,7 +60,7 @@ backgroundImage: url('https://marp.app/assets/hero-background.svg')
 
 # Bolt 的局限
 
-小林用 Bolt 做原型时发现的问题：
+小林把 Lab 02 的本地项目跑起来后发现的问题：
 
 ❌ 只能在浏览器里用，不能操作本地项目
 ❌ 生成的代码要手动复制粘贴
@@ -225,7 +225,8 @@ source ~/.bashrc
 ```
 我购买了 XXX 服务商的 Anthropic API，
 API 地址是 https://api.xxx.com，
-密钥是 sk-xxx。
+密钥已经保存在本机环境变量 ANTHROPIC_API_KEY 中。
+不要在对话、截图或 Git 里写出真实密钥。
 请帮我配置 Claude Code 的环境变量。
 ```
 

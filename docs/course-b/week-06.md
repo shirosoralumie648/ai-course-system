@@ -33,7 +33,7 @@ async function askAI(userInput) {
     headers: {
       'Content-Type': 'application/json',
       // 致命错误：密钥被打包进前端代码
-      Authorization: 'Bearer sk-proj-abc123真实密钥写在这里'
+      Authorization: 'Bearer <EXAMPLE_DO_NOT_USE>'
     },
     body: JSON.stringify({
       model: 'gpt-4o-mini',
@@ -98,6 +98,10 @@ async function askAI(userInput) {
 小哲冷静下来想：盗刷的根源，是密钥跟着前端代码一起发给了浏览器。那正确的做法是什么？
 
 答案是 **后端代理（Backend Proxy）**：前端不再直接连 AI 服务，而是先把请求发给小哲自己的后端，由后端带着密钥去调 AI，再把结果转发回前端。密钥从头到尾只待在服务器上，永远不下发到浏览器。
+
+![前端直连 AI 与后端代理对比](week-06-images/ai-api-backend-proxy.png)
+
+*AI 密钥必须留在服务器端，前端只应该调用自己的后端接口。*
 
 用前面餐厅那个比喻：前端是点餐的客人，AI 服务是后厨，**密钥是进后厨的门禁卡**。你不会把门禁卡复印一份发给每个客人，而是让服务员（后端）拿着卡进出，客人只管点单和取餐。
 
@@ -178,7 +182,7 @@ my-api-project/
 
 ```bash
 # .env —— 这个文件绝对不能提交到 Git
-OPENAI_API_KEY=sk-proj-你的真实密钥
+OPENAI_API_KEY=<SERVER_SIDE_API_KEY>
 AI_API_BASE=https://api.openai.com/v1
 ```
 
@@ -266,7 +270,7 @@ module.exports = router
 <DiffViewer title="审查 AI 代码：把硬编码密钥改成环境变量" diff="@@ -1,5 +1,5 @@
    const response = await fetch(url, {
      headers: {
--      Authorization: 'Bearer sk-proj-abc123真实密钥'
+-      Authorization: 'Bearer <EXAMPLE_DO_NOT_USE>'
 +      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
      }
    })" />
@@ -442,6 +446,10 @@ router.post('/api/ai/chat', async (req, res) => {
 接口能跑通、扛得住了，小哲又发现一个体验问题：AI 生成一段长回答要好几秒，这期间页面一片空白，用户以为卡死了。
 
 你肯定见过 ChatGPT 那种「一个字一个字蹦出来」的效果——这就是 **流式响应（Streaming）**。模型边生成边返回，前端边收边显示，用户几乎立刻看到第一个字。
+
+![普通响应与流式响应对比](week-06-images/streaming-response-compare.png)
+
+*流式响应把等待时间变成可见进度，用户不会盯着空白页面干等。*
 
 <AiChat botName="汉堡店智能助手" status="流式响应中" :showInput="false" :initialMessages="[
   { role: 'user', content: '招牌牛肉汉堡里有什么？' },

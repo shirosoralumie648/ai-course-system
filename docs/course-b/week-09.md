@@ -731,6 +731,10 @@ LLM 裁判的优势在于能进行更接近人类的整体性判断——它可�
 
 讲清原理和选型还不够，课程的规矩是：**能讲清楚，还得能跑起来。** 小哲决定不用任何 RAG 框架，纯手写一遍，把前面拆解的「切分向量化 → 检索 → 增强生成」三步都落到代码上。环境只需要一个 Embedding 接口和一个对话模型接口（用你上周配好的任意 API 即可）。
 
+![最小 RAG 代码运行流程](week-09-images/minimal-rag-pipeline.png)
+
+*最小 RAG 的目标是把切分、向量化、检索、拼提示词和回答生成跑成一条完整链路。*
+
 ```python
 import numpy as np
 from openai import OpenAI

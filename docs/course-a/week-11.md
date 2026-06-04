@@ -2,47 +2,17 @@
 
 > 小林做完前几章的练习后，一直以为 Claude Code 就是个「会写代码的终端」。直到有天她想让它顺手看一眼 GitHub 上的 Issue，结果发现它真能做到——前提是先接上一个叫 MCP 的东西。那一刻她意识到，Claude Code 远不只能读写本地文件，它可以连上整个外部世界。
 
-🎯学习目标
+<ChapterIntroduction duration="约 2 小时" output="一份可提交到 Git 的 MCP 配置草稿，以及一份不含真实 token 的安全边界说明" prerequisite="学完前几章 Claude Code 基础" :tags="['MCP', 'Claude Code', '工具集成', '配置管理', '安全边界']">
 
-MCPClaude Code工具集成配置管理自然语言运维
+本章带你搞懂 MCP（Model Context Protocol）到底是什么、为什么它能让 Claude Code 连接外部工具，以及配置文件应该长什么样。Course A 的课堂边界是**读懂配置、写出配置草稿、说明安全风险**；不要求在课堂或作业中接入真实 GitHub token、数据库密码或生产服务。
 
-本章带你搞懂 MCP（Model Context Protocol）到底是什么、为什么它能让 Claude Code 脱胎换骨，以及怎么一步步把 GitHub、SQLite、文件系统、浏览器这些外部能力接进来。我们不只讲概念，而是把每一段配置、每一条命令、每一种传输方式都过一遍。学完这章，你的 Claude Code 就不再是孤岛，而是一个能访问真实数据和服务的超级助手。
+</ChapterIntroduction>
 
-⏱️
-
-预计时长
-
-约 2 小时
-
-📦
-
-核心产出
-
-一份可提交到 Git 的 .claude/mcp.json 配置，以及用自然语言驱动 GitHub / 数据库 / 浏览器的实操流程
-
-📋
-
-前置条件
-
-学完前几章 Claude Code 基础
-
-0
-
-① 认识 MCP
-
-理解协议本质与价值
-
-0
-
-② 配置接入
-
-配置文件、传输方式、自然语言管理
-
-0
-
-③ 实战与运维
-
-实战示例、调试、最佳实践
+<StepBar :active="0" :items="[
+  { title: '① 认识 MCP', description: '理解协议本质与价值' },
+  { title: '② 配置接入', description: '配置文件、传输方式、自然语言管理' },
+  { title: '③ 实战与运维', description: '实战示例、调试、最佳实践' }
+]" />
 
 * * *
 
@@ -55,6 +25,10 @@ MCPClaude Code工具集成配置管理自然语言运维
 简单来说，MCP 让 Claude Code 从一个「只能读写本地文件」的 AI 助手，变成一个「能访问 GitHub、数据库、API、云服务」的超级助手！
 
 小林的理解方式：如果 Claude Code 是一台主机，那 MCP 就是 USB 接口——本身不做事，但你插上什么外设，它就多出什么能力。插上 GitHub，它会管 Issue；插上数据库，它会查数据；插上浏览器，它会截图。
+
+![Claude Code MCP 架构关系](week-11-images/mcp-architecture.png)
+
+*MCP 负责把 Claude Code、本地工具和远程服务接起来，真正的能力来自连接后的工具调用。*
 
 ## 为什么需要在 Claude Code 中使用 MCP？
 
@@ -124,7 +98,7 @@ Claude Code 的 MCP 配置文件位于：
 在 Claude Code 中，你不需要手动编辑配置文件或记忆命令，直接用自然语言描述即可：
 
 ```
-你：帮我添加 GitHub MCP 服务器，我的 token 是 ghp_xxx
+你：帮我添加 GitHub MCP 服务器。真实 token 已经在本机环境变量 GITHUB_PERSONAL_ACCESS_TOKEN 中，请只在配置草稿里引用这个变量名，不要让我把 token 发到聊天或 Git。
 
 Claude：我来帮你配置 GitHub MCP 服务器...
 
@@ -143,7 +117,7 @@ Claude：好的，我来配置 SQLite MCP 服务器...
 Claude：我来添加这个远程 MCP 服务器...
 ```
 
-这正是小林作为非技术出身的人最喜欢的一点：她不用背 JSON 字段名，只要把需求说清楚，Claude Code 会替她把配置写对。但她也提醒自己——配置写完后还是要打开文件看一眼，知道它到底改了什么，这样出问题时心里有数。
+这正是小林作为非技术出身的人最喜欢的一点：她不用背 JSON 字段名，只要把需求说清楚，Claude Code 会替她把配置写对。但她也提醒自己——配置写完后还是要打开文件看一眼，知道它到底改了什么；如果涉及 token、数据库密码、云服务凭证，只能出现变量名或占位符，不能出现真实值。
 
 ### 步骤 3：验证配置
 
@@ -224,12 +198,14 @@ Claude：[会自动运行诊断，分析配置文件，检查服务器状态]
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "$GITHUB_PERSONAL_ACCESS_TOKEN"
       }
     }
   }
 }
 ```
+
+> **课堂边界：** 用户级配置可以在自己电脑上引用环境变量，但不要把真实 token 写进 `~/.claude.json` 截图或提交物。项目级配置更要保持为草稿，只出现 `$变量名` 或 `<PLACEHOLDER>`。
 
 ### 项目级配置（推荐）
 
@@ -251,6 +227,8 @@ Claude：[会自动运行诊断，分析配置文件，检查服务器状态]
 -   团队成员可以共享配置（提交到 Git）
 -   不同项目使用不同的 MCP 服务
 -   配置更灵活，不会污染全局设置
+
+**Course A 提交要求：** 提交 `.claude/mcp.example.json` 或配置截图即可；真实 `.env`、真实 token、真实数据库连接串不进 Git、不进聊天、不进作业。
 
 ### 传输方式配置
 
@@ -278,7 +256,7 @@ Claude Code 支持三种传输方式：
       "url": "https://api.example.com/mcp",
       "transport": "http",
       "headers": {
-        "Authorization": "Bearer your-token"
+        "Authorization": "Bearer ${EXAMPLE_MCP_TOKEN}"
       }
     }
   }
@@ -302,9 +280,42 @@ Claude Code 支持三种传输方式：
 
 STDIO 适合本地工具（在你电脑上起一个进程），HTTP 和 SSE 适合远程服务（连别人的服务器）。绝大多数官方服务器都是 STDIO 方式，用 `npx` 临时拉起来就行，不用预装。
 
+<InfoCard icon="🧩" variant="tip">
+
+**参考卡片：最小 MCP Tool Schema**
+
+参考 `modelcontextprotocol/servers` 和 `modelcontextprotocol/typescript-sdk` 的写法，一个工具至少要把「名字、说明、输入结构、处理函数」说清楚。Course A 不要求你写完整服务器，但要能读懂下面这种最小结构：
+
+```ts
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+
+const server = new McpServer({ name: "course-a-demo", version: "0.1.0" });
+
+server.tool(
+  "summarize_note",
+  "把一段课堂笔记压缩成三条要点",
+  {
+    note: z.string().min(1).describe("不含隐私和密钥的课堂笔记"),
+  },
+  async ({ note }) => ({
+    content: [{ type: "text", text: note.slice(0, 120) }],
+  })
+);
+```
+
+检查点：
+
+- 工具名要具体，不要叫 `do_anything`。
+- 输入 schema 要限制字段类型和含义。
+- 工具说明要写清副作用；读操作、写操作、外部网络操作要分开。
+- schema 示例里只能放假数据，不放真实 token、数据库地址或用户隐私。
+
+</InfoCard>
+
 ## 实战示例
 
-配置打通后，小林挑了几个自己日常真会用到的场景试了一遍。
+配置草稿读懂后，小林挑了几个自己日常真会用到的场景做**模拟走查**。如果你在课后已经有安全的测试 token，可以在本机尝试；课堂作业只要求提交配置草稿和风险说明。
 
 ### 示例 1：GitHub 工作流自动化
 
@@ -367,6 +378,10 @@ Claude：
 ## 调试技巧
 
 接外部服务难免出岔子。小林第一次配 SQLite 就因为路径写错连不上，于是她总结了一套排查方法。
+
+![MCP 调试路径](week-11-images/mcp-debug-flow.png)
+
+*调试 MCP 时先看配置，再看启动，再看日志和工具调用结果，逐层缩小问题范围。*
 
 ### 使用自然语言诊断
 
@@ -474,8 +489,8 @@ MCP 服务器状态：
 ```json
 {
   "env": {
-    "GITHUB_TOKEN": "$GITHUB_TOKEN",  // ✓ 好 - 从环境变量读取
-    "GITHUB_TOKEN": "ghp_abc123"       // ✗ 不好 - 硬编码密钥
+        "GITHUB_TOKEN": "$GITHUB_TOKEN",  // ✓ 好 - 从环境变量读取
+    "GITHUB_TOKEN": "ghp_abc123"       // ✗ 不好 - 硬编码密钥；这里只是反例，不能照抄
   }
 }
 ```
@@ -587,7 +602,7 @@ Claude Desktop
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "$GITHUB_PERSONAL_ACCESS_TOKEN"
       }
     }
   }
@@ -763,13 +778,13 @@ Week 11 学习进度
 
 跑通实战与调试
 
-能配 GitHub/SQLite/Puppeteer，并用 /doctor 排查连接问题
+能写 GitHub/SQLite/Puppeteer 的配置草稿，并用 /doctor 的思路排查连接问题
 
 6
 
 记住安全最佳实践
 
-密钥环境变量化、版本锁定、项目级配置、文档化
+配置草稿只放变量名，真实密钥不进聊天、不进 Git；同时做到版本锁定、项目级配置、文档化
 
 **自测问题：**
 
