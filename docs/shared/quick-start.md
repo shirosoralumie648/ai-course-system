@@ -359,11 +359,19 @@ openclaw configure
 
 按提示填入服务商、BaseURL、API Key、协议和模型 ID。配置完成后新开一个终端：
 
+![OpenClaw 命令行填写 BaseURL](./quick-start-assets/openclaw-baseurl.png)
+
+![OpenClaw 命令行配置摘要](./quick-start-assets/openclaw-config-summary.png)
+
 ```bash
 openclaw tui
 ```
 
+![OpenClaw TUI 选择模型](./quick-start-assets/openclaw-tui-model.png)
+
 如果后续手动修改了 `contextWindow`，记得再次执行：
+
+![OpenClaw 修改上下文窗口](./quick-start-assets/openclaw-context-window.png)
 
 ```bash
 openclaw gateway restart
@@ -380,6 +388,8 @@ openclaw gateway restart
 | API Key | `YOUR_API_KEY` |
 | 协议类型 | `anthropic-messages` 或 `openai-completions` |
 | 模型 ID | `MiniMax-M2.7` 或自己套餐内的模型 |
+
+![飞书妙搭自定义模型配置](./quick-start-assets/feishu-miaoda-custom-model.png)
 
 配置后先做一句话测试，再用于真实项目。
 
@@ -399,6 +409,12 @@ https://hermesagent.org.cn/
 4. 如果工具没有自动获取模型，在模型广场复制模型 ID 手动输入。
 5. 最长上下文设置为目标模型支持的值，手册示例填写 `200000`。
 6. 新开一个窗口唤起 Hermes，确认模型能回复。
+
+![Hermes Agent 填写 API Host](./quick-start-assets/hermes-api-host.png)
+
+![Hermes Agent 选择 API 模式](./quick-start-assets/hermes-api-mode.png)
+
+![Hermes Agent 完成配置后启动](./quick-start-assets/hermes-complete.png)
 
 验收方式：让 Hermes 回答一句话，再让它读取一个小目录或生成一个简单文件说明。
 
@@ -468,6 +484,12 @@ OpenAI 兼容模型要改两处：
 4. 进入模型选择界面后选择 `MiniMax-M2.7` 或自己的模型。
 5. 回车确认后开始使用。
 
+![OpenCode 输入 models 进入模型选择](./quick-start-assets/opencode-models.png)
+
+![OpenCode 选择自定义模型提供商](./quick-start-assets/opencode-provider.png)
+
+![OpenCode 选择模型](./quick-start-assets/opencode-model-select.png)
+
 注意：
 
 1. `opencode.json` 不能写注释。
@@ -493,6 +515,10 @@ https://www.codebuddy.cn/work/
 6. BaseURL 按协议填写：Anthropic 兼容用 `https://api.svips.org`，OpenAI 兼容用 `https://api.svips.org/v1`。
 7. API Key 填后台生成的密钥。
 8. 保存后在模型列表里选择刚添加的模型。
+
+![WorkBuddy 添加自定义模型](./quick-start-assets/workbuddy-custom-model.png)
+
+![WorkBuddy 在模型列表选择自定义模型](./quick-start-assets/workbuddy-model-list.png)
 
 如果自定义模型没有立即出现在列表里，多刷新或重试几次。手册里说明这可能是软件列表刷新问题。
 
@@ -569,6 +595,8 @@ Cline 可以通过 VS Code、Cursor、Trae 等编辑器插件市场安装。
 | OpenAI Compatible | `https://api.svips.org/v1` | 套餐内 OpenAI 兼容模型 |
 | Anthropic Compatible | `https://api.svips.org` | 套餐内 Anthropic 兼容模型 |
 
+![Cline 配置自定义 Provider](./quick-start-assets/cline-provider.png)
+
 ### Cherry Studio
 
 下载地址：
@@ -593,6 +621,10 @@ https://www.cherry-ai.com/download
 https://api.svips.org/v1
 ```
 
+![Cherry Studio 添加模型服务商](./quick-start-assets/cherry-provider.png)
+
+![Cherry Studio 选择模型测试](./quick-start-assets/cherry-chat-test.png)
+
 ### AutoClaw
 
 下载地址：
@@ -616,6 +648,8 @@ https://autoglm.zhipuai.cn/autoclaw/
 https://api.svips.org/v1
 ```
 
+![AutoClaw 添加自定义模型](./quick-start-assets/autoclaw-custom-model.png)
+
 ### RooCode
 
 RooCode 可以在 VS Code、Cursor、Trae 等编辑器的插件市场安装。
@@ -631,6 +665,8 @@ RooCode 可以在 VS Code、Cursor、Trae 等编辑器的插件市场安装。
 7. 保存后用一个小任务验证。
 
 建议第一次验证只让 RooCode 读取当前目录并说明文件结构，不要直接让它修改项目。
+
+![RooCode 配置自定义 Provider](./quick-start-assets/roocode-provider.png)
 
 ### ChatBox
 
@@ -656,6 +692,10 @@ https://chatboxai.app/zh/
 5. 填模型 ID。
 6. 保存后新建对话测试。
 
+![ChatBox 配置 OpenAI 兼容 API](./quick-start-assets/chatbox-openai-settings.png)
+
+![ChatBox 配置 Claude API 兼容模式](./quick-start-assets/chatbox-claude-settings.png)
+
 ### Qclaw
 
 下载地址：
@@ -675,6 +715,8 @@ https://qclaw.qq.com/?channel=5004&bd_vid=8422091002495405437
 5. 保存后选择该模型。
 
 如果填写的是 OpenAI 兼容协议，接口地址后面需要拼 `/v1`。
+
+![Qclaw 添加自定义模型](./quick-start-assets/qclaw-custom-model.png)
 
 ### OneClaw
 
@@ -700,6 +742,10 @@ https://oneclaw.cn/
 | `openai-completions` | `https://api.svips.org/v1` |
 | `anthropic-messages` | `https://api.svips.org` |
 
+![OneClaw 选择手动配置](./quick-start-assets/oneclaw-manual-config.png)
+
+![OneClaw 填写模型配置表单](./quick-start-assets/oneclaw-form.png)
+
 ### Trae
 
 Trae 支持自定义模型。手册把 OpenAI 协议和 Anthropic 协议分开说明。
@@ -717,12 +763,18 @@ OpenAI 兼容接入：
 https://api.svips.org/v1
 ```
 
+![Trae 选择 OpenAI 兼容自定义模型](./quick-start-assets/trae-openai-models.png)
+
+![Trae 填写 OpenAI 兼容模型配置](./quick-start-assets/trae-openai-form.png)
+
 Anthropic 兼容接入：
 
 1. 选择 Claude / Anthropic 兼容接口。
 2. 按界面字段填写 BaseURL、API Key、模型 ID。
 3. 如果界面要求完整 endpoint，再按工具提示补 `/v1/messages`。
 4. 保存后选择模型测试。
+
+![Trae 填写 Anthropic 兼容模型配置](./quick-start-assets/trae-anthropic-form.png)
 
 ### Cursor
 
@@ -740,6 +792,10 @@ Cursor 需要会员才可以添加自定义模型。
 8. 点击 `Add` 保存。
 
 建议先在一个空项目中测试模型回复，再用于课程项目。
+
+![Cursor 打开 Models 设置](./quick-start-assets/cursor-models.png)
+
+![Cursor 添加自定义模型](./quick-start-assets/cursor-custom-model.png)
 
 ### VS Code
 
