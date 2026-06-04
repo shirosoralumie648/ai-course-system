@@ -6,6 +6,7 @@
 
 | 工具 | 说明 |
 |---|---|
+| [快速接入教程](/shared/quick-start) | 从账号、兑换、API Key 到常用工具接入的一页式流程 |
 | [Claude Code](/shared/claude-code) | 安装和验证 Claude Code |
 | [Codex CLI](/shared/codex-cli) | 安装和验证 Codex CLI |
 | [Git 与 GitHub](/shared/git-github) | Git 基础操作和作业提交 |

@@ -140,6 +140,7 @@ export default defineConfig({
           text: '共享资源',
           items: [
             { text: '安装指南', link: '/shared/' },
+            { text: '快速接入教程', link: '/shared/quick-start' },
             { text: 'Claude Code 安装', link: '/shared/claude-code' },
             { text: 'Codex CLI 安装', link: '/shared/codex-cli' },
             { text: 'Git 与 GitHub', link: '/shared/git-github' },
