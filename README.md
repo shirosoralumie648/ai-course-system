@@ -1,6 +1,6 @@
 # AI Course System
 
-面向高校和训练营的 AI 课程体系。当前仓库以 `docs/` VitePress 课程网站为发布主体，根目录保留教师备课材料、示例项目、评分表和共享资源。
+面向高校和训练营的 AI 课程体系。当前仓库以 `docs/` VitePress 课程网站为发布主体，根目录只保留站点入口、部署配置和轻量 reference 索引。
 
 正式站点：
 
@@ -49,31 +49,31 @@ ai-course-system/
 │   ├── course-a/                     # 课程 A 网站内容
 │   ├── course-b/                     # 课程 B 网站内容
 │   └── shared/                       # 网站公共资源页
-├── course-a-prompt-engineering/       # 课程 A 早期教师备课材料和 PPT 源材料
-├── course-b-agentic-development/      # 课程 B 示例项目、模板、教师材料和实验支撑文件
-├── shared/                           # 根目录公共安装和工具材料
-├── assessment/                       # 通用评分表和互评表
+├── reference/                        # reference 说明与课程映射索引
+│   ├── README.md                     # 本地 reference 库使用说明
+│   └── catalog/                      # 课程映射和参考项目清单
 └── .gitignore                        # 排除依赖、构建产物和本地归档
 ```
 
-## 示例项目
+## 实验体系
 
-课程 B 的部分实验会引用根目录示例项目：
+课程 A 和课程 B 都按 16 周组织，每周都有对应实验：
 
-- `course-b-agentic-development/examples/repo-01-small-bugfix/`
-- `course-b-agentic-development/examples/repo-02-feature-development/`
+- 课程 A 实验：`docs/course-a/labs/lab-01.md` 至 `lab-16.md`
+- 课程 B 实验：`docs/course-b/labs/lab-01.md` 至 `lab-16.md`
 
-这些示例项目需要保留在仓库中，否则 `docs/course-b/labs/` 中的实验命令会失效。
+当前实验以学生自己的项目、课堂工具输出、截图、日志、diff 和验证记录为主要证据，不依赖旧版根目录练习仓库。
 
 ## 整理规则
 
-已过时的规划、交付报告、参考分析、组件调试页、构建产物和本地执行计划不作为发布内容提交。它们已整理到 `.local-archive/outdated-docs/2026-06-01/`，并由 `.gitignore` 排除。
+已过时的规划、交付报告、参考分析、组件调试页、构建产物、本地执行计划和下载的源文档不作为发布内容提交。旧版根目录课程材料、示例仓库和评分表已经从发布仓库移除。
 
 保留内容的判断标准：
 
 - `docs/` 中当前站点需要的页面、图片、主题和配置。
-- 课程实验明确引用的示例项目、模板和支撑材料。
-- 教师备课仍可能用到的课程源材料、PPT、评分表和安装指南。
+- `reference/README.md` 与 `reference/catalog/` 中的参考项目说明和课程映射。
+- 课程实验明确引用的模板、图片和支撑材料必须放在 `docs/` 下。
+- 大型 reference 源码克隆放在本地 `reference/repos/`，由 `.gitignore` 排除，不随课程网站仓库发布。
 
 ## 当前状态
 

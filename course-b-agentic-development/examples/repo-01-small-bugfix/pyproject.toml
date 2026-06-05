@@ -1,5 +1,0 @@
-[project]
-name = "repo-01-small-bugfix"
-version = "0.1.0"
-description = "Teaching repo for Lab 01 Claude Code bugfix"
-requires-python = ">=3.10"

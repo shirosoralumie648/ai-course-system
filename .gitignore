@@ -36,3 +36,7 @@ venv/
 Thumbs.db
 .idea/
 .vscode/
+
+# Local cloned reference repositories. Keep reference/README.md and
+# reference/catalog/ tracked as the lightweight index.
+reference/repos/
