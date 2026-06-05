@@ -1,3 +1,17 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+last_updated: "2026-06-05T10:40:13.797Z"
+progress:
+  total_phases: 6
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+---
+
 # State: Course C Business AI Operations
 
 ## Project Reference
@@ -44,6 +58,7 @@ during planning.
 - Templates and compliance artifacts are created before weekly high-risk content.
 - Week content is split into core business weeks, high-risk business weeks, and
   enterprise API/MCP week to keep safety boundaries clear.
+
 - Full verification and reference map updates are collected in Phase 6.
 - Professional business tasks must use authoritative domain sources, not only
   code/tool documentation.
