@@ -31,6 +31,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '课程 A', link: '/course-a/' },
       { text: '课程 B', link: '/course-b/' },
+      { text: '课程 C', link: '/course-c/' },
       { text: '共享资源', link: '/shared/' }
     ],
     sidebar: {
@@ -132,6 +133,18 @@ export default defineConfig({
             ]},
             { text: '期末项目', link: '/course-b/final-project' },
             { text: '评分标准', link: '/course-b/rubric' }
+          ]
+        }
+      ],
+      '/course-c/': [
+        {
+          text: '课程 C：企业 AI 运营系统',
+          items: [
+            { text: '课程介绍', link: '/course-c/' },
+            { text: '教学日历', link: '/course-c/teaching-calendar' },
+            { text: 'Reference 融入方案', link: '/course-c/reference-integration' },
+            { text: '期末项目', link: '/course-c/final-project' },
+            { text: '评分标准', link: '/course-c/rubric' }
           ]
         }
       ],

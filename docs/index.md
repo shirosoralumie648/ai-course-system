@@ -23,6 +23,10 @@ features:
     title: 课程 B：AI 全栈开发实战
     details: 面向有编程基础的学生。覆盖前端、组件库、数据库、AI 接口、支付部署、RAG、跨平台和 Agent 工程。16 周课程。
     link: /course-b/
+  - icon: 🏢
+    title: 课程 C：企业 AI 运营系统
+    details: 面向企业员工、管理者和业务学生。把 Codex / Claude Code 用到报告、仪表盘、客户材料、财务、人力、法务和日常运营。16 周课程。
+    link: /course-c/
   - icon: 📚
     title: 共享资源
     details: 安装指南、工具对比、伦理安全材料。所有课程共用的基础资源。
@@ -63,6 +67,15 @@ features:
     description: '16 周课程。完成前端、数据库、AI 接口、支付部署、Dify、RAG、跨平台和 Agent 工程实践。',
     link: '/course-b/',
     linkText: '查看课程 B'
+  },
+  {
+    icon: '🏢',
+    gradient: 'linear-gradient(135deg, #0f766e 0%, #f59e0b 100%)',
+    tag: '课程 C',
+    title: '企业 AI 运营系统',
+    description: '16 周课程。面向企业员工和管理者，沉淀岗位 AI 助理包、业务工作流、合规审计和真实流程改造证据。',
+    link: '/course-c/',
+    linkText: '查看课程 C'
   },
   {
     icon: '📚',
