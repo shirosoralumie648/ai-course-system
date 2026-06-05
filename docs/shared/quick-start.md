@@ -1,10 +1,10 @@
 # 快速接入教程
 
-本页按根目录的 `使用手册.docx` 改写成课堂操作页，目标是让学生先跑通最小 API 调用，再把同一套模型服务接入常用开发工具。
+本页目标是让学生先跑通最小 API 调用，再把同一套模型服务接入常用开发工具。
 
 阅读顺序很简单：
 
-1. 注册账号并兑换套餐。
+1. 注册账号并充值。
 2. 创建 API Key，确认模型协议和模型 ID。
 3. 用 `curl` 做一次最小调用测试。
 4. 按目标工具填写 `BaseURL`、`API Key`、协议和模型 ID。
@@ -20,17 +20,14 @@
 
 | 用途 | 地址 |
 |---|---|
-| 主入口 | `https://api.svips.org` |
-| 备用入口 1 | `https://api1.svips.org` |
-| 备用入口 2 | `http://67.230.168.254:8080` |
-| 备用入口 3 | `http://47.112.186.31:48080` |
+| 主入口 | `https://api.shirosora.cn` |
 
 填写工具配置时先判断协议：
 
 | 协议 | 常见填写方式 | 说明 |
 |---|---|---|
-| OpenAI 兼容 | `https://api.svips.org/v1` | 多数 OpenAI 兼容工具需要在 BaseURL 后拼接 `/v1` |
-| Anthropic 兼容 | `https://api.svips.org` | 多数 Anthropic 兼容工具填写不带 `/v1` 的根地址 |
+| OpenAI 兼容 | `https://api.shirosora.cn/v1` | 多数 OpenAI 兼容工具需要在 BaseURL 后拼接 `/v1` |
+| Anthropic 兼容 | `https://api.shirosora.cn` | 多数 Anthropic 兼容工具填写不带 `/v1` 的根地址 |
 | 直接调用接口 | 以完整 endpoint 为准 | 例如 `/v1/chat/completions` 或 `/v1/messages` |
 
 如果不确定工具要填哪一种，先看字段名称：写着 OpenAI Compatible、OpenAI API Host、Chat Completions 的，通常填带 `/v1`；写着 Anthropic、Claude API、Messages API 的，通常填根地址。
@@ -42,47 +39,37 @@
 访问注册页：
 
 ```text
-https://api.svips.org/register
+https://api.shirosora.cn/sign-up
 ```
 
-如果主入口打不开，依次尝试：
+### 2. 创建API密钥
 
-```text
-https://api1.svips.org/register
-http://67.230.168.254:8080/register
-http://47.112.186.31:48080/register
-```
+注册登录后，进入“API 密钥”页面。
+![进入 API 密钥页面](./quick-start-assets/api-key-page.png)
 
-如果注册过程需要邀请码，按课堂通知联系管理员处理。
-
-### 2. 兑换套餐
-
-注册登录后，进入“兑换”页面，输入兑换码完成套餐兑换。
-
-![兑换码输入界面](./quick-start-assets/exchange-code.png)
-
-兑换完成后，按套餐类型检查是否生效：
-
-| 套餐类型 | 检查方式 |
-|---|---|
-| 订阅套餐 | 打开“我的订阅”，确认套餐状态已经生效 |
-| 余额充值 | 查看右上角余额是否增加 |
-
-![订阅状态检查](./quick-start-assets/subscription-check.png)
-
-![余额检查](./quick-start-assets/balance-check.png)
-
-### 3. 创建密钥
-
-进入“API 密钥”页面，点击右上角“创建密钥”，在分组下拉框中选择刚刚兑换的套餐分组，然后创建。
+点击右上角“创建密钥”，在分组下拉框中选择合适的套餐分组，然后创建
 
 ![创建 API 密钥](./quick-start-assets/api-key-create.png)
 
 ![选择密钥分组](./quick-start-assets/api-key-group.png)
 
 ::: warning 分组不要乱选
-聚合 Token 渠道是余额计费模式，需要单独购买聚合套餐余额后使用。按次或次数订阅用户不要误选聚合 Token 分组。
+不同分组提供的模型和计价倍率不同，根据需要选择合适的分组。如果想要最佳体验请使用 Auto 分组，但是如遇上游故障费用可能会升高。
 :::
+
+创建完成后即可获得 API 密钥，点击复制按钮即可复制，后续接入工具时需要填写。
+
+![复制密钥](./quick-start-assets/api-key-copy.png)
+
+### 3. 添加额度
+
+注册登录后，进入“钱包”页面，输入兑换码完成额度兑换。
+
+![前往钱包页面](./quick-start-assets/wallet-page.png)
+
+![兑换码输入界面](./quick-start-assets/exchange-code.png)
+
+
 
 ## 选择模型
 
@@ -92,6 +79,8 @@ http://47.112.186.31:48080/register
 
 | 分类 | 模型 ID |
 |---|---|
+| OpenAI | `gpt-5.5` 、`gpt-5.4`、`gpt-5.4-mini` |
+| Anthropic | `claude-opus-4-8` 、`claude-opus-4-7`、`claude-opus-4-6`、`claude-opus-4-5` |
 | MiniMax | `MiniMax-M2`、`MiniMax-M2.5`、`MiniMax-M2.7` |
 | MiniMax 极速 | `MiniMax-M2.5-highspeed`、`MiniMax-M2.7-highspeed` |
 | GLM | `GLM-5`、`GLM-5.1` |
@@ -99,15 +88,9 @@ http://47.112.186.31:48080/register
 | DeepSeek | `deepseek-v4-flash`、`deepseek-v4-pro` |
 | Qwen | `qwen3.6-plus`、`qwen3.5-plus`、`qwen3-max-2026-01-23`、`qwen3-coder-plus`、`qwen3-coder-next` |
 
-手册中的协议提示：
-
-| 协议标签 | 可用模型示例 |
-|---|---|
-| OpenAI 兼容 | `GLM-5.1`、`GLM-5`、`MiniMax-M2.7`、`deepseek-v4-pro`、`deepseek-v4-flash`、`Kimi-K2.5`、`Kimi-K2.6` |
-| Anthropic 兼容 | `GLM-5.1`、`GLM-5`、`MiniMax-M2.7`、`Kimi-K2.5` |
 
 ::: tip 建议课堂默认值
-第一次测试建议用 `MiniMax-M2.7` 作为示例模型。真正提交作业时，以自己套餐内显示的模型 ID 为准。
+第一次测试建议用 `gpt-5.4` 作为示例模型。真正提交作业时，以自己套餐内显示的模型 ID 为准。
 :::
 
 ## 最小调用测试
@@ -119,20 +102,20 @@ http://47.112.186.31:48080/register
 Windows PowerShell 可以使用 `curl.exe`：
 
 ```powershell
-curl.exe -X POST "https://api.svips.org/v1/chat/completions" `
+curl.exe -X POST "https://api.shirosora.cn/v1/chat/completions" `
   -H "Content-Type: application/json" `
   -H "Authorization: Bearer YOUR_API_KEY" `
-  -d "{\"model\":\"MiniMax-M2.7\",\"max_tokens\":1024,\"messages\":[{\"role\":\"user\",\"content\":\"你好，请介绍下自己。\"}],\"temperature\":1.0,\"stream\":true}"
+  -d "{\"model\":\"gpt-5.4\",\"max_tokens\":1024,\"messages\":[{\"role\":\"user\",\"content\":\"你好，请介绍下自己。\"}],\"temperature\":1.0,\"stream\":true}"
 ```
 
 macOS / Linux 可以使用：
 
 ```bash
-curl -X POST "https://api.svips.org/v1/chat/completions" \
+curl -X POST "https://api.shirosora.cn/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "MiniMax-M2.7",
+    "model": "gpt-5.4",
     "max_tokens": 1024,
     "messages": [
       { "role": "user", "content": "你好，请介绍下自己。" }
@@ -147,20 +130,20 @@ curl -X POST "https://api.svips.org/v1/chat/completions" \
 Windows PowerShell：
 
 ```powershell
-curl.exe -X POST "https://api.svips.org/v1/messages" `
+curl.exe -X POST "https://api.shirosora.cn/v1/messages" `
   -H "Content-Type: application/json" `
   -H "Authorization: Bearer YOUR_API_KEY" `
-  -d "{\"model\":\"MiniMax-M2.7\",\"max_tokens\":1024,\"system\":\"你是一个有用的AI助手。\",\"messages\":[{\"role\":\"user\",\"content\":\"你好，请介绍下自己。\"}],\"temperature\":1.0,\"stream\":true}"
+  -d "{\"model\":\"gpt-5.4\",\"max_tokens\":1024,\"system\":\"你是一个有用的AI助手。\",\"messages\":[{\"role\":\"user\",\"content\":\"你好，请介绍下自己。\"}],\"temperature\":1.0,\"stream\":true}"
 ```
 
 macOS / Linux：
 
 ```bash
-curl -X POST "https://api.svips.org/v1/messages" \
+curl -X POST "https://api.shirosora.cn/v1/messages" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -d '{
-    "model": "MiniMax-M2.7",
+    "model": "gpt-5.4",
     "max_tokens": 1024,
     "system": "你是一个有用的AI助手。",
     "messages": [
@@ -180,7 +163,7 @@ curl -X POST "https://api.svips.org/v1/messages" \
 | 字段 | 填什么 |
 |---|---|
 | Provider / Name | `breeze` 或自定义名称 |
-| BaseURL / API Host | 按协议填写 `https://api.svips.org` 或 `https://api.svips.org/v1` |
+| BaseURL / API Host | 按协议填写 `https://api.shirosora.cn` 或 `https://api.shirosora.cn/v1` |
 | API Key | 后台创建的 `sk-...` 密钥 |
 | Model ID | 从模型广场复制的精确模型 ID |
 
@@ -193,7 +176,7 @@ curl -X POST "https://api.svips.org/v1/messages" \
 
 ## 常用工具接入
 
-这一节按工具分别写。所有示例仍然以 `MiniMax-M2.7` 为例，实际使用时必须替换成自己套餐内可用的模型 ID。
+这一节按工具分别写。所有示例仍然以 `gpt-5.4` 为例，实际使用时必须替换成自己套餐内可用的模型 ID。
 
 | 工具 | 推荐接入方式 | 适合对象 |
 |---|---|---|
@@ -210,15 +193,22 @@ curl -X POST "https://api.svips.org/v1/messages" \
 
 ### CCSwitch
 
-CCSwitch 不是 AI 接口调用工具，它是 API 接口配置辅助工具。手册建议 Claude Code、Codex、OpenCode、OpenClaw、Hermes Agent 用户安装它来管理模型配置，减少手动填错 BaseURL、协议和模型 ID 的概率。
+CCSwitch 不是 AI 接口调用工具，它是 API 接口配置辅助工具。建议 Claude Code、Codex、OpenCode、OpenClaw、Hermes Agent 用户安装它来管理模型配置，减少手动填错 BaseURL、协议和模型 ID 的概率。
 
 下载地址：
 
 ```text
 https://github.com/farion1231/cc-switch/releases
 ```
+网盘下载地址（更新不及时）：
+
+```text
+https://wwamj.lanzout.com/b002vy8i6b
+密码:2y0n
+```
 
 使用方式：
+tips：您也可以点击 API 密钥页面中已创建密钥最右端的三个点按钮，再点击 CC 切换，选择您使用的应用和模型后即可快速导入。
 
 1. 安装最新版 CCSwitch。
 2. 新增一个服务配置，名称可写 `breeze`。
@@ -238,9 +228,9 @@ Claude Code 的配置方式和普通 OpenAI 兼容客户端不完全一样，手
 | 字段 | 填写 |
 |---|---|
 | Provider 名称 | `breeze` 或自定义名称 |
-| BaseURL | 按模型协议填写，OpenAI 兼容通常用 `https://api.svips.org/v1` |
+| BaseURL | 按模型协议填写，OpenAI 兼容通常用 `https://api.shirosora.cn/v1` |
 | API Key | 后台创建的 `sk-...` |
-| Model ID | 从模型广场复制，例如 `MiniMax-M2.7` |
+| Model ID | 从模型广场复制，例如 `gpt-5.4` |
 
 验证方法：
 
@@ -257,9 +247,9 @@ Codex CLI 的课程安装和验证见 [Codex CLI 安装指南](/shared/codex-cli
 
 | 字段 | 填写 |
 |---|---|
-| BaseURL | OpenAI 兼容一般填 `https://api.svips.org/v1` |
+| BaseURL | OpenAI 兼容一般填 `https://api.shirosora.cn/v1` |
 | API Key | 后台创建的 `sk-...` |
-| Model ID | 从模型广场复制，例如 `MiniMax-M2.7` |
+| Model ID | 从模型广场复制，例如 `gpt-5.4` |
 | 协议 | OpenAI 兼容模型使用 OpenAI Compatible / Chat Completions |
 
 建议流程：
@@ -294,14 +284,14 @@ C:\Users\<用户名>\.openclaw\openclaw.json
 {
   "providers": {
     "breeze": {
-      "baseUrl": "https://api.svips.org",
+      "baseUrl": "https://api.shirosora.cn",
       "apiKey": "YOUR_API_KEY",
       "auth": "api-key",
       "api": "anthropic-messages",
       "models": [
         {
-          "id": "MiniMax-M2.7",
-          "name": "MiniMax-M2.7",
+          "id": "gpt-5.4",
+          "name": "gpt-5.4",
           "reasoning": true,
           "input": ["text", "image"],
           "contextWindow": 200000
@@ -319,10 +309,10 @@ C:\Users\<用户名>\.openclaw\openclaw.json
   "agents": {
     "defaults": {
       "model": {
-        "primary": "breeze/MiniMax-M2.7"
+        "primary": "breeze/gpt-5.4"
       },
       "models": {
-        "breeze/MiniMax-M2.7": {}
+        "breeze/gpt-5.4": {}
       }
     }
   }
@@ -333,8 +323,8 @@ C:\Users\<用户名>\.openclaw\openclaw.json
 
 | 场景 | `baseUrl` | `api` |
 |---|---|---|
-| Anthropic 兼容模型 | `https://api.svips.org` | `anthropic-messages` |
-| OpenAI 兼容模型 | `https://api.svips.org/v1` | `openai-completions` |
+| Anthropic 兼容模型 | `https://api.shirosora.cn` | `anthropic-messages` |
+| OpenAI 兼容模型 | `https://api.shirosora.cn/v1` | `openai-completions` |
 
 保存后执行：
 
@@ -384,10 +374,10 @@ openclaw gateway restart
 | 字段 | 填写 |
 |---|---|
 | 服务商名称 | `breeze` |
-| 接口地址 | `https://api.svips.org`，OpenAI 兼容时按界面要求拼 `/v1` |
+| 接口地址 | `https://api.shirosora.cn`，OpenAI 兼容时按界面要求拼 `/v1` |
 | API Key | `YOUR_API_KEY` |
 | 协议类型 | `anthropic-messages` 或 `openai-completions` |
-| 模型 ID | `MiniMax-M2.7` 或自己套餐内的模型 |
+| 模型 ID | `gpt-5.4` 或自己想要使用的模型 |
 
 ![飞书妙搭自定义模型配置](./quick-start-assets/feishu-miaoda-custom-model.png)
 
@@ -436,12 +426,12 @@ Anthropic 兼容示例：
       "npm": "@ai-sdk/anthropic",
       "name": "breeze",
       "options": {
-        "baseURL": "https://api.svips.org",
+        "baseURL": "https://api.shirosora.cn",
         "apiKey": "YOUR_API_KEY"
       },
       "models": {
-        "MiniMax-M2.7": {
-          "name": "MiniMax-M2.7",
+        "gpt-5.4": {
+          "name": "gpt-5.4",
           "thinking": true,
           "limit": {
             "context": 200000,
@@ -464,7 +454,7 @@ OpenAI 兼容模型要改两处：
 {
   "npm": "@ai-sdk/openai-compatible",
   "options": {
-    "baseURL": "https://api.svips.org/v1",
+    "baseURL": "https://api.shirosora.cn/v1",
     "apiKey": "YOUR_API_KEY"
   }
 }
@@ -481,7 +471,7 @@ OpenAI 兼容模型要改两处：
 1. 进入模型选择窗口。
 2. 按 `Ctrl+A` 选择模型提供商，自定义 provider 通常在列表最后。
 3. 如果弹出 API Key 输入框，粘贴密钥并回车。
-4. 进入模型选择界面后选择 `MiniMax-M2.7` 或自己的模型。
+4. 进入模型选择界面后选择 `gpt-5.4` 或自己的模型。
 5. 回车确认后开始使用。
 
 ![OpenCode 输入 models 进入模型选择](./quick-start-assets/opencode-models.png)
@@ -510,9 +500,9 @@ https://www.codebuddy.cn/work/
 1. 安装并打开 WorkBuddy。
 2. 找到模型设置或自定义模型入口。
 3. 添加自定义模型。
-4. 模型名称可写 `MiniMax-M2.7`。
+4. 模型名称可写 `gpt-5.4`。
 5. 模型 ID 填自己套餐里的模型 ID。
-6. BaseURL 按协议填写：Anthropic 兼容用 `https://api.svips.org`，OpenAI 兼容用 `https://api.svips.org/v1`。
+6. BaseURL 按协议填写：Anthropic 兼容用 `https://api.shirosora.cn`，OpenAI 兼容用 `https://api.shirosora.cn/v1`。
 7. API Key 填后台生成的密钥。
 8. 保存后在模型列表里选择刚添加的模型。
 
@@ -524,7 +514,7 @@ https://www.codebuddy.cn/work/
 
 ### 腾讯云龙虾
 
-以 `MiniMax-M2.7` 为例，配置时替换成自己套餐内模型。
+以 `gpt-5.4` 为例，配置时替换成自己套餐内模型。
 
 步骤：
 
@@ -536,11 +526,11 @@ https://www.codebuddy.cn/work/
 | 字段 | Anthropic 兼容示例 | OpenAI 兼容示例 |
 |---|---|---|
 | `provider` | `breeze` | `breeze` |
-| `baseurl` | `https://api.svips.org` | `https://api.svips.org/v1` |
+| `baseurl` | `https://api.shirosora.cn` | `https://api.shirosora.cn/v1` |
 | `api` | `anthropic-messages` | `openai-completions` |
 | `api_key` | `YOUR_API_KEY` | `YOUR_API_KEY` |
-| `model.id` | `MiniMax-M2.7` | `MiniMax-M2.7` |
-| `model.name` | `MiniMax-M2.7` | `MiniMax-M2.7` |
+| `model.id` | `gpt-5.4` | `gpt-5.4` |
+| `model.name` | `gpt-5.4` | `gpt-5.4` |
 
 保存后在龙虾里切换到该模型，先做一句话测试。
 
@@ -559,17 +549,17 @@ https://www.codebuddy.cn/work/
 
 ```text
 provider: breeze
-baseurl: https://api.svips.org
+baseurl: https://api.shirosora.cn
 api: anthropic-messages
 api_key: YOUR_API_KEY
-model.id: MiniMax-M2.7
-model.name: MiniMax-M2.7
+model.id: gpt-5.4
+model.name: gpt-5.4
 ```
 
 如果使用 OpenAI 兼容协议：
 
 ```text
-baseurl: https://api.svips.org/v1
+baseurl: https://api.shirosora.cn/v1
 api: openai-completions
 ```
 
@@ -584,7 +574,7 @@ Cline 可以通过 VS Code、Cursor、Trae 等编辑器插件市场安装。
 3. 选择自定义模型、自定义 provider、OpenAI Compatible 或 Anthropic Compatible。
 4. 填写 BaseURL。
 5. 填写 API Key。
-6. 填写模型 ID，例如 `MiniMax-M2.7`。
+6. 填写模型 ID，例如 `gpt-5.4`。
 7. 保存配置。
 8. 新开一个 Cline 会话，先让模型回复一句话。
 
@@ -592,8 +582,8 @@ Cline 可以通过 VS Code、Cursor、Trae 等编辑器插件市场安装。
 
 | Cline 场景 | BaseURL | 模型 |
 |---|---|---|
-| OpenAI Compatible | `https://api.svips.org/v1` | 套餐内 OpenAI 兼容模型 |
-| Anthropic Compatible | `https://api.svips.org` | 套餐内 Anthropic 兼容模型 |
+| OpenAI Compatible | `https://api.shirosora.cn/v1` | 套餐内 OpenAI 兼容模型 |
+| Anthropic Compatible | `https://api.shirosora.cn` | 套餐内 Anthropic 兼容模型 |
 
 ![Cline 配置自定义 Provider](./quick-start-assets/cline-provider.png)
 
@@ -618,7 +608,7 @@ https://www.cherry-ai.com/download
 如果使用 OpenAI 兼容模型，BaseURL 通常填：
 
 ```text
-https://api.svips.org/v1
+https://api.shirosora.cn/v1
 ```
 
 ![Cherry Studio 添加模型服务商](./quick-start-assets/cherry-provider.png)
@@ -645,7 +635,7 @@ https://autoglm.zhipuai.cn/autoclaw/
 注意：如果是 OpenAI 协议的模型接口，BaseURL 需要额外拼接 `/v1`：
 
 ```text
-https://api.svips.org/v1
+https://api.shirosora.cn/v1
 ```
 
 ![AutoClaw 添加自定义模型](./quick-start-assets/autoclaw-custom-model.png)
@@ -680,7 +670,7 @@ https://chatboxai.app/zh/
 
 | ChatBox 模式 | API 主机填写 |
 |---|---|
-| OpenAI 兼容 API | 填 OpenAI 兼容地址，通常为 `https://api.svips.org/v1` |
+| OpenAI 兼容 API | 填 OpenAI 兼容地址，通常为 `https://api.shirosora.cn/v1` |
 | Claude API 兼容 | 按 ChatBox 的 Claude API 兼容主机要求填写；手册提示需要在地址后添加 `/v1` |
 
 接入步骤：
@@ -704,7 +694,7 @@ https://chatboxai.app/zh/
 https://qclaw.qq.com/?channel=5004&bd_vid=8422091002495405437
 ```
 
-手册示例使用 `Kimi-K2.5`，实际配置时以自己套餐为准。
+手册示例使用 `gpt-5.4`，实际配置时以自己套餐为准。
 
 接入步骤：
 
@@ -739,8 +729,8 @@ https://oneclaw.cn/
 
 | 接口类型 | 地址填写 |
 |---|---|
-| `openai-completions` | `https://api.svips.org/v1` |
-| `anthropic-messages` | `https://api.svips.org` |
+| `openai-completions` | `https://api.shirosora.cn/v1` |
+| `anthropic-messages` | `https://api.shirosora.cn` |
 
 ![OneClaw 选择手动配置](./quick-start-assets/oneclaw-manual-config.png)
 
@@ -760,7 +750,7 @@ OpenAI 兼容接入：
 6. 保存后在输入框位置选择自定义模型。
 
 ```text
-https://api.svips.org/v1
+https://api.shirosora.cn/v1
 ```
 
 ![Trae 选择 OpenAI 兼容自定义模型](./quick-start-assets/trae-openai-models.png)
@@ -840,7 +830,7 @@ VS Code 本身不是模型客户端，需要通过插件调用 API。手册里�
 
 ### 404 / 模型不存在
 
-优先检查模型 ID。模型 ID 区分大小写，`MiniMax-M2.7` 和 `minimax-m2.7` 不是同一个值。
+优先检查模型 ID。模型 ID 区分大小写，`gpt-5.4` 和 `Gpt-5.4` 不是同一个值。
 
 ### JSON 配置报错
 
@@ -848,7 +838,7 @@ VS Code 本身不是模型客户端，需要通过插件调用 API。手册里�
 
 1. JSON 里没有注释。
 2. 每个对象和数组的逗号位置正确。
-3. 没有把示例里的 `YOUR_API_KEY`、`MiniMax-M2.7` 忘记替换成自己的真实配置。
+3. 没有把示例里的 `YOUR_API_KEY`、`gpt-5.4` 忘记替换成自己的真实配置。
 
 ## 课堂验收标准
 
