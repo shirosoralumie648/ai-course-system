@@ -17,7 +17,7 @@ and explicit human approval gates.
 | PROJECT.md | Complete | Initialized from Course C design spec |
 | config.json | Complete | Quality, parallel, commit planning docs, research/check/verify enabled |
 | research/ | Complete | Stack, features, architecture, pitfalls, summary |
-| REQUIREMENTS.md | Complete | 30 v1 requirements mapped |
+| REQUIREMENTS.md | Complete | 32 v1 requirements mapped after source-gate update |
 | ROADMAP.md | Complete | 6 phases |
 
 ## Next Action
@@ -45,6 +45,14 @@ during planning.
 - Week content is split into core business weeks, high-risk business weeks, and
   enterprise API/MCP week to keep safety boundaries clear.
 - Full verification and reference map updates are collected in Phase 6.
+- Professional business tasks must use authoritative domain sources, not only
+  code/tool documentation.
+
+## Quick Tasks Completed
+
+| Date | Task | Outcome |
+| --- | --- | --- |
+| 2026-06-05 | Add authoritative domain-source gate | Updated project requirements, roadmap success criteria, state, and agent guidance |
 
 ---
-*Initialized: 2026-06-05*
+*Updated: 2026-06-05 after authoritative domain-source gate*

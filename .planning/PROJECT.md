@@ -50,6 +50,8 @@ approval gates.
   discoverable.
 - [ ] Update `reference/catalog/course-integration-map.md` with Course C mapping
   without requiring local `reference/repos/` to exist on GitHub Pages.
+- [ ] Require each professional business scenario to cite authoritative domain
+  sources, not only code or tool documentation.
 - [ ] Verify Markdown/VitePress build with `BASE=/ai-course-system/ npm run build`
   from `docs/`.
 
@@ -111,6 +113,9 @@ Course C topics from the approved spec:
   source tracking, and audit artifacts.
 - **Reference material**: Course pages cannot depend on untracked
   `reference/repos/` content being available online.
+- **Domain research**: Professional business tasks must consult authoritative
+  domain books, peer-reviewed papers, official standards/regulations, or
+  recognized industry guidance in addition to implementation/code references.
 - **Scope**: First implementation pass should be complete and navigable but does
   not need every week to be a long chapter.
 - **Repository hygiene**: Keep planning and course changes scoped; do not restore
@@ -126,6 +131,7 @@ Course C topics from the approved spec:
 | API/MCP and enterprise systems are advanced controlled layers | Allows realistic integration coverage without unsafe production writes | -- Pending |
 | Every high-risk workflow uses data, source, human, and audit gates | Protects against overclaiming AI authority in investment, finance, tax, HR, legal, and compliance contexts | -- Pending |
 | Course C pages must be self-contained on GitHub Pages | `reference/repos/` is local-only and ignored by git | -- Pending |
+| Professional tasks require authoritative domain sources | Code docs explain implementation mechanics but cannot validate finance, legal, HR, tax, sales, product, or management content quality | -- Pending |
 
 ## Evolution
 

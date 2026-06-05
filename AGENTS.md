@@ -40,6 +40,9 @@ approval gates.
   source tracking, and audit artifacts.
 - **Reference material**: Course pages cannot depend on untracked
   `reference/repos/` content being available online.
+- **Domain research**: Professional business tasks must consult authoritative
+  books, papers, official standards/regulations, regulator guidance, or industry
+  body materials in addition to implementation/code references.
 - **Scope**: First implementation pass should be complete and navigable but does
   not need every week to be a long chapter.
 - **Repository hygiene**: Keep planning and course changes scoped; do not restore
@@ -85,6 +88,28 @@ npm run dev -- --host 0.0.0.0
 - Do not move the site root out of `docs/`.
 - Do not treat Course C as a web-app feature; it is static curriculum content,
   examples, templates, and VitePress navigation.
+
+## Professional Source Gate
+
+For Course C professional business scenarios, do not rely only on code docs,
+tool docs, repo examples, or prompt examples. Those sources explain how to
+implement a workflow, but they do not validate business-domain correctness.
+
+Each relevant phase should also consult and cite authoritative domain sources,
+for example:
+
+- Recognized books or textbooks for product, marketing, sales, finance,
+  operations, HR, management, and design methods.
+- Peer-reviewed papers or academic reviews where the topic has a research base.
+- Official laws, regulations, standards, regulator guidance, or industry body
+  materials for investment, tax, finance, HR, legal, privacy, security,
+  compliance, and enterprise-system governance.
+
+When a page uses both source types, keep them distinct:
+
+- **Implementation sources**: tool docs, code repos, API/MCP docs, SaaS guides.
+- **Domain sources**: books, papers, standards, laws, regulator or industry
+  guidance.
 <!-- GSD:stack-end -->
 
 <!-- GSD:conventions-start source:CONVENTIONS.md -->

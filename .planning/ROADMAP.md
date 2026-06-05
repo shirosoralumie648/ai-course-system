@@ -34,7 +34,8 @@ finally full verification.
 all weeks can reference.
 **Mode:** mvp
 
-**Requirements:** TEMP-01, TEMP-02, TEMP-03, TEMP-04, RISK-01
+**Requirements:** TEMP-01, TEMP-02, TEMP-03, TEMP-04, RISK-01, REF-01, REF-04,
+REF-05
 
 **Success Criteria:**
 1. `docs/course-c/templates/` contains role assistant pack, workflow SOP, prompt
@@ -44,6 +45,11 @@ all weeks can reference.
 3. Compliance templates define data, source, human, and audit gates.
 4. Examples contain no real personal, customer, employee, credential, financial,
    tax, or legal data.
+5. Course C source rules require professional business pages to consult
+   authoritative domain books, papers, official standards/regulations, regulator
+   guidance, or industry body materials in addition to code/tool docs.
+6. `docs/course-c/reference-integration.md` explains the difference between
+   implementation sources and professional domain sources.
 
 **UI hint:** no
 
@@ -59,6 +65,8 @@ market, product, brand, sales, customer operations, and dashboards.
 2. Lab 01-07 pages exist and produce concrete evidence tied to weekly outputs.
 3. The virtual company story is visible across Weeks 01-07.
 4. Each week/lab updates the role AI assistant pack with a reusable artifact.
+5. Market research, product, brand, sales, and data-analysis pages include
+   professional domain references beyond code/tool documentation.
 
 **UI hint:** no
 
@@ -77,6 +85,9 @@ weeks with explicit compliance boundaries.
    workflow support, not final professional judgment.
 4. Investment, tax, HR, legal, finance, and admin pages state what AI must not
    directly do.
+5. Investment, finance, tax, HR, legal, and administration pages cite
+   authoritative domain sources, and distinguish those sources from AI/tool
+   implementation docs.
 
 **UI hint:** no
 
@@ -94,6 +105,9 @@ weeks with explicit compliance boundaries.
    approval as hard constraints.
 4. Week 15 remains accessible to business learners by keeping code optional and
    conceptual.
+5. Week 15 uses both implementation references for API/MCP mechanics and
+   authoritative governance/security references for enterprise permissions,
+   audit, and operational risk.
 
 **UI hint:** no
 
@@ -102,8 +116,8 @@ weeks with explicit compliance boundaries.
 verification.
 **Mode:** mvp
 
-**Requirements:** FINAL-01, FINAL-02, FINAL-03, FINAL-04, REF-01, REF-02, REF-03,
-VER-01, VER-02, VER-03
+**Requirements:** FINAL-01, FINAL-02, FINAL-03, FINAL-04, REF-02, REF-03, VER-01,
+VER-02, VER-03
 
 **Success Criteria:**
 1. Week 16, Lab 16, final project, and rubric align around assistant pack plus
@@ -116,6 +130,8 @@ VER-01, VER-02, VER-03
 4. `BASE=/ai-course-system/ npm run build` succeeds from `docs/`.
 5. Course C links are reachable and no generated build output, dependencies,
    local archives, or ignored reference repos are committed.
+6. Final QA checks that each professional scenario has both source types where
+   relevant: implementation/tool references and authoritative domain references.
 
 **UI hint:** yes
 
@@ -124,13 +140,13 @@ VER-01, VER-02, VER-03
 | Phase | Requirements |
 | --- | --- |
 | Phase 1 | SHELL-01, SHELL-02, SHELL-03, SHELL-04 |
-| Phase 2 | TEMP-01, TEMP-02, TEMP-03, TEMP-04, RISK-01 |
+| Phase 2 | TEMP-01, TEMP-02, TEMP-03, TEMP-04, RISK-01, REF-01, REF-04, REF-05 |
 | Phase 3 | CURR-01, CURR-02, CURR-03, LAB-01, LAB-02, LAB-03 |
 | Phase 4 | CURR-04, RISK-02, RISK-03, RISK-04 |
 | Phase 5 | RISK-05 |
-| Phase 6 | FINAL-01, FINAL-02, FINAL-03, FINAL-04, REF-01, REF-02, REF-03, VER-01, VER-02, VER-03 |
+| Phase 6 | FINAL-01, FINAL-02, FINAL-03, FINAL-04, REF-02, REF-03, VER-01, VER-02, VER-03 |
 
-**Coverage:** 30 of 30 v1 requirements mapped.
+**Coverage:** 32 of 32 v1 requirements mapped.
 
 ## Phase Dependencies
 
@@ -152,7 +168,9 @@ the full site and final project contract.
   code; avoid complex multiline component props.
 - Reference leakage: public pages must not require ignored `reference/repos/`.
 - Base-path breakage: verify with `BASE=/ai-course-system/`.
+- Shallow professional research: phase work must not rely only on coding docs
+  when teaching business, finance, legal, HR, tax, sales, product, brand, market
+  research, governance, or management tasks.
 
 ---
-*Roadmap created: 2026-06-05 after Course C project initialization*
-
+*Roadmap updated: 2026-06-05 after adding authoritative domain-source gate*

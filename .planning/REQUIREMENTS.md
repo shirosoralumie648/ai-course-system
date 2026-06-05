@@ -91,6 +91,12 @@ and explicit human approval gates.
   C section.
 - [ ] **REF-03**: Published Course C pages remain self-contained and do not
   require local ignored `reference/repos/` content.
+- [ ] **REF-04**: Professional business scenario pages include authoritative
+  domain sources such as recognized books, peer-reviewed papers, official
+  standards/regulations, regulator guidance, or industry body materials.
+- [ ] **REF-05**: Coding/tool documentation is treated as implementation support,
+  not as the only evidence source for finance, legal, HR, tax, investment,
+  sales, product, brand, market research, or management content.
 
 ### Verification
 
@@ -155,19 +161,20 @@ and explicit human approval gates.
 | FINAL-02 | Phase 6 | Pending |
 | FINAL-03 | Phase 6 | Pending |
 | FINAL-04 | Phase 6 | Pending |
-| REF-01 | Phase 6 | Pending |
+| REF-01 | Phase 2 | Pending |
 | REF-02 | Phase 6 | Pending |
 | REF-03 | Phase 6 | Pending |
+| REF-04 | Phase 2 | Pending |
+| REF-05 | Phase 2 | Pending |
 | VER-01 | Phase 6 | Pending |
 | VER-02 | Phase 6 | Pending |
 | VER-03 | Phase 6 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 30
+- v1 requirements: 32 total
+- Mapped to phases: 32
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-05*
-*Last updated: 2026-06-05 after initial definition*
-
+*Last updated: 2026-06-05 after adding authoritative domain-source requirements*
