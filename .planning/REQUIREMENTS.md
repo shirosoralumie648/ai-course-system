@@ -9,13 +9,13 @@ and explicit human approval gates.
 
 ### Course Shell
 
-- [ ] **SHELL-01**: Visitor can open a Course C landing page that explains the
+- [x] **SHELL-01**: Visitor can open a Course C landing page that explains the
   course positioning, audience, outcomes, and 16-week route.
-- [ ] **SHELL-02**: Visitor can reach Course C from the VitePress top navigation,
+- [x] **SHELL-02**: Visitor can reach Course C from the VitePress top navigation,
   homepage course cards/actions, and Course C sidebar.
-- [ ] **SHELL-03**: Course C landing copy clearly distinguishes Course C from
+- [x] **SHELL-03**: Course C landing copy clearly distinguishes Course C from
   Course A prototype literacy and Course B software product engineering.
-- [ ] **SHELL-04**: Course C includes `teaching-calendar.md`,
+- [x] **SHELL-04**: Course C includes `teaching-calendar.md`,
   `reference-integration.md`, `final-project.md`, and `rubric.md`.
 
 ### Curriculum Structure
@@ -137,10 +137,10 @@ and explicit human approval gates.
 
 | Requirement | Phase | Status |
 | --- | --- | --- |
-| SHELL-01 | Phase 1 | Pending |
-| SHELL-02 | Phase 1 | Pending |
-| SHELL-03 | Phase 1 | Pending |
-| SHELL-04 | Phase 1 | Pending |
+| SHELL-01 | Phase 1 | Complete |
+| SHELL-02 | Phase 1 | Complete |
+| SHELL-03 | Phase 1 | Complete |
+| SHELL-04 | Phase 1 | Complete |
 | CURR-01 | Phase 3 | Pending |
 | CURR-02 | Phase 3 | Pending |
 | CURR-03 | Phase 3 | Pending |

@@ -2,14 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: unknown
-last_updated: "2026-06-05T11:19:46.720Z"
+status: ready_to_plan
+last_updated: 2026-06-05T11:49:15.471Z
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 1
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 17
+stopped_at: Phase 01 complete (1/1) — ready to discuss Phase 2
 ---
 
 # State: Course C Business AI Operations
@@ -22,7 +23,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-05)
 agents safely and repeatably for real enterprise workflows, with useful outputs
 and explicit human approval gates.
 
-**Current focus:** Phase 1: Course C Site Skeleton
+**Current focus:** Phase 2 — compliance, templates, and synthetic examples
 
 ## Workflow Status
 
@@ -39,18 +40,17 @@ and explicit human approval gates.
 Run:
 
 ```bash
-$gsd-discuss-phase 1
+$gsd-discuss-phase 2
 ```
 
 Alternative:
 
 ```bash
-$gsd-ui-phase 1
-$gsd-plan-phase 1
+$gsd-plan-phase 2
 ```
 
-Phase 1 has a UI/navigation surface, so UI design review is useful before or
-during planning.
+Phase 2 creates the reusable compliance, template, and synthetic-example
+foundation that later Course C weeks will reference.
 
 ## Recent Decisions
 
@@ -68,6 +68,7 @@ during planning.
 | Date | Task | Outcome |
 | --- | --- | --- |
 | 2026-06-05 | Add authoritative domain-source gate | Updated project requirements, roadmap success criteria, state, and agent guidance |
+| 2026-06-05 | Complete Phase 1 Course C site skeleton | Added Course C shell pages, navigation, homepage card, review, and verification |
 
 ---
-*Updated: 2026-06-05 after authoritative domain-source gate*
+*Updated: 2026-06-05 after Phase 1 execution*
