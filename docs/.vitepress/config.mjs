@@ -150,7 +150,14 @@ export default defineConfig({
               { text: 'Week 04：品牌推广与内容资产', link: '/course-c/week-04' },
               { text: 'Week 05：销售线索与渠道开拓', link: '/course-c/week-05' },
               { text: 'Week 06：客户关系维护', link: '/course-c/week-06' },
-              { text: 'Week 07：数据分析与管理仪表盘', link: '/course-c/week-07' }
+              { text: 'Week 07：数据分析与管理仪表盘', link: '/course-c/week-07' },
+              { text: 'Week 08：公开股票投资研究', link: '/course-c/week-08' },
+              { text: 'Week 09：投行业务与商业计划', link: '/course-c/week-09' },
+              { text: 'Week 10：财务管理与预算分析', link: '/course-c/week-10' },
+              { text: 'Week 11：税务申报资料留档', link: '/course-c/week-11' },
+              { text: 'Week 12：人力资源流程', link: '/course-c/week-12' },
+              { text: 'Week 13：法律合同与纠纷材料', link: '/course-c/week-13' },
+              { text: 'Week 14：行政与公司治理支持', link: '/course-c/week-14' }
             ]},
             { text: '逐周实验', items: [
               { text: 'Lab 01：岗位 AI 助理包骨架', link: '/course-c/labs/lab-01' },
@@ -159,7 +166,14 @@ export default defineConfig({
               { text: 'Lab 04：品牌活动素材包', link: '/course-c/labs/lab-04' },
               { text: 'Lab 05：客户分层与外联序列', link: '/course-c/labs/lab-05' },
               { text: 'Lab 06：会议纪要转 CRM', link: '/course-c/labs/lab-06' },
-              { text: 'Lab 07：仪表盘字段与指标审计', link: '/course-c/labs/lab-07' }
+              { text: 'Lab 07：仪表盘字段与指标审计', link: '/course-c/labs/lab-07' },
+              { text: 'Lab 08：股票研究风险备忘录', link: '/course-c/labs/lab-08' },
+              { text: 'Lab 09：BP 与尽调清单', link: '/course-c/labs/lab-09' },
+              { text: 'Lab 10：预算差异与财务复核', link: '/course-c/labs/lab-10' },
+              { text: 'Lab 11：税务资料与留档 SOP', link: '/course-c/labs/lab-11' },
+              { text: 'Lab 12：招聘筛选与偏见审查', link: '/course-c/labs/lab-12' },
+              { text: 'Lab 13：合同争议证据包', link: '/course-c/labs/lab-13' },
+              { text: 'Lab 14：行政台账与制度 SOP', link: '/course-c/labs/lab-14' }
             ]},
             { text: '模板与样例', items: [
               { text: '模板总览', link: '/course-c/templates/' },
