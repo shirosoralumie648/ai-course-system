@@ -143,6 +143,24 @@ export default defineConfig({
             { text: '课程介绍', link: '/course-c/' },
             { text: '教学日历', link: '/course-c/teaching-calendar' },
             { text: 'Reference 融入方案', link: '/course-c/reference-integration' },
+            { text: '每周教程', items: [
+              { text: 'Week 01：企业 AI 运营系统', link: '/course-c/week-01' },
+              { text: 'Week 02：市场调研与行业分析', link: '/course-c/week-02' },
+              { text: 'Week 03：产品定位与原型表达', link: '/course-c/week-03' },
+              { text: 'Week 04：品牌推广与内容资产', link: '/course-c/week-04' },
+              { text: 'Week 05：销售线索与渠道开拓', link: '/course-c/week-05' },
+              { text: 'Week 06：客户关系维护', link: '/course-c/week-06' },
+              { text: 'Week 07：数据分析与管理仪表盘', link: '/course-c/week-07' }
+            ]},
+            { text: '逐周实验', items: [
+              { text: 'Lab 01：岗位 AI 助理包骨架', link: '/course-c/labs/lab-01' },
+              { text: 'Lab 02：市场研究来源审计', link: '/course-c/labs/lab-02' },
+              { text: 'Lab 03：产品定位与原型提示词', link: '/course-c/labs/lab-03' },
+              { text: 'Lab 04：品牌活动素材包', link: '/course-c/labs/lab-04' },
+              { text: 'Lab 05：客户分层与外联序列', link: '/course-c/labs/lab-05' },
+              { text: 'Lab 06：会议纪要转 CRM', link: '/course-c/labs/lab-06' },
+              { text: 'Lab 07：仪表盘字段与指标审计', link: '/course-c/labs/lab-07' }
+            ]},
             { text: '模板与样例', items: [
               { text: '模板总览', link: '/course-c/templates/' },
               { text: '岗位 AI 助理包', link: '/course-c/templates/role-ai-assistant-pack' },
