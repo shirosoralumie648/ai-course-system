@@ -143,6 +143,18 @@ export default defineConfig({
             { text: '课程介绍', link: '/course-c/' },
             { text: '教学日历', link: '/course-c/teaching-calendar' },
             { text: 'Reference 融入方案', link: '/course-c/reference-integration' },
+            { text: '模板与样例', items: [
+              { text: '模板总览', link: '/course-c/templates/' },
+              { text: '岗位 AI 助理包', link: '/course-c/templates/role-ai-assistant-pack' },
+              { text: '工作流 SOP', link: '/course-c/templates/workflow-sop' },
+              { text: '提示词库', link: '/course-c/templates/prompt-library' },
+              { text: '合规检查清单', link: '/course-c/templates/compliance-checklist' },
+              { text: '审计日志', link: '/course-c/templates/audit-log' },
+              { text: 'ROI 报告', link: '/course-c/templates/roi-report' },
+              { text: '合成样例包', link: '/course-c/examples/' },
+              { text: '虚构公司画像', link: '/course-c/examples/virtual-company-profile' },
+              { text: '合同纠纷样例', link: '/course-c/examples/sample-contract-dispute' }
+            ]},
             { text: '期末项目', link: '/course-c/final-project' },
             { text: '评分标准', link: '/course-c/rubric' }
           ]
