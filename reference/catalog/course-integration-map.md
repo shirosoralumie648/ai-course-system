@@ -47,6 +47,29 @@ development and agentic development.
 | Tests, review, CI | Week 11 | Software Engineering at Google, Google SRE, `agentic-coding/spec-kit` | Add explicit evidence artifacts: test command, review checklist, CI gate, human gate. |
 | Final defense | Week 12 | `production-apps/*`, `agentic-coding/*` | Require process trace, diff review, test proof, and a short architecture walk-through. |
 
+## Course C: Enterprise AI Operations System
+
+Course C maps reference material to business-role AI workflows. Public course
+pages should not require local `reference/repos/`; local clones are optional
+teacher preparation material. Student-facing pages should cite source categories
+and accessible public documentation, books, papers, standards, regulator
+guidance, or company policy.
+
+| Course area | Current weeks | Implementation references | Authoritative domain references | Improvement ideas |
+| --- | --- | --- | --- | --- |
+| AI operating-system setup | Week 01 | Course C templates, AGENTS/Codex/Claude Code docs, shared setup pages | Workflow management, organizational design, AI governance | Add a filled assistant-pack example for one nontechnical role. |
+| Market research | Week 02 | Survey tools, spreadsheet tools, public-source collection workflows | Market research textbooks, consumer research papers, industry-report methods | Add a source-quality rubric for public reports and AI summaries. |
+| Product positioning | Week 03 | Prototype tools, document templates, prompt-library template | Product management books, user research methods, Stage-Gate, design research | Add one before/after positioning critique with source evidence. |
+| Brand promotion | Week 04 | Content calendars, design tools, publishing checklists | Brand management, integrated marketing communication, advertising ethics, platform rules | Add review examples for risky marketing claims. |
+| Sales and CRM | Week 05-06 | CRM docs, meeting-note templates, sales email templates | Sales management, customer relationship management, customer-experience research | Add a CRM-field governance checklist shared by sales and operations. |
+| Data analysis and dashboards | Week 07 | Spreadsheet/BI docs, metric dictionaries, dashboard specs | Statistics, data quality, business analytics, Balanced Scorecard | Add dashboard anti-pattern examples around misleading metrics. |
+| Investment and IB materials | Week 08-09 | EDGAR/public filing workflows, BP templates, due-diligence checklists | SEC/FINRA investor education, company finance, valuation, investment banking texts | Add jurisdiction notes so examples are not mistaken for advice. |
+| Finance and tax | Week 10-11 | Sample finance data, budget tables, tax-record checklists | Accounting standards, management accounting, internal control, tax authority guidance | Add separate local-tax-authority lookup instructions for teachers. |
+| HR and legal | Week 12-13 | HR sample data, JD templates, contract/dispute sample, evidence packet templates | DOL/EEOC examples, HR management, labor law, contract law, court-record guidance | Add privacy-preserving submission examples. |
+| Administration and governance | Week 14 | Asset registers, meeting minutes, qualification calendars, policy SOPs | Corporate governance, records management, procurement controls, asset management | Add an approval-matrix example for small teams. |
+| Enterprise system connection | Week 15 | OpenAI/Codex Skills, AGENTS, MCP, permissions docs; Claude Code MCP docs; MCP docs | NIST SP 800-53, OWASP LLM Top 10, ISO/CIS/SOC2, privacy/security policy | Add a sample read-only/mock-first connection packet. |
+| Final defense | Week 16 | Course C final project, rubric, templates, audit log, ROI report | The selected role's professional sources and organization-specific approval rules | Add exemplar defense decks after the first cohort. |
+
 ## Gaps To Consider Next
 
 - Current Course B has two overlapping identities: full-stack AI product and
@@ -56,3 +79,5 @@ development and agentic development.
   do not need to learn from huge production repositories first.
 - Add "reference reading" assignments: students inspect one cloned project and
   extract directory structure, run command, test command, and one reusable idea.
+- For Course C, add public exemplar submissions for one low-risk role and one
+  high-risk role so students can see the expected evidence depth.
