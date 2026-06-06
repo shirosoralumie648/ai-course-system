@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-last_updated: 2026-06-06T05:25:46Z
+status: complete
+last_updated: 2026-06-06T05:40:35Z
 progress:
   total_phases: 6
-  completed_phases: 5
-  total_plans: 13
-  completed_plans: 13
-  percent: 83
-stopped_at: Phase 5 complete (2/2) — ready to discuss Phase 6
+  completed_phases: 6
+  total_plans: 16
+  completed_plans: 16
+  percent: 100
+stopped_at: Phase 6 complete (3/3) — Course C v1 complete
 ---
 
 # State: Course C Business AI Operations
@@ -23,7 +23,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-05)
 agents safely and repeatably for real enterprise workflows, with useful outputs
 and explicit human approval gates.
 
-**Current focus:** Phase 6 — final project, reference map, and verification
+**Current focus:** Course C v1 complete — ready for instructor review or publication workflow
 
 ## Workflow Status
 
@@ -37,25 +37,21 @@ and explicit human approval gates.
 
 ## Next Action
 
-Run:
+Run only if new work is requested:
 
 ```bash
-$gsd-discuss-phase 6
+$gsd-ship
 ```
 
 Alternative:
 
 ```bash
-$gsd-plan-phase 6 --research
-$gsd-execute-phase 6
+$gsd-new-milestone
 ```
 
-Phase 5 is complete for the Week/Lab 15 enterprise-system connection slice.
-Phase 6 should add Week/Lab 16 final defense, align final project and rubric
-around the assistant pack plus workflow transformation evidence, update the
-Course C reference map, and run full public-site verification. `CURR-*` and
-`LAB-*` requirements remain broader than Phase 5 because Week/Lab 16 is still
-planned in Phase 6.
+Phase 6 is complete. Course C now has Week/Lab 01-16, final project/rubric
+alignment, Course C reference mapping, sidebar links, and full public-site
+verification.
 
 ## Recent Decisions
 
@@ -79,6 +75,7 @@ planned in Phase 6.
 | 2026-06-06 | Complete Phase 3 Course C core business slice | Added Week/Lab 01-07, professional source anchors, four-gate checks, sidebar links, review, and verification |
 | 2026-06-06 | Complete Phase 4 Course C high-risk business slice | Added Week/Lab 08-14, professional high-risk boundaries, source anchors, four-gate checks, sidebar links, summaries, and verification |
 | 2026-06-06 | Complete Phase 5 Course C enterprise connection slice | Added Week/Lab 15, read-only/mock-first enterprise connection plan, source anchors, sidebar links, summaries, and verification |
+| 2026-06-06 | Complete Phase 6 Course C final project and verification | Added Week/Lab 16, aligned final project/rubric/reference map, exposed full navigation, and verified Week/Lab 01-16 build |
 
 ---
-*Updated: 2026-06-06 after Phase 5 execution*
+*Updated: 2026-06-06 after Phase 6 execution*
