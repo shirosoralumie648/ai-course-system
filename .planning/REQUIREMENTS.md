@@ -44,21 +44,21 @@ and explicit human approval gates.
 
 ### Templates And Examples
 
-- [ ] **TEMP-01**: Course C includes a role AI assistant pack template with role
+- [x] **TEMP-01**: Course C includes a role AI assistant pack template with role
   profile, workflows, prompts, Skills, templates, data, tools, compliance, and
   cases sections.
-- [ ] **TEMP-02**: Course C includes reusable templates for workflow SOP, prompt
+- [x] **TEMP-02**: Course C includes reusable templates for workflow SOP, prompt
   library, compliance checklist, audit log, and ROI or quality-improvement
   report.
-- [ ] **TEMP-03**: Course C includes synthetic sample artifacts for the virtual
+- [x] **TEMP-03**: Course C includes synthetic sample artifacts for the virtual
   company, CRM, finance, HR, and contract/dispute examples.
-- [ ] **TEMP-04**: Template and example pages do not contain real personal,
+- [x] **TEMP-04**: Template and example pages do not contain real personal,
   customer, employee, financial, tax, legal, credential, or production system
   data.
 
 ### Compliance And Risk
 
-- [ ] **RISK-01**: Course C defines a four-gate compliance model: data gate,
+- [x] **RISK-01**: Course C defines a four-gate compliance model: data gate,
   source gate, human gate, and audit gate.
 - [ ] **RISK-02**: High-risk weeks covering investment, finance, tax, HR, legal,
   administration, and enterprise systems state what AI can support and what it
@@ -84,17 +84,17 @@ and explicit human approval gates.
 
 ### Reference Integration
 
-- [ ] **REF-01**: `docs/course-c/reference-integration.md` explains how business,
+- [x] **REF-01**: `docs/course-c/reference-integration.md` explains how business,
   operations, AI workflow, SaaS, compliance, and API/MCP references inform Course
   C.
 - [ ] **REF-02**: `reference/catalog/course-integration-map.md` includes a Course
   C section.
 - [ ] **REF-03**: Published Course C pages remain self-contained and do not
   require local ignored `reference/repos/` content.
-- [ ] **REF-04**: Professional business scenario pages include authoritative
+- [x] **REF-04**: Professional business scenario pages include authoritative
   domain sources such as recognized books, peer-reviewed papers, official
   standards/regulations, regulator guidance, or industry body materials.
-- [ ] **REF-05**: Coding/tool documentation is treated as implementation support,
+- [x] **REF-05**: Coding/tool documentation is treated as implementation support,
   not as the only evidence source for finance, legal, HR, tax, investment,
   sales, product, brand, market research, or management content.
 
@@ -148,11 +148,11 @@ and explicit human approval gates.
 | LAB-01 | Phase 3 | Pending |
 | LAB-02 | Phase 3 | Pending |
 | LAB-03 | Phase 3 | Pending |
-| TEMP-01 | Phase 2 | Pending |
-| TEMP-02 | Phase 2 | Pending |
-| TEMP-03 | Phase 2 | Pending |
-| TEMP-04 | Phase 2 | Pending |
-| RISK-01 | Phase 2 | Pending |
+| TEMP-01 | Phase 2 | Complete |
+| TEMP-02 | Phase 2 | Complete |
+| TEMP-03 | Phase 2 | Complete |
+| TEMP-04 | Phase 2 | Complete |
+| RISK-01 | Phase 2 | Complete |
 | RISK-02 | Phase 4 | Pending |
 | RISK-03 | Phase 4 | Pending |
 | RISK-04 | Phase 4 | Pending |
@@ -161,11 +161,11 @@ and explicit human approval gates.
 | FINAL-02 | Phase 6 | Pending |
 | FINAL-03 | Phase 6 | Pending |
 | FINAL-04 | Phase 6 | Pending |
-| REF-01 | Phase 2 | Pending |
+| REF-01 | Phase 2 | Complete |
 | REF-02 | Phase 6 | Pending |
 | REF-03 | Phase 6 | Pending |
-| REF-04 | Phase 2 | Pending |
-| REF-05 | Phase 2 | Pending |
+| REF-04 | Phase 2 | Complete |
+| REF-05 | Phase 2 | Complete |
 | VER-01 | Phase 6 | Pending |
 | VER-02 | Phase 6 | Pending |
 | VER-03 | Phase 6 | Pending |
