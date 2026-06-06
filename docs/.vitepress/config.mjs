@@ -158,7 +158,8 @@ export default defineConfig({
               { text: 'Week 12：人力资源流程', link: '/course-c/week-12' },
               { text: 'Week 13：法律合同与纠纷材料', link: '/course-c/week-13' },
               { text: 'Week 14：行政与公司治理支持', link: '/course-c/week-14' },
-              { text: 'Week 15：企业系统连接治理', link: '/course-c/week-15' }
+              { text: 'Week 15：企业系统连接治理', link: '/course-c/week-15' },
+              { text: 'Week 16：真实工作流改造答辩', link: '/course-c/week-16' }
             ]},
             { text: '逐周实验', items: [
               { text: 'Lab 01：岗位 AI 助理包骨架', link: '/course-c/labs/lab-01' },
@@ -175,7 +176,8 @@ export default defineConfig({
               { text: 'Lab 12：招聘筛选与偏见审查', link: '/course-c/labs/lab-12' },
               { text: 'Lab 13：合同争议证据包', link: '/course-c/labs/lab-13' },
               { text: 'Lab 14：行政台账与制度 SOP', link: '/course-c/labs/lab-14' },
-              { text: 'Lab 15：企业连接计划', link: '/course-c/labs/lab-15' }
+              { text: 'Lab 15：企业连接计划', link: '/course-c/labs/lab-15' },
+              { text: 'Lab 16：答辩证据包', link: '/course-c/labs/lab-16' }
             ]},
             { text: '模板与样例', items: [
               { text: '模板总览', link: '/course-c/templates/' },
