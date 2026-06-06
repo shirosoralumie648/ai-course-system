@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready_to_plan
-last_updated: 2026-06-06T04:30:09Z
+last_updated: 2026-06-06T05:08:34Z
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
-  percent: 50
-stopped_at: Phase 3 complete (4/4) — ready to discuss Phase 4
+  completed_phases: 4
+  total_plans: 11
+  completed_plans: 11
+  percent: 67
+stopped_at: Phase 4 complete (4/4) — ready to discuss Phase 5
 ---
 
 # State: Course C Business AI Operations
@@ -23,7 +23,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-05)
 agents safely and repeatably for real enterprise workflows, with useful outputs
 and explicit human approval gates.
 
-**Current focus:** Phase 4 — high-risk business weeks 08-14 and labs
+**Current focus:** Phase 5 — enterprise system connection and AI workflow
 
 ## Workflow Status
 
@@ -40,21 +40,21 @@ and explicit human approval gates.
 Run:
 
 ```bash
-$gsd-discuss-phase 4
+$gsd-discuss-phase 5
 ```
 
 Alternative:
 
 ```bash
-$gsd-plan-phase 4 --research
-$gsd-execute-phase 4
+$gsd-plan-phase 5 --research
+$gsd-execute-phase 5
 ```
 
-Phase 3 is complete for the Week/Lab 01-07 slice. Phase 4 should create the
-high-risk Week/Lab 08-14 pages for investment, investment banking, finance,
-tax, HR, legal, and administration using the same source and four-gate rules.
-`CURR-*` and `LAB-*` requirements remain broader than Phase 3 because Week/Lab
-08-16 are still planned in later phases.
+Phase 4 is complete for the high-risk Week/Lab 08-14 slice. Phase 5 should add
+Week/Lab 15 for safe Skills, API/MCP, and enterprise-system connection planning
+using read-only, mock-first, least-privilege, permissioned, and auditable
+integration framing. `CURR-*`, `LAB-*`, and `RISK-*` requirements remain broader
+than Phase 4 because Week/Lab 15-16 are still planned in later phases.
 
 ## Recent Decisions
 
@@ -76,6 +76,7 @@ tax, HR, legal, and administration using the same source and four-gate rules.
 | 2026-06-06 | Plan Phase 2 Course C template/compliance foundation | Created Phase 2 research, patterns, validation, and two execution plans |
 | 2026-06-06 | Complete Phase 2 Course C template/compliance foundation | Added reusable templates, synthetic examples, four-gate compliance fields, source matrix, sidebar links, review, and verification |
 | 2026-06-06 | Complete Phase 3 Course C core business slice | Added Week/Lab 01-07, professional source anchors, four-gate checks, sidebar links, review, and verification |
+| 2026-06-06 | Complete Phase 4 Course C high-risk business slice | Added Week/Lab 08-14, professional high-risk boundaries, source anchors, four-gate checks, sidebar links, summaries, and verification |
 
 ---
-*Updated: 2026-06-06 after Phase 3 execution*
+*Updated: 2026-06-06 after Phase 4 execution*
