@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready_to_plan
-last_updated: 2026-06-06T03:57:01.234Z
+last_updated: 2026-06-06T04:30:09Z
 progress:
   total_phases: 6
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
-  percent: 33
-stopped_at: Phase 2 complete (2/2) — ready to discuss Phase 3
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
+  percent: 50
+stopped_at: Phase 3 complete (4/4) — ready to discuss Phase 4
 ---
 
 # State: Course C Business AI Operations
@@ -23,7 +23,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-05)
 agents safely and repeatably for real enterprise workflows, with useful outputs
 and explicit human approval gates.
 
-**Current focus:** Phase 3 — core business weeks 01-07 and labs
+**Current focus:** Phase 4 — high-risk business weeks 08-14 and labs
 
 ## Workflow Status
 
@@ -40,19 +40,21 @@ and explicit human approval gates.
 Run:
 
 ```bash
-$gsd-discuss-phase 3
+$gsd-discuss-phase 4
 ```
 
 Alternative:
 
 ```bash
-$gsd-plan-phase 3 --research
-$gsd-execute-phase 3
+$gsd-plan-phase 4 --research
+$gsd-execute-phase 4
 ```
 
-Phase 2 is complete. Phase 3 should create the core business Week 01-07 pages
-and Labs 01-07 using the Phase 2 templates, synthetic example pack,
-four-gate compliance model, and professional-source rules.
+Phase 3 is complete for the Week/Lab 01-07 slice. Phase 4 should create the
+high-risk Week/Lab 08-14 pages for investment, investment banking, finance,
+tax, HR, legal, and administration using the same source and four-gate rules.
+`CURR-*` and `LAB-*` requirements remain broader than Phase 3 because Week/Lab
+08-16 are still planned in later phases.
 
 ## Recent Decisions
 
@@ -73,6 +75,7 @@ four-gate compliance model, and professional-source rules.
 | 2026-06-05 | Complete Phase 1 Course C site skeleton | Added Course C shell pages, navigation, homepage card, review, and verification |
 | 2026-06-06 | Plan Phase 2 Course C template/compliance foundation | Created Phase 2 research, patterns, validation, and two execution plans |
 | 2026-06-06 | Complete Phase 2 Course C template/compliance foundation | Added reusable templates, synthetic examples, four-gate compliance fields, source matrix, sidebar links, review, and verification |
+| 2026-06-06 | Complete Phase 3 Course C core business slice | Added Week/Lab 01-07, professional source anchors, four-gate checks, sidebar links, review, and verification |
 
 ---
-*Updated: 2026-06-06 after Phase 2 execution*
+*Updated: 2026-06-06 after Phase 3 execution*
