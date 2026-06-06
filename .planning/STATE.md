@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready_to_plan
-last_updated: 2026-06-06T05:08:34Z
+last_updated: 2026-06-06T05:25:46Z
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 11
-  completed_plans: 11
-  percent: 67
-stopped_at: Phase 4 complete (4/4) — ready to discuss Phase 5
+  completed_phases: 5
+  total_plans: 13
+  completed_plans: 13
+  percent: 83
+stopped_at: Phase 5 complete (2/2) — ready to discuss Phase 6
 ---
 
 # State: Course C Business AI Operations
@@ -23,7 +23,7 @@ See: `.planning/PROJECT.md` (updated 2026-06-05)
 agents safely and repeatably for real enterprise workflows, with useful outputs
 and explicit human approval gates.
 
-**Current focus:** Phase 5 — enterprise system connection and AI workflow
+**Current focus:** Phase 6 — final project, reference map, and verification
 
 ## Workflow Status
 
@@ -40,21 +40,22 @@ and explicit human approval gates.
 Run:
 
 ```bash
-$gsd-discuss-phase 5
+$gsd-discuss-phase 6
 ```
 
 Alternative:
 
 ```bash
-$gsd-plan-phase 5 --research
-$gsd-execute-phase 5
+$gsd-plan-phase 6 --research
+$gsd-execute-phase 6
 ```
 
-Phase 4 is complete for the high-risk Week/Lab 08-14 slice. Phase 5 should add
-Week/Lab 15 for safe Skills, API/MCP, and enterprise-system connection planning
-using read-only, mock-first, least-privilege, permissioned, and auditable
-integration framing. `CURR-*`, `LAB-*`, and `RISK-*` requirements remain broader
-than Phase 4 because Week/Lab 15-16 are still planned in later phases.
+Phase 5 is complete for the Week/Lab 15 enterprise-system connection slice.
+Phase 6 should add Week/Lab 16 final defense, align final project and rubric
+around the assistant pack plus workflow transformation evidence, update the
+Course C reference map, and run full public-site verification. `CURR-*` and
+`LAB-*` requirements remain broader than Phase 5 because Week/Lab 16 is still
+planned in Phase 6.
 
 ## Recent Decisions
 
@@ -77,6 +78,7 @@ than Phase 4 because Week/Lab 15-16 are still planned in later phases.
 | 2026-06-06 | Complete Phase 2 Course C template/compliance foundation | Added reusable templates, synthetic examples, four-gate compliance fields, source matrix, sidebar links, review, and verification |
 | 2026-06-06 | Complete Phase 3 Course C core business slice | Added Week/Lab 01-07, professional source anchors, four-gate checks, sidebar links, review, and verification |
 | 2026-06-06 | Complete Phase 4 Course C high-risk business slice | Added Week/Lab 08-14, professional high-risk boundaries, source anchors, four-gate checks, sidebar links, summaries, and verification |
+| 2026-06-06 | Complete Phase 5 Course C enterprise connection slice | Added Week/Lab 15, read-only/mock-first enterprise connection plan, source anchors, sidebar links, summaries, and verification |
 
 ---
-*Updated: 2026-06-06 after Phase 4 execution*
+*Updated: 2026-06-06 after Phase 5 execution*
