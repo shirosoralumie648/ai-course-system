@@ -1294,6 +1294,85 @@ Web 管理后台和统计没有迁移。
 
 这段 40 秒就能讲清，比展示 5 张无说明截图更有效。
 
+## 纵向追踪：同一条报名请求
+
+第 14、15、16 周的证据表都指向同一条请求 `req_act_20261016_0142`。产品是已经在第 14.2 节出现的「AI 校园活动助手」。这一周只记录请求穿过哪个平台；第 15 周记录谁被允许改代码；第 16 周把这些记录填进答辩索引。
+
+请求从微信小程序发出，兴趣是「摄影」。后端用下面这段不依赖第三方包的 Python 把数据库、权限、模型草稿和失败日志串起来。保存为 `activity_trace.py`，执行 `python3 activity_trace.py`。
+
+```python
+activities = [
+    {"id": "a1", "title": "摄影社夜巡", "tag": "摄影", "start": "2026-10-16T19:00", "end": "2026-10-16T21:00"},
+    {"id": "a2", "title": "暗房工作坊", "tag": "摄影", "start": "2026-10-18T14:00", "end": "2026-10-18T16:00"},
+    {"id": "a3", "title": "校庆彩排", "tag": "摄影", "start": "2026-10-16T18:30", "end": "2026-10-16T20:00"},
+]
+registrations = [{"user_id": "demo-user", "activity_id": "a9"}]
+failure_log = []
+
+def overlaps(left, right):
+    return left["start"] < right["end"] and right["start"] < left["end"]
+
+def recommend(request):
+    if request["role"] != "student":
+        failure_log.append({
+            "request_id": request["id"],
+            "reason": "permission_denied",
+            "op": "read_activities",
+        })
+        return {"status": 403, "cards": []}
+    rows = [row for row in activities if row["tag"] == request["interest"]]
+    busy = {"start": "2026-10-16T18:00", "end": "2026-10-16T20:30"}
+    draft = rows[:2] + [row for row in rows if row["id"] == "a3"]
+    accepted = []
+    seen = set()
+    for row in draft:
+        if overlaps(row, busy):
+            failure_log.append({
+                "request_id": request["id"],
+                "reason": "time_conflict",
+                "activity_id": row["id"],
+            })
+            continue
+        if row["id"] not in seen:
+            accepted.append(row)
+            seen.add(row["id"])
+    return {
+        "status": 200,
+        "request_id": request["id"],
+        "db_ids": [row["id"] for row in rows],
+        "cards": [{"id": row["id"], "title": row["title"]} for row in accepted],
+        "model": "server-side-only",
+    }
+
+def register(user_id, activity_id):
+    if any(item["user_id"] == user_id and item["activity_id"] == activity_id for item in registrations):
+        return 409
+    registrations.append({"user_id": user_id, "activity_id": activity_id})
+    return 201
+
+student = {"id": "req_act_20261016_0142", "role": "student", "interest": "摄影"}
+print(recommend(student))
+print(register("demo-user", "a2"))
+print(register("demo-user", "a2"))
+print(recommend({"id": "req_act_20261016_0142", "role": "guest", "interest": "摄影"}))
+print(failure_log)
+```
+
+学生身份的推荐返回状态 200。数据库命中 `a1`、`a2`、`a3`。模型草稿把 `a1` 和 `a3` 也算进去，但两者都和用户已有的 18:00–20:30 冲突，失败日志记下 `time_conflict`。最终卡片只剩 `a2` 暗房工作坊。模型名字段写成 `server-side-only`：小程序不保存模型密钥，调用发生在后端。
+
+`register("demo-user", "a2")` 第一次返回 201，第二次返回 409。报名接口拒绝重复写入。访客角色再调 `recommend` 得到 403，失败日志追加 `permission_denied`。
+
+这一周的跨平台记录表加一行，指向这次运行：
+
+| 字段 | 记录 |
+|---|---|
+| 请求 | `req_act_20261016_0142` |
+| 平台 | 小程序发起，HTTPS 打到测试后端；管理后台不在这条路径上 |
+| 数据库 | `activities` 中 tag 为摄影的三行 |
+| 模型 | 后端生成草稿，冲突活动不返回给小程序 |
+| 权限 | `student` 可读活动；`guest` 被拒绝 |
+| 失败日志 | `a1`、`a3` 时间冲突；访客读取被拒绝；重复报名 409 |
+
 ## 24. 本周回顾
 
 本周的重点不是学会某个跨平台框架，而是学会用产品路径控制平台迁移的范围。一个可信的 Week 14 交付应该能回答：为什么是这个平台，为什么只迁移这条路径，哪些能力已经被验证，哪些能力还不能承诺。

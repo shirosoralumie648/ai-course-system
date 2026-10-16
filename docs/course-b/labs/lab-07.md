@@ -155,3 +155,23 @@ Stripe test mode 应保存：
 | Zeabur 部署 | 25 | 公网链接、构建日志和环境变量是否正确 |
 | 线上走查 | 15 | 主路径是否在线可用 |
 | 复盘证据 | 15 | 截图、日志、diff 和踩坑记录是否完整 |
+
+## 预期产物节选
+
+本地先交这段自检的输出，再交 Stripe 测试模式或模拟支付的订单状态截图：
+
+```text
+node billing-server.mjs --self-check
+self-check ok
+```
+
+订单表里的金额列来自 Checkout Session 的 `amount_total` 或模拟支付里由服务端写死的价格，不来自按钮上的 `amount` 参数。
+
+## 一种常见失败和排查
+
+失败：用户打开 `/success` 就把会员改成 active。没有 Webhook 的时候，直接访问这个地址也会开通。排查：把开通逻辑移到签名通过之后的 `checkout.session.completed`。用同一 `event.id` 投递两次，第二次应走重复分支，会员天数不加。把两次处理的日志贴进报告。
+
+## 思考题
+
+1. `lineItemFromRequest({ plan: "monthly", amount: 1 })` 的返回值里为什么没有 `amount`？真正扣款的 price id 从哪来？
+2. 同一 `event.id` 第二次到达时，`claimEvent` 返回什么？为什么这时仍要给 Stripe 回 HTTP 200，而不是 500？

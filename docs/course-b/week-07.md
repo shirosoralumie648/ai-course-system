@@ -411,6 +411,178 @@ sequenceDiagram
 有一个新手极易踩的坑：如果你的后端用了 `express.json()` 这类中间件，它会在 Webhook 路由之前就把请求体解析成 JSON。但 Stripe 验签需要的是**原始请求体（raw body）**，被提前解析过签名就对不上了。解决办法是给 Webhook 路由单独用 `express.raw({ type: 'application/json' })`，让它拿到原始字节流。
 :::
 
+### 4.6 状态机、验签、重复通知，以及金额在后端
+
+前面的提示词让 AI 去写支付。这一节把那四件事写成可以检查的代码。Stripe 的事件类型和验签方式见 [Webhook 签名](https://docs.stripe.com/webhooks#verify-official-libraries) 与 [事件类型](https://docs.stripe.com/api/event_types)。同一事件可能送达多次，官方在 [Handle duplicate events](https://docs.stripe.com/webhooks#handle-duplicate-events) 里要求接收端自己去重。
+
+支付在你的数据库里只有这几个状态。重复的 `checkout.session.completed` 停在「已支付」，不要再把会员天数加一次。
+
+```mermaid
+stateDiagram-v2
+  state "草稿" as draft
+  state "待支付" as checkout_open
+  state "已支付" as paid
+  state "已过期" as expired
+  state "已退款" as refunded
+  [*] --> draft
+  draft --> checkout_open: 后端创建 Session
+  checkout_open --> paid: checkout.session.completed
+  checkout_open --> expired: 会话过期
+  paid --> paid: 同一个 event.id 再次到达
+  paid --> refunded: charge.refunded
+```
+
+下面这份 `billing-server.mjs` 分成两截。不装依赖时，先跑纯逻辑自检：
+
+```bash
+node billing-server.mjs --self-check
+```
+
+它检查两件事：同一个 `event.id` 第二次不会被认领；请求体里的 `amount: 1` 不会进 `line_items`，价格只来自服务端的 price id。接上真实的 Stripe 测试密钥后，去掉 `--self-check` 才会 `import('express')` 和 `import('stripe')` 并监听端口。创建会话的字段以 [Create a Checkout Session](https://docs.stripe.com/api/checkout/sessions/create) 为准。
+
+```javascript
+const PRICE_BY_PLAN = {
+  monthly: process.env.STRIPE_PRICE_MONTHLY || 'price_monthly_test',
+  yearly: process.env.STRIPE_PRICE_YEARLY || 'price_yearly_test',
+}
+
+function priceIdForPlan(plan) {
+  if (typeof plan !== 'string') return null
+  return Object.prototype.hasOwnProperty.call(PRICE_BY_PLAN, plan)
+    ? PRICE_BY_PLAN[plan]
+    : null
+}
+
+function lineItemFromRequest(body) {
+  const price = priceIdForPlan(body && body.plan)
+  if (!price) return null
+  return { price, quantity: 1 }
+}
+
+function claimEvent(seen, eventId) {
+  if (seen.has(eventId)) return false
+  seen.add(eventId)
+  return true
+}
+
+function selfCheck() {
+  const seen = new Set()
+  if (claimEvent(seen, 'evt_1') !== true) throw new Error('first event should be claimed')
+  if (claimEvent(seen, 'evt_1') !== false) throw new Error('duplicate event should be skipped')
+  const item = lineItemFromRequest({ plan: 'monthly', amount: 1 })
+  if (!item || item.price !== PRICE_BY_PLAN.monthly || item.quantity !== 1) {
+    throw new Error('server must choose the price id')
+  }
+  if (Object.prototype.hasOwnProperty.call(item, 'amount')) {
+    throw new Error('client amount must not be forwarded')
+  }
+  if (lineItemFromRequest({ amount: 1 }) !== null) {
+    throw new Error('missing plan must be rejected')
+  }
+  console.log('self-check ok')
+}
+
+async function startServer() {
+  const { default: express } = await import('express')
+  const { default: Stripe } = await import('stripe')
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+    throw new Error('Set STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET')
+  }
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+  const app = express()
+  const seen = new Set()
+
+  app.post('/api/billing/create-checkout-session', express.json(), async (req, res) => {
+    const lineItem = lineItemFromRequest(req.body)
+    if (!lineItem) return res.status(400).json({ error: 'unknown plan' })
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [lineItem],
+      success_url: `${process.env.APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.APP_URL}/pricing`,
+      client_reference_id: String(req.body.userId || ''),
+      metadata: { plan: req.body.plan },
+    })
+    res.json({ url: session.url })
+  })
+
+  app.post('/api/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+    let event
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        req.headers['stripe-signature'],
+        process.env.STRIPE_WEBHOOK_SECRET
+      )
+    } catch (err) {
+      return res.status(400).send(`Webhook Error: ${err.message}`)
+    }
+    if (!claimEvent(seen, event.id)) {
+      return res.json({ received: true, duplicate: true })
+    }
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
+      console.log(JSON.stringify({
+        userId: session.client_reference_id,
+        plan: session.metadata && session.metadata.plan,
+        amountTotal: session.amount_total,
+        eventId: event.id,
+      }))
+    }
+    res.json({ received: true })
+  })
+
+  const port = Number(process.env.PORT || 3000)
+  app.listen(port, () => {
+    console.log(`billing server listening on ${port}`)
+  })
+}
+
+if (process.argv.includes('--self-check')) {
+  selfCheck()
+} else {
+  startServer().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
+}
+```
+
+内存里的 `Set` 只能演示一台机器、一次进程。进程重启后会把同一个 `event.id` 再处理一遍。要留下来的去重是数据库主键。Postgres 遇到重复主键会返回 `23505`：
+
+```sql
+CREATE TABLE stripe_events (
+  event_id text PRIMARY KEY,
+  event_type text NOT NULL,
+  processed_at timestamptz DEFAULT now()
+);
+```
+
+```javascript
+function decideClaim(error) {
+  if (error && error.code === '23505') return false
+  if (error) throw error
+  return true
+}
+
+async function claimEventInDb(supabase, event) {
+  const { error } = await supabase.from('stripe_events').insert({
+    event_id: event.id,
+    event_type: event.type,
+  })
+  return decideClaim(error)
+}
+
+console.log(decideClaim(null) === true)
+console.log(decideClaim({ code: '23505' }) === false)
+```
+
+把这一段存成 `claim-check.mjs` 再执行 `node claim-check.mjs`，两行都打印 `true`。第一行是插入成功，第二行是主键冲突 `23505`，这次不再处理业务。`claimEventInDb` 要有 Supabase 客户端才会真正写表；没有客户端时，上面两行已经把分支验完。
+
+`claimEventInDb` 返回 `false` 时，Webhook 仍然要回答 HTTP 200。Stripe 把非 2xx 当成失败，会继续重试。去重的含义是「这笔已经处理过」，不是「把 Stripe 的重试挡在门外直到它报警」。
+
+金额以 `session.amount_total` 为准，单位是货币的最小单位（美元套餐就是美分）。这个数字来自 Checkout Session 对象，也就是来自你在 Stripe 里配置的 Price，不是来自浏览器提交的 `amount`。开通会员时读这个字段，写进订单表。
+
 ---
 
 ## 5. 让 AI 一把接入 + 本地联调

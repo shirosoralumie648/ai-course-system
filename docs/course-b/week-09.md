@@ -643,7 +643,7 @@ MTEB、Reranker Leaderboard、LMArena 这些榜单是很好的「初筛」工具
 
 通过自动化批量测试，我们能够得到 RAG 系统的准确率等具体指标。这就形成了一个「评测、优化、再评测」的实用循环：先看数据找出问题，再调整检索方法或优化模型，然后重新测试验证效果。系统就在这样一次次的迭代中，实现持续改进和性能提升。
 
-你已经知道了评测在 RAG 中意味着什么，接下来我们将聚焦 RAG 评测的核心组成部分：常见的评测指标（如检索阶段的 Recall@K、生成阶段的 Faithfulness）、主流评测框架（如 RAGAS、ARES）与基准数据集（如 WikiEval、MedRAG）。鉴于这些内容覆盖面广、细节庞杂，此处暂先进行概览性介绍，帮助你建立整体认知框架。
+你已经知道了评测在 RAG 中意味着什么。下面先把 Recall@K 和 MRR 在 5 条查询上算完，再说明每个被点到名字的框架评的是检索、生成，还是两者一起。算式和论文都写在这一节里，作业按这张手算表批改。
 
 若你需要深入掌握具体细节（如指标的数学计算逻辑、框架的实操部署步骤、不同基准数据集的适用场景等），建议参考以下两篇 RAG 评测领域的论文：
 
@@ -672,7 +672,32 @@ RAG 系统的评估本质上围绕两个核心问题：检索模块能否准确�
 - **NDCG@K（Normalized Discounted Cumulative Gain）** 考虑了相关性分级和位置衰减两个因素。它不仅关注文档是否相关，还关注相关程度；同时，越相关的文档排在越前面，得分越高。这使得 NDCG 成为衡量排序质量最全面的指标之一。
 - **MAP（Mean Average Precision）** 综合考虑所有相关文档的位置，对整体排序质量更为敏感。
 
-在实际工程中，我们通常采用 Recall@K + MRR@K 的组合，既保证召回覆盖面又约束排序质量。举个例子，如果发现 Recall@10 达到 80% 但 MRR@10 只有 0.3，说明相关文档虽然被找到了但都埋在后面，这时就需要优化重排序策略，比如引入交叉编码器或调整多路召回的权重分配。必要时，还可以补充 Coverage 指标来监控知识库覆盖情况，发现系统性的召回盲区。
+在实际工程中，我们通常采用 Recall@K + MRR 的组合，既保证召回覆盖面又约束排序质量。如果相关文档都挤在第 K 名之后，Recall@K 会很低；如果相关文档找回来了但第一条相关结果排得很靠后，MRR 会低。这时再考虑重排序。必要时，还可以补充 Coverage 指标来监控知识库覆盖情况，发现系统性的召回盲区。
+
+#### 五条查询手算 Recall@3 和 MRR
+
+记号先定死，避免和「大约百分之多少」混在一起。
+
+- 相关集合由人标注，不由模型自己宣布。
+- Recall@3 = 前 3 名里命中的相关文档数 / 该题相关文档总数。
+- 某一题的 RR = 1 / 第一条相关文档的名次。整条排序里都没有相关文档时，RR = 0。
+- MRR = 五题 RR 的算术平均。
+
+| 题 | 相关集合 | 排序（从第 1 名到更后） | 前 3 名命中 | Recall@3 | 首个相关名次 | RR |
+|---|---|---|---|---:|---:|---:|
+| Q1 | {A, C} | A, B, C, D | A 与 C，2/2 | 1 | 1 | 1 |
+| Q2 | {B} | A, B, C, D | B，1/1 | 1 | 2 | 1/2 |
+| Q3 | {E} | A, B, C, D, E | 没有 | 0 | 5 | 1/5 |
+| Q4 | {C} | D, A, B, C | 没有，C 在第 4 名 | 0 | 4 | 1/4 |
+| Q5 | {E, A} | E, A, B, D | E 与 A，2/2 | 1 | 1 | 1 |
+
+平均 Recall@3 = (1 + 1 + 0 + 0 + 1) / 5 = 0.6。
+
+五题 RR 之和 = 1 + 1/2 + 1/5 + 1/4 + 1。通分到 20：20/20 + 10/20 + 4/20 + 5/20 + 20/20 = 59/20。再除以 5，MRR = 59/100 = 0.59。
+
+Q1 的 Recall 是 1，因为两个相关文档都在前 3 名。Q4 的 Recall@3 是 0，但 RR 仍是 1/4，因为第 4 名确实是相关文档。两个数回答的不是同一个问题：一个问「前 K 名盖住了多少标注」，一个问「第一个正确结果出现得有多早」。
+
+把这张表交作业时，写出每一题的分子和分母。只写 0.6 和 0.59，看不出 Q3 和 Q4 错在名次的哪一档。
 
 **生成质量评估：准确性与事实忠实度**
 
@@ -715,7 +740,24 @@ LLM 裁判的优势在于能进行更接近人类的整体性判断——它可�
 - **基准测试框架**则提供了标准化的测试集和评测流程，用于横向比较不同 RAG 系统的性能。这类框架数量最多、影响最广。例如：**RAGAS**（2023.09）是最早的综合性 RAG 评测框架之一，采用 LLM-as-a-Judge 模式，同时评估检索和生成两个环节；**ARES**（2023.11）引入了分类器辅助的评测方法；**RGB**（2023.12）专注于生成阶段的评估，提出了信息整合、噪声鲁棒性、负样本拒绝、反事实鲁棒性等细分维度；**MultiHop-RAG**（2024.01）针对多跳推理场景；**CRUD-RAG**（2024.02）模拟真实的知识管理场景，评估系统在 Create、Read、Update、Delete 四种操作下的表现。进入 2024 年后，评测框架呈现出明显的专业化和细分化趋势：医疗领域有 MedRAG，法律领域有 LegalBench-RAG，金融领域有相关的 domain-specific 框架。
 - **工具型框架**则侧重于工程实践，提供了易用的评测工具和集成方案。TruEra RAG Triad、LangChain Benchmarks、RECALL 等都属于这一类。它们通常与主流的 RAG 开发框架深度集成，支持快速接入现有系统。
 
-在具体实战中该如何选择？不妨先选取 GitHub 星标数量较多的几款进行初步测试；而当企业面临丰富的框架选择、需要落地决策时，可从以下几方面着手：**快速上手需求**（可选 RAGAS、RAGEval 等综合性框架），**深入诊断某一环节**（检索效果不佳用 MultiHop-RAG，幻觉问题突出用 CoURAGE），**结合行业进行选择**（医疗、法律、金融等专业领域优先选适配框架），**根据集成成本选择**（如 LangChain Benchmarks、TruEra RAG Triad 已与主流框架深度集成）。社区中还公认推荐了一批工具：Ragas 提供丰富指标且不绑定特定框架；Continuous Eval 以轻量和低成本为特点；TruLens-Eval 与 LangChain、Llama-Index 集成良好并提供可视化分析；还有 Phoenix、DeepEval、LangSmith 和 OpenAI Evals 等工具也在持续迭代中。
+#### 6.3.4 每个名字评的是检索还是生成
+
+上文点了一串名字。能打开论文或官方文档的，按它实际测量的对象归类。作业引用时写这张表里的链接，不要只写框架简称。
+
+| 名字 | 评什么 | 依据 |
+|---|---|---|
+| FiD-Light | 生成效果和出处检索一起评，论文的重点是降低阅读多段文本时的延迟 | [Hofstätter 等，arXiv:2209.14290](https://arxiv.org/abs/2209.14290) |
+| Diversity rerank（MMR） | 检索之后的重排，让结果不要挤在同一主题上；不给生成打分 | Carbonell 与 Goldstein，SIGIR 1998，*The Use of MMR, Diversity-Based Reranking for Reordering Documents and Producing Summaries* |
+| RAGAS | 检索看 context precision / context recall，生成看 faithfulness 与 answer relevancy | [Es 等，arXiv:2309.15217](https://arxiv.org/abs/2309.15217) |
+| ARES | 同样分开评 context relevance、answer faithfulness、answer relevance | [Saad-Falcon 等，arXiv:2311.09476](https://arxiv.org/abs/2311.09476) |
+| RGB | 在已经给定的检索上下文上，评生成是否受噪声、反事实和该拒答的题影响 | [Chen 等，arXiv:2309.01431](https://arxiv.org/abs/2309.01431) |
+| MultiHop-RAG | 评多跳检索能不能找齐证据，并检查最终答案是否用上了这些证据 | [Tang 与 Yang，arXiv:2401.15391](https://arxiv.org/abs/2401.15391) |
+| CRUD-RAG | 端到端。Create / Read / Update / Delete 四类任务同时看检索组件和生成结果 | [Lyu 等，arXiv:2401.17043](https://arxiv.org/abs/2401.17043) |
+| MedRAG | 医学问答里的检索语料和生成答案一起评 | [Xiong 等，arXiv:2402.13178](https://arxiv.org/abs/2402.13178) |
+| LegalBench-RAG | 只评检索。标注是法律文本里的字符片段，指标是 precision 和 recall | [Pipitone 与 Houir Alami，arXiv:2408.10343](https://arxiv.org/abs/2408.10343) |
+| TruLens RAG Triad | context relevance 评检索到的上下文，groundedness 与 answer relevance 评生成 | [TruLens：The RAG Triad](https://www.trulens.org/getting_started/core_concepts/rag_triad/) |
+
+上文还提到 RAGEval、CoURAGE、RECALL、Continuous Eval、Phoenix、DeepEval、LangSmith、OpenAI Evals。这些名字没有放进表里：本课没有逐一核对到一篇论文或一份官方指标说明，作业里先不要把它们写成「它评检索」或「它评生成」。要用其中某一个，先把文档链接和指标名称抄进参考借鉴说明。
 
 **评测基准**的重要性在实践中常常被低估。许多团队在搭建 RAG 系统时，往往仅依靠少量人工编写的测试问题便匆忙开始评估，导致上线后的实际效果与测试阶段的表现差距显著。一个能够有效支撑系统迭代的评测基准，通常具备三个核心特征：**代表性**（测试数据需要全面覆盖真实业务中的各种场景）、**标准化**（问题和答案的格式、难度系数、评分标准需要统一规范）、**可演化性**（基准应能随着系统能力提升和业务需求变化而持续更新）。
 
@@ -806,6 +848,73 @@ print(answer("今天天气怎么样？"))            # 无证据过阈值，老�
 
 这段代码每次检索都遍历全部文档、算全部相似度，几条数据没问题，文档一多就慢得没法用。真实系统会用**向量数据库**做近似最近邻检索（ANN），还要处理切分策略、重排序、混合检索等一堆工程问题——也就是前面 Advanced RAG 和 Modular RAG 讲的那些。这些是下周的内容。这周的目标只有一个：**把 RAG 三步彻底搞懂，能自己实现一遍。**
 </InfoCard>
+
+### 7.1 阈值改前改后：三条问题的评测记录
+
+第八周那张表留下了切分、Top K 和拒答阈值。这里用一组固定的六维向量把阈值算死，不调用付费接口。向量和 `cosine` 与第 4 节的示意同一形状，分数保留四位，是这组数的余弦，不是接口返回值。保存为 `rag_threshold_record.py` 后执行 `python3 rag_threshold_record.py`。
+
+```python
+import math
+
+DOCS = {
+    "A": [0.85, -0.23, 0.41, -0.56, 0.12, 0.78],
+    "B": [-0.12, 0.95, -0.34, 0.67, -0.89, 0.05],
+    "C": [0.79, -0.18, 0.52, -0.61, 0.23, 0.81],
+}
+QUERIES = {
+    "苹果公司是什么时候创立的？": [0.82, -0.21, 0.38, -0.58, 0.15, 0.76],
+    "吃苹果有什么好处？": [-0.08, 0.92, -0.31, 0.71, -0.85, 0.08],
+    "今天天气怎么样？": [0.05, 0.10, 0.95, 0.20, -0.15, -0.40],
+}
+
+def cosine(left, right):
+    dot = sum(x * y for x, y in zip(left, right))
+    left_norm = math.sqrt(sum(x * x for x in left))
+    right_norm = math.sqrt(sum(y * y for y in right))
+    return dot / (left_norm * right_norm)
+
+def retrieve(query, threshold, top_k=2):
+    scored = [(doc_id, cosine(query, vector)) for doc_id, vector in DOCS.items()]
+    scored.sort(key=lambda item: item[1], reverse=True)
+    return [(doc_id, score) for doc_id, score in scored[:top_k] if score >= threshold]
+
+for question, vector in QUERIES.items():
+    print(question)
+    for threshold in (0.0, 0.3):
+        hits = retrieve(vector, threshold)
+        if not hits:
+            print(f"  threshold={threshold:.1f} 拒答")
+        else:
+            shown = ", ".join(f"{doc_id}={score:.4f}" for doc_id, score in hits)
+            print(f"  threshold={threshold:.1f} {shown}")
+```
+
+脚本打印：
+
+```text
+苹果公司是什么时候创立的？
+  threshold=0.0 A=0.9992, C=0.9933
+  threshold=0.3 A=0.9992, C=0.9933
+吃苹果有什么好处？
+  threshold=0.0 B=0.9985
+  threshold=0.3 B=0.9985
+今天天气怎么样？
+  threshold=0.0 C=0.0232, B=0.0084
+  threshold=0.3 拒答
+```
+
+把打印结果填进和第八周一样的记录表。前两题在 0.0 和 0.3 下命中的文档相同，因为相关文档的余弦都远高于 0.3，不相关文档是负数，连 0.0 都过不了。第三题在 0.0 时仍返回 C 和 B：它们和天气无关，只是这三条里相对不那么负。按第 7 节的 `answer()`，`hits` 非空就不会走「根据现有资料无法回答」那个分支，无关片段会进入提示词。阈值改成 0.3 后 `hits` 为空，函数在调用对话模型之前返回拒答句。
+
+| 问题 | 阈值 | 进入提示词的片段 | 是否走到拒答分支 |
+|---|---:|---|---|
+| 苹果公司是什么时候创立的？ | 0.0 | A=0.9992，C=0.9933 | 否 |
+| 苹果公司是什么时候创立的？ | 0.3 | A=0.9992，C=0.9933 | 否 |
+| 吃苹果有什么好处？ | 0.0 | B=0.9985 | 否 |
+| 吃苹果有什么好处？ | 0.3 | B=0.9985 | 否 |
+| 今天天气怎么样？ | 0.0 | C=0.0232，B=0.0084 | 否，无关片段仍会送给模型 |
+| 今天天气怎么样？ | 0.3 | 无 | 是 |
+
+这张表就是「改阈值」的证据。它不需要编一条天气预报当模型输出。代码分支本身已经说明：0.0 挡不住无关片段，0.3 在调用模型前停住。
 
 ---
 

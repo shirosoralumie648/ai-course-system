@@ -247,6 +247,77 @@ WHERE
 
 这个查询会跨越 5 个表，将所有相关数据聚合在一起返回。这是关系数据库的核心优势：通过规范化和连接操作，可以灵活地进行各种复杂的查询，同时保证了数据的一致性和最小冗余。
 
+#### 为什么要拆开：用一笔订单看范式
+
+上面的博客例子说「减少冗余」。订单场景把后果算得更具体。William Kent 在 *Communications of the ACM* 1983 年的 [A Simple Guide to Five Normal Forms in Relational Database Theory](https://dl.acm.org/doi/10.1145/358024.358054) 里用更新异常说明为什么要拆表。这里只用前三范式，并且每一步都能在 Supabase 的 SQL Editor 里执行。
+
+先看一张故意写宽的表。顾客邮箱和菜品名都塞进订单行：
+
+```sql
+CREATE TABLE order_lines_wide (
+  line_id integer PRIMARY KEY,
+  order_id integer NOT NULL,
+  customer_email text NOT NULL,
+  sku text NOT NULL,
+  item_name text NOT NULL,
+  qty integer NOT NULL,
+  unit_price numeric(10, 2) NOT NULL
+);
+
+INSERT INTO order_lines_wide
+  (line_id, order_id, customer_email, sku, item_name, qty, unit_price)
+VALUES
+  (1, 501, 'ada@example.com', 'BGR001', 'Beef Burger', 1, 12.00),
+  (2, 501, 'ada@example.com', 'DRK002', 'Cola', 2, 4.00);
+```
+
+这张表连第一范式都勉强算过：每一格是一个值，没有「把两道菜写进同一个格子」。问题出在依赖关系。
+
+- 第二范式：`item_name` 只取决于 `sku`，不取决于这一行的订单。把菜名写在每一行上，改一次菜名就要改很多行。
+- 第三范式：`customer_email` 取决于顾客，不取决于 `line_id`。Ada 改邮箱时，如果只改了第 1 行、漏了第 2 行，同一笔订单里会出现两个邮箱。
+
+拆开之后，邮箱只活在顾客表，菜名只活在菜品表：
+
+```sql
+CREATE TABLE customers (
+  customer_id integer PRIMARY KEY,
+  email text NOT NULL UNIQUE
+);
+
+CREATE TABLE menu_items (
+  sku text PRIMARY KEY,
+  item_name text NOT NULL,
+  unit_price numeric(10, 2) NOT NULL
+);
+
+CREATE TABLE orders_norm (
+  order_id integer PRIMARY KEY,
+  customer_id integer NOT NULL REFERENCES customers (customer_id)
+);
+
+CREATE TABLE order_lines (
+  line_id integer PRIMARY KEY,
+  order_id integer NOT NULL REFERENCES orders_norm (order_id),
+  sku text NOT NULL REFERENCES menu_items (sku),
+  qty integer NOT NULL CHECK (qty > 0)
+);
+
+INSERT INTO customers (customer_id, email) VALUES (1, 'ada@example.com');
+INSERT INTO menu_items (sku, item_name, unit_price) VALUES
+  ('BGR001', 'Beef Burger', 12.00),
+  ('DRK002', 'Cola', 4.00);
+INSERT INTO orders_norm (order_id, customer_id) VALUES (501, 1);
+INSERT INTO order_lines (line_id, order_id, sku, qty) VALUES
+  (1, 501, 'BGR001', 1),
+  (2, 501, 'DRK002', 2);
+
+UPDATE customers SET email = 'ada.new@example.com' WHERE customer_id = 1;
+```
+
+最后这一句 `UPDATE` 只改一行。订单 501 的两行明细跟着外键看到的都是新邮箱，不存在「改了一半」。查询时再用 `JOIN` 把名字拼回来，这就是前面那条五表查询在做的事。
+
+范式不是要求所有系统都拆到最碎。后面的文档数据库例子会把作者嵌进文章里，用读性能换更新成本。选择的依据是：这个字段改一次，要改几行；改漏一行时，业务是否还能自圆其说。
+
 #### 非关系数据库 (NoSQL) 示例
 
 NoSQL 数据库（如 MongoDB、Redis）的设计思路与 SQL 相反，它不强调数据的拆分与规范，通常会将业务上相关联的所有数据打包聚合在一起，以减少查询时的连接操作，从而提高读取性能。
@@ -773,6 +844,164 @@ RLS 正是为解决这类数据安全与隔离需求而生。它允许开发者�
 
 只要你的应用有「用户只能看自己的数据」这种需求，RLS 几乎是必须的。开发阶段为了方便测试可以暂时关掉，但**生产环境一定要打开并配好策略**——否则任何人拿到 anon key 就能读到全表数据。小哲后面会反复用到 `auth.uid()` 这个函数。
 </InfoCard>
+
+### 2.5 关掉 RLS 之后，anon key 能读到什么
+
+Supabase 把 `public` 里的表通过 API 暴露出去。官方说明写在 [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)：表如果没有启用 RLS，持有 anon key 的客户端可以按表上的权限读到行。anon key 是公开的，它不是秘密口令。
+
+课堂表不要复用前面的 `orders.user_id`。那一列是整数，`auth.uid()` 返回的是 UUID，两列不能直接比较。单独建一张带 `owner_id uuid` 的表：
+
+```sql
+CREATE TABLE order_notes (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  owner_id uuid NOT NULL,
+  note text NOT NULL
+);
+
+INSERT INTO order_notes (owner_id, note) VALUES
+  ('11111111-1111-1111-1111-111111111111', 'Ada 的订单备注'),
+  ('22222222-2222-2222-2222-222222222222', 'Bo 的订单备注');
+
+ALTER TABLE order_notes DISABLE ROW LEVEL SECURITY;
+```
+
+在 RLS 关闭时，用项目的 anon key 调用：
+
+```javascript
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+)
+
+const { data, error } = await supabase
+  .from('order_notes')
+  .select('id, owner_id, note')
+
+console.log(error)
+console.log(data)
+```
+
+`data` 里会同时出现 Ada 和 Bo 的备注。调用方没有登录。把 RLS 打开，并且先不写任何允许读取的策略：
+
+```sql
+ALTER TABLE order_notes ENABLE ROW LEVEL SECURITY;
+```
+
+同一段 JavaScript 再跑一次，`data` 变成空数组。Postgres 对启用了 RLS、又没有任何通过策略的角色，默认不返回行。最后补上「只能读自己的备注」：
+
+```sql
+CREATE POLICY order_notes_select_own
+  ON order_notes
+  FOR SELECT
+  TO authenticated
+  USING (owner_id = auth.uid());
+```
+
+anon key 仍然读不到行，因为它不是 `authenticated`。用户登录之后，JWT 里的 `auth.uid()` 等于哪一行的 `owner_id`，就只能看到那一行。把这次实验记成三行：RLS 关、RLS 开但无策略、RLS 开且有策略。每一行贴 `select` 的返回。
+
+### 2.6 一笔订单的事务：失败就整笔回滚
+
+PostgreSQL 的事务说明在 [Tutorial: Transactions](https://www.postgresql.org/docs/current/tutorial-transactions.html)。`BEGIN` 和 `COMMIT` 之间的语句要么全部留下，要么 `ROLLBACK` 全部撤销。
+
+订单从 `pending` 变成 `paid` 时，要同时写一笔收款。两步必须一起成功。先准备收款表，再故意让第二步失败：
+
+```sql
+CREATE TABLE payments (
+  payment_id integer PRIMARY KEY,
+  order_id integer NOT NULL,
+  amount numeric(10, 2) NOT NULL CHECK (amount > 0)
+);
+
+BEGIN;
+UPDATE orders
+SET status = 'paid', is_paid = true
+WHERE id = 1 AND status = 'pending';
+
+INSERT INTO payments (payment_id, order_id, amount)
+VALUES (1, 1, 0);
+ROLLBACK;
+```
+
+`amount > 0` 会拒绝 `0`，所以 `INSERT` 失败。因为还在同一个事务里，前面的 `UPDATE` 也不会留下。回滚之后执行：
+
+```sql
+SELECT id, status, is_paid FROM orders WHERE id = 1;
+SELECT count(*) FROM payments;
+```
+
+订单 1 仍然是插入脚本里的 `pending` / `false`，`payments` 是 0 行。把 `ROLLBACK` 换成成功路径时，金额必须大于 0，并且两句都执行完再 `COMMIT`：
+
+```sql
+BEGIN;
+UPDATE orders
+SET status = 'paid', is_paid = true
+WHERE id = 1 AND status = 'pending';
+
+INSERT INTO payments (payment_id, order_id, amount)
+VALUES (1, 1, 23.50);
+COMMIT;
+```
+
+如果应用在两句之间崩溃、又没有事务，就会出现「订单已标记支付，收款表没有这笔钱」。这就是要把这两句放进同一个 `BEGIN` 的原因。
+
+### 2.7 三道手写查询
+
+数据就是 2.3.2 插入的那 11 行 `orders`。不要用图形界面点筛选，把 SQL 写出来。做完再打开答案。
+
+**第一题。** 列出所有 `is_paid = true` 的订单，只要 `user_id` 和 `amount`，按 `amount` 从高到低。
+
+**第二题。** 按 `status` 汇总：每种状态有多少笔，金额合计是多少。金额保留两位小数。
+
+**第三题。** 找出还没支付、并且 `details` 里的菜名包含 `Beef Burger` 的订单，返回 `user_id` 和 `amount`。
+
+<details>
+<summary>参考答案与核对用的结果</summary>
+
+第一题：
+
+```sql
+SELECT user_id, amount
+FROM orders
+WHERE is_paid = true
+ORDER BY amount DESC;
+```
+
+五行：`2002 / 50.00`，`2008 / 26.99`，`2004 / 22.98`，`2010 / 19.89`，`2006 / 8.00`。`2007` 的状态是 `refunded`，`is_paid` 是 `false`，不在结果里。
+
+第二题：
+
+```sql
+SELECT status,
+       count(*) AS order_count,
+       round(sum(amount), 2) AS total_amount
+FROM orders
+GROUP BY status
+ORDER BY status;
+```
+
+| status | order_count | total_amount |
+|---|---:|---:|
+| cancelled | 2 | 15.00 |
+| paid | 5 | 127.86 |
+| pending | 3 | 52.24 |
+| refunded | 1 | 14.50 |
+
+`paid` 的合计是 50.00 + 22.98 + 8.00 + 26.99 + 19.89 = 127.86。`pending` 是 23.50 + 18.75 + 9.99 = 52.24。
+
+第三题。JSONB 的包含运算要求数组里存在一个至少带这些键的对象，见 [PostgreSQL JSON functions](https://www.postgresql.org/docs/current/functions-json.html)：
+
+```sql
+SELECT user_id, amount
+FROM orders
+WHERE is_paid = false
+  AND details->'items' @> '[{"name":"Beef Burger"}]';
+```
+
+两行：`user_id` 2001，金额 23.50；`user_id` 2005，金额 18.75。`user_id` 2010 也有 Beef Burger，但 `is_paid` 是 `true`，被 `WHERE` 排除。
+
+</details>
 
 ---
 

@@ -1241,6 +1241,31 @@ trace 包含任务、允许文件、审批、diff、测试命令和剩余风险�
 
 然后展示 trace 文件的一页即可。不要放 20 张聊天截图。
 
+## 纵向追踪：谁可以改这条请求的代码
+
+第 14 周的 `activity_trace.py` 已经把 `req_act_20261016_0142` 跑完：时间冲突被记进 `failure_log`，访客得到 403，重复报名得到 409。这一周不再换一个故事。Agent 只被允许修「冲突活动仍可能被推荐」这一处，如果推荐函数以后又把冲突活动放进 `cards`。
+
+规则文件里写死范围：
+
+```markdown
+## 任务
+- 请求：req_act_20261016_0142
+- 允许修改：activity_trace.py 里的 recommend
+- 禁止：改 activities 的原始时间来让冲突消失；把 guest 改成可以读活动；删掉 failure_log
+- 验收：python3 activity_trace.py 的学生请求仍只返回 a2；failure_log 里仍有 a1 和 a3 的 time_conflict
+```
+
+人工门放在跑脚本之前。人先看 diff，确认没有删日志、没有放宽 `role != "student"` 这个判断，再执行脚本。执行 trace 就填这一张，供第 16 周的证据索引引用：
+
+| 项 | 记录 |
+|---|---|
+| 任务 | 保持冲突活动不进入 cards |
+| 允许文件 | `activity_trace.py` |
+| 禁止 | 改测试数据、放宽访客权限、删除失败日志 |
+| 人的批准 | 看完 diff 后才运行 `python3 activity_trace.py` |
+| 结果 | 学生请求的 cards 只有暗房工作坊；日志保留 time_conflict 与 permission_denied |
+| 剩余风险 | 忙闲时间写在函数内部，还没有变成数据库里的课表 |
+
 ## 26. 本周回顾
 
 本周的核心不是让 Agent 变多，而是让责任边界变清楚。一个可信的 AI 工程工作流应该能被复盘：谁提出任务，谁批准边界，工具有什么权限，AI 产生了哪些改动，验证证据在哪里，人类最终判断了什么。
