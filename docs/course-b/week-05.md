@@ -8,6 +8,34 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '三道查询', detail: '对已有的 11 行 orders 写出 SQL 和结果' },
+  { title: 'RLS 三行记录', detail: '关闭、开启无策略、只读本人' },
+  { title: '一笔回滚', detail: '金额为 0 时订单状态不留下' }
+]" />
+
+```mermaid
+flowchart LR
+  begin["BEGIN"]
+  upd["订单改为 paid"]
+  pay["写入收款"]
+  bad{"收款金额大于 0"}
+  commit["COMMIT"]
+  back["ROLLBACK"]
+  begin --> upd --> pay --> bad
+  bad -->|是| commit
+  bad -->|否| back
+```
+
+<CheckList storage-key="c-b-w05" :items="['paid 五行合计 127.86', 'anon key 在 RLS 关闭时读到两行备注', 'ROLLBACK 后 payments 是 0 行']" />
+<ErrorLookup :rows="[
+  { symptom: 'anon key 读到了别人的备注', cause: '表没有打开 RLS', fix: 'ENABLE ROW LEVEL SECURITY，不要先写 USING true' },
+  { symptom: '订单已是 paid，收款表没有这笔', cause: '两条语句不在同一个事务里', fix: '放进同一个 BEGIN，失败就 ROLLBACK' }
+]" />
+<QuizCard question="Ada 的邮箱在宽表里出现两次。拆表之后，改邮箱要改几行？">
+一行，在 customers 表。订单明细通过外键看到新邮箱。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 数据库是什么', description: '数据、关系型 vs 非关系型' },
   { title: '② 认识 Supabase', description: '控制台逐项拆解' },
@@ -847,6 +875,8 @@ RLS 正是为解决这类数据安全与隔离需求而生。它允许开发者�
 
 ### 2.5 关掉 RLS 之后，anon key 能读到什么
 
+![anon key 在三种 RLS 状态下能读到的行](figures/rls-anon.svg)
+
 Supabase 把 `public` 里的表通过 API 暴露出去。官方说明写在 [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)：表如果没有启用 RLS，持有 anon key 的客户端可以按表上的权限读到行。anon key 是公开的，它不是秘密口令。
 
 课堂表不要复用前面的 `orders.user_id`。那一列是整数，`auth.uid()` 返回的是 UUID，两列不能直接比较。单独建一张带 `owner_id uuid` 的表：
@@ -947,6 +977,8 @@ COMMIT;
 如果应用在两句之间崩溃、又没有事务，就会出现「订单已标记支付，收款表没有这笔钱」。这就是要把这两句放进同一个 `BEGIN` 的原因。
 
 ### 2.7 三道手写查询
+
+<ShotPlaceholder tool="Supabase SQL Editor 的结果表" caption="用本周插入的 11 行 orders 跑出已支付订单五行：2002/50.00、2008/26.99、2004/22.98、2010/19.89、2006/8.00。结果网格要能看见 user_id 和 amount 两列。" />
 
 数据就是 2.3.2 插入的那 11 行 `orders`。不要用图形界面点筛选，把 SQL 写出来。做完再打开答案。
 

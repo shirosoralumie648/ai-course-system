@@ -6,6 +6,14 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '证据索引', detail: '请求号、数据库、权限、日志、Agent 各一行' }
+]" />
+<CheckList storage-key="c-b-l16" :items="['先讲请求号', '403 和没进卡片的原因分开写']" />
+<QuizCard question="索引的权限一行对应哪一次调用？">
+访客再调推荐，返回 403，原因是 permission_denied。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 整理材料', description: '收集链接、截图、日志和报告' },
   { title: '② 准备 Demo', description: '设计 2 分钟核心演示' },

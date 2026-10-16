@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '手算表', detail: '五题的分子和分母，不只写 0.6' },
+  { title: '两条边界日志', detail: '像天气题一样写明没有进入提示词' }
+]" />
+<CheckList storage-key="c-b-l09" :items="['Q4 的 RR 写成 1/4', '阈值 0.3 的天气题是拒答']" />
+<QuizCard question="天气题在阈值 0.0 时，为什么不会走进拒答分支？">
+最高分是 0.0232，仍然大于 0，hits 不是空的，无关片段会进入提示词。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 准备语料', description: '整理项目文档和测试问题' },
   { title: '② 文档切块', description: '记录 chunk 与来源编号' },
@@ -183,5 +192,5 @@
 
 ## 思考题
 
-1. Q5 的相关集合是 {E, A}，排序是 E, A, B, D。Recall@3 的分子和分母各是多少？第一条相关文档的 RR 是多少？
+1. Q5 的相关集合是 &#123;E, A&#125;，排序是 E, A, B, D。Recall@3 的分子和分母各是多少？第一条相关文档的 RR 是多少？
 2. 天气问题在阈值 0.0 时为什么不会走进 `if not hits` 的拒答分支？把脚本打印的那两个分数写出来。

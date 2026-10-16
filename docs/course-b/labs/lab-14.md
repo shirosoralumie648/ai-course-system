@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '请求记录', detail: '数据库 id、返回卡片、失败日志' },
+  { title: '一条端到端路径', detail: '含一次错误状态' }
+]" />
+<CheckList storage-key="c-b-l14" :items="['没有把管理后台迁进小程序', '重复操作有错误文案']" />
+<QuizCard question="role 不是 student 时，推荐接口返回什么？">
+状态 403，失败日志的 reason 是 permission_denied。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 锁定平台', description: '从决策矩阵选择一个方向' },
   { title: '② 定义路径', description: '写清用户从入口到结果' },

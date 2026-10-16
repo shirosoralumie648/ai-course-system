@@ -10,6 +10,27 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '证据索引', detail: '每一列都能指回同一次脚本输出' },
+  { title: '请求号', detail: '答辩先说编号，再说哪两张卡片被拿掉' },
+  { title: '限制说明', detail: '忙闲时间还写在函数里，这一点要承认' }
+]" />
+
+```mermaid
+flowchart LR
+  req["请求号"]
+  db["数据库 id"]
+  model["模型字段"]
+  perm["403"]
+  log["失败日志"]
+  req --> db --> model --> perm --> log
+```
+
+<CheckList storage-key="c-b-w16" :items="['索引里有请求号', '权限一行对应访客调用', '卡片缺失和数据库没命中分成两行']" />
+<QuizCard question="卡片里没有 a1，和数据库没查到 a1，有什么区别？">
+数据库查到了 a1，它在 db_ids 里。它没进卡片，是因为时间冲突被失败日志拿掉了。
+</QuizCard>
+
 ## 上节课回顾
 
 第 15 周我们给期末项目建立了 Agent 工程规则：`AGENTS.md`、Human Gate、MCP 工具卡、Agent Team 角色表和一次执行 trace。它解决的是"AI 在最后交付阶段如何被管理"的问题。

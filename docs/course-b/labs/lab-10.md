@@ -6,6 +6,14 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '四格记录', detail: '切分、重排、拒答、转人工' }
+]" />
+<CheckList storage-key="c-b-l10" :items="['没有答应退款金额', '缺订单号时只追问', '转人工包里有订单状态']" />
+<QuizCard question="订单状态是 unpaid 时，哪一句越权了？">
+复述未支付是在用业务记录。答应马上全额退款越权，应转人工。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 复盘 badcase', description: '从 Lab 09 选失败样本' },
   { title: '② 拆分知识域', description: '区分产品、流程、政策等资料' },

@@ -8,6 +8,26 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '五题手算', detail: 'Recall@3 平均 0.6，MRR 是 0.59，要写分子分母' },
+  { title: '阈值记录', detail: '三条问题在 0.0 和 0.3 下各一行' },
+  { title: '框架归类', detail: '每个名字标明评检索、评生成，或两者都评' }
+]" />
+<TryIt command="python3 rag_threshold_record.py">
+今天天气怎么样？
+  threshold=0.0 C=0.0232, B=0.0084
+  threshold=0.3 拒答
+</TryIt>
+<CheckList storage-key="c-b-w09" :items="['五题都写了相关集合和名次', 'Q4 的 Recall@3 是 0 但 RR 是 1/4', '天气题在 0.3 时走拒答']" />
+<GlossaryList :terms="[
+  { term: 'Recall@3', def: '前 3 名里命中的相关文档数，除以该题相关文档总数' },
+  { term: 'RR', def: '1 除以第一条相关文档的名次；完全没有则是 0' },
+  { term: 'MRR', def: '各题 RR 的算术平均' }
+]" />
+<QuizCard question="Q5 的相关集合是 E 和 A，排序是 E、A、B、D。Recall@3 的分子和分母是多少？">
+分子 2，分母 2，Recall@3 是 1。第一条相关文档在第 1 名，RR 是 1。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 拆开 Dify 黑盒', description: '小哲的疑问从哪来' },
   { title: '② 为什么需要 RAG', description: '长上下文解决不了的事' },
@@ -118,7 +138,18 @@ RAG 的核心思路是让大模型在回答问题时，不仅依赖训练阶段�
 
 在索引阶段，系统会先处理企业内部文档、网页文章、报告等原始资料，将它们拆分成较小的语义片段（chunks），再用向量模型为每个片段生成向量表示并建立索引。这样，后续接收到用户问题时，就可以在向量空间中快速找到「语义最相近」的几段内容。
 
-在图中，这一阶段对应右上角紫色区域「Indexing」。从「Documents」出发，经由「Chunks / Vectors」到「embeddings」的那一部分，就是在说明文档被切块并转换为向量、写入索引的过程。具体过程如下：
+在图中，这一阶段对应右上角紫色区域「Indexing」。从「Documents」出发，经由「Chunks / Vectors」到「embeddings」的那一部分，就是在说明文档被切块并转换为向量、写入索引的过程。上面那张图是原论文示意图。下面这张把同一段路径单独画出来，方便对照紫色区域在说什么：
+
+```mermaid
+flowchart LR
+  docs["Documents 原始文档"]
+  chunks["Chunks 切片"]
+  vectors["Vectors embeddings"]
+  index["Indexing 写入索引"]
+  docs --> chunks --> vectors --> index
+```
+
+具体过程如下：
 
 - 文档被划分为若干个语义相对完整的 chunks，每个 chunk 可能对应一小段新闻、一段说明或一段分析。
 - 每个 chunk 会通过 embedding 模型转换成高维向量，并存入向量索引中。
@@ -685,11 +716,15 @@ RAG 系统的评估本质上围绕两个核心问题：检索模块能否准确�
 
 | 题 | 相关集合 | 排序（从第 1 名到更后） | 前 3 名命中 | Recall@3 | 首个相关名次 | RR |
 |---|---|---|---|---:|---:|---:|
-| Q1 | {A, C} | A, B, C, D | A 与 C，2/2 | 1 | 1 | 1 |
-| Q2 | {B} | A, B, C, D | B，1/1 | 1 | 2 | 1/2 |
-| Q3 | {E} | A, B, C, D, E | 没有 | 0 | 5 | 1/5 |
-| Q4 | {C} | D, A, B, C | 没有，C 在第 4 名 | 0 | 4 | 1/4 |
-| Q5 | {E, A} | E, A, B, D | E 与 A，2/2 | 1 | 1 | 1 |
+| Q1 | &#123;A, C&#125; | A, B, C, D | A 与 C，2/2 | 1 | 1 | 1 |
+| Q2 | &#123;B&#125; | A, B, C, D | B，1/1 | 1 | 2 | 1/2 |
+| Q3 | &#123;E&#125; | A, B, C, D, E | 没有 | 0 | 5 | 1/5 |
+| Q4 | &#123;C&#125; | D, A, B, C | 没有，C 在第 4 名 | 0 | 4 | 1/4 |
+| Q5 | &#123;E, A&#125; | E, A, B, D | E 与 A，2/2 | 1 | 1 | 1 |
+
+![五条查询的名次](figures/recall-ranks.svg)
+
+实心块是相关文档。竖线左边才算进 Recall@3。Q3 的 E 和 Q4 的 C 都在竖线右边，所以这两题的 Recall@3 是 0。
 
 平均 Recall@3 = (1 + 1 + 0 + 0 + 1) / 5 = 0.6。
 
@@ -850,6 +885,8 @@ print(answer("今天天气怎么样？"))            # 无证据过阈值，老�
 </InfoCard>
 
 ### 7.1 阈值改前改后：三条问题的评测记录
+
+![三条问题在两个阈值下的结果](figures/rag-threshold.svg)
 
 第八周那张表留下了切分、Top K 和拒答阈值。这里用一组固定的六维向量把阈值算死，不调用付费接口。向量和 `cosine` 与第 4 节的示意同一形状，分数保留四位，是这组数的余弦，不是接口返回值。保存为 `rag_threshold_record.py` 后执行 `python3 rag_threshold_record.py`。
 

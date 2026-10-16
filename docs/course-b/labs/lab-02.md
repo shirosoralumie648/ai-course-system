@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: 'token 表', detail: '颜色和间距有名字' },
+  { title: '两个页面', detail: '按钮来自同一组件' }
+]" />
+<CheckList storage-key="c-b-l02" :items="['只留一套组件库', '两页都引用 token', '截图能同时看见两页']" />
+<QuizCard question="改一个 token 却只有一页变色，说明什么？">
+另一页仍写着自己的色值，没有引用这份 token。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '盘点样式', description: '找出重复按钮、卡片和表单' },
   { title: '选组件库', description: '确认 shadcn/ui 或项目组件方案' },

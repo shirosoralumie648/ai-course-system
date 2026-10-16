@@ -8,6 +8,18 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '自检', detail: '打印 self-check ok' },
+  { title: '订单金额', detail: '来自服务端价格，不来自按钮上的 amount' }
+]" />
+<TryIt command="node billing-server.mjs --self-check">
+self-check ok
+</TryIt>
+<CheckList storage-key="c-b-l07" :items="['成功页没有直接开通会员', '同一事件处理两次只生效一次']" />
+<QuizCard question="line item 里为什么不能有浏览器传来的 amount？">
+价格由服务端的 price id 决定。浏览器传来的金额不能进入 line_items。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '定义商品', description: '确定价格、权益和订单状态' },
   { title: '接 Checkout', description: '后端创建 Stripe Session' },

@@ -8,6 +8,24 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '自检输出', detail: 'node billing-server.mjs --self-check 打印 self-check ok' },
+  { title: '价格来源', detail: 'line item 里是 price id，没有浏览器传来的 amount' },
+  { title: '重复事件', detail: '同一个 event.id 第二次不再加会员' }
+]" />
+<TryIt command="node billing-server.mjs --self-check">
+self-check ok
+</TryIt>
+<CheckList storage-key="c-b-w07" :items="['创建会话时不读取 body.amount', '验签用原始请求体', '重复 event.id 仍返回 200']" />
+<ErrorLookup :rows="[
+  { symptom: '签名一直对不上', cause: 'express.json 先解析了 body', fix: 'Webhook 路由单独用 express.raw' },
+  { symptom: '会员天数加了两次', cause: 'Stripe 重试了同一事件', fix: '用 event.id 做主键，23505 时直接返回 200' }
+]" />
+<ShotPlaceholder tool="Stripe Dashboard 的 Webhook 详情" caption="事件列表里能看见 checkout.session.completed，以及 signing secret 的入口。不要把真实 secret 拍进截图。" />
+<QuizCard question="同一 event.id 第二次到达时，接口应该返回什么状态码？">
+200。返回 500 会让 Stripe 继续重试。业务侧跳过即可。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 本地能跑但没人用', description: '小哲的产品卡在哪' },
   { title: '② 支付的三条铁律', description: '定价/确认/记账归谁' },

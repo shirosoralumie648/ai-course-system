@@ -15,6 +15,30 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '切分表', detail: '每段只有一条规则' },
+  { title: '重排名次', detail: '写出重叠排序和重排之后的顺序' },
+  { title: '转人工包', detail: '含订单号、业务状态、用过的片段、停下来的原因' }
+]" />
+
+```mermaid
+flowchart LR
+  cut["切成四段"]
+  rank["重叠后重排"]
+  ask["没有订单号就追问"]
+  human["退款请求转人工"]
+  cut --> rank --> ask --> human
+```
+
+<CheckList storage-key="c-b-w10" :items="['C2 排到了 C1 前面', '缺订单号时没有说已经开通', '退款请求没有答应金额']" />
+<ErrorLookup :rows="[
+  { symptom: '回复写成可以全额退款', cause: '检索到了禁止承诺的那一段，仍让模型生成', fix: '命中退款承诺就停止生成，把上下文交给人' },
+  { symptom: '没有订单号也给了开通结论', cause: '跳过了追问', fix: '字段不齐时只提问，不回答原因' }
+]" />
+<QuizCard question="只按关键词重叠，为什么 C1 会排在 C2 前面？">
+问题里的「课程」只和 C1 重叠，C1 多一个词。重排加上「打不开」，才把「权限未开通」的 C2 放到第一名。
+</QuizCard>
+
 ![企业级 RAG 治理图](week-10-images/enterprise-rag-governance.png)
 
 *企业级 RAG 不是把文档全塞进去，而是先治理知识，再编排检索，最后让回答可追溯。*

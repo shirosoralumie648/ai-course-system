@@ -8,6 +8,20 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '带 Auto Layout 的原型', detail: '标题、说明、按钮在同一个 Frame 里' },
+  { title: '对比度核对', detail: '说明文字不要停在浅灰 #999' },
+  { title: '两段导出代码', detail: '绝对定位一版，flex 一版' }
+]" />
+<CheckList storage-key="c-b-w03" :items="['标题明显大于说明', '三块内容共用左边缘', '间距用 8 的倍数', '白字放在 #3451b2 上']" />
+<ErrorLookup :rows="[
+  { symptom: '窄屏上按钮压住标题', cause: '导出结果是 absolute 和固定 left、top', fix: '改成纵向 flex，删掉绝对定位' },
+  { symptom: '说明文字发虚', cause: '#999 在白底上只有 2.85 比 1', fix: '正文改到 #444 或更深' }
+]" />
+<QuizCard question="按钮设成 Hug contents 之后，文字变长时宽度由谁决定？">
+由文字内容和左右内边距决定，不要再写死 width。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 为什么先用设计工具', description: '设计工具到底解决什么问题' },
   { title: '② Figma 入门', description: 'Frame / Auto Layout / 组件实操' },
@@ -216,6 +230,8 @@ Material Design 的间距说明也使用固定步长，而不是每个元素单�
 | `#ffffff` | `#3451b2` | 7.08:1 | 白字放在这个蓝底上通过 |
 
 所以占位稿里的浅灰说明文字不要停在 `#999`。按钮如果用 `#3451b2`，文字用白色，而不是再叠一层浅灰。对比度用 `(较亮亮度 + 0.05) / (较暗亮度 + 0.05)` 计算，相对亮度的定义就在 WCAG 2.2 的 1.4.3 同一条里。
+
+![白底上的四组文字](figures/contrast-pairs.svg)
 
 ### 2.4 善用 Auto Layout 整合元素
 

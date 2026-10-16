@@ -8,6 +8,34 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一次对象查看', detail: 'cat-file 能看见 commit、tree、blob' },
+  { title: '一段 diff', detail: '退回之前先保存 AI 改了哪几行' },
+  { title: '退回记录', detail: '未提交用 restore，已提交用 revert' }
+]" />
+
+```mermaid
+flowchart TD
+  work["工作区被 AI 改坏"]
+  diff["先看 git diff"]
+  ask{"提交了吗"}
+  restore["git restore 回到 HEAD"]
+  revert["git revert 新增一笔"]
+  work --> diff --> ask
+  ask -->|没有| restore
+  ask -->|已经提交| revert
+```
+
+<TryIt command="git diff -- menu.py">
+-price = 18
++price = 0
++print("BUG: free burgers")
+</TryIt>
+<CheckList storage-key="c-b-w04" :items="['先看 diff 再 restore', '已推送的提交不用 reset --hard', 'PR 说明里写了验证命令']" />
+<QuizCard question="blob 和 commit 各存什么？">
+blob 存文件内容，不含文件名。commit 指向一棵 tree，并带上作者和说明。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 从 CLI 说起', description: '终端是什么，为什么后端离不开它' },
   { title: '② CLI AI 编程工具', description: 'Claude Code / Codex / OpenCode 配置与用法' },
@@ -1016,7 +1044,9 @@ Features: Add "Templates," "Themes & Personalization," and start developing "Clo
 >
 > 本节将重点介绍 GitHub 工作流和实际操作，上述基础知识可结合本周前半段的命令行内容一起理解。
 
-截图里的按钮先放着。Git 真正记住的不是「第 3 版对话」，而是下面这四种对象。对象模型、分支和合并的说明来自 Pro Git 第二版：[Git 对象](https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1) 与 [分支简介](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B)。Pull Request 的审查角色来自 GitHub 文档：[About pull request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)。
+截图里的按钮先放着。Git 真正记住的不是「第 3 版对话」，而是下面这四种对象。
+
+![blob、tree、commit 和分支指针](figures/git-objects.svg)对象模型、分支和合并的说明来自 Pro Git 第二版：[Git 对象](https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1) 与 [分支简介](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B)。Pull Request 的审查角色来自 GitHub 文档：[About pull request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)。
 
 ### 4.1 一次提交里有什么
 
@@ -1083,6 +1113,8 @@ git log --oneline --graph --decorate
 2. 再看 diff：是否出现密钥、`.env`、与任务无关的文件。
 3. 然后看验证：作者跑了哪条命令，输出是什么。
 4. 最后才点 Approve、Comment 或 Request changes。GitHub 的这三种审查结论见上面的文档。
+
+<ShotPlaceholder tool="GitHub Pull Request 的 Files changed 页" caption="左侧是本次 diff，右上角有 Comment、Approve、Request changes。页面上要能看见被审查的文件名，以及这三种审查结论的按钮。" />
 
 没有验证记录的 Approve，只说明有人点了按钮。
 

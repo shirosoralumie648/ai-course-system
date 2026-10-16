@@ -8,6 +8,17 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一个页面', detail: '开发者工具里能看见页面路径和 mock 数据' },
+  { title: '差异说明', detail: '导航、请求域名、登录各一行' },
+  { title: '密钥检查', detail: '小程序目录里搜不到模型密钥' }
+]" />
+<CheckList storage-key="c-b-w12" :items="['模拟器里页面能打开', 'mock 字段和页面用到的一致', '密钥不在小程序包内']" />
+<ShotPlaceholder tool="微信开发者工具模拟器" caption="左侧能看见 pages 目录，模拟器里是课程或活动列表。不要拍下自己的 AppSecret。" />
+<QuizCard question="没有正式账号时，怎样证明页面能渲染？">
+用测试号或无 AppID 模式留下模拟器截图，并写明限制。这和伪造一个线上地址不是同一件事。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 认识开发平台', description: '移动端、桌面端、Web、小程序生态' },
   { title: '② 平台选择决策', description: '用户在哪、需要什么能力、资源有多少' },

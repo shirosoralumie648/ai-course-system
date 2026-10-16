@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '调用日志', detail: '有输入和输出' },
+  { title: '主机名', detail: '客户端只看见你的函数或后端' }
+]" />
+<CheckList storage-key="c-b-l13" :items="['改之前和改之后各一张网络记录', '登录态的拒绝规则写了']" />
+<QuizCard question="客户端请求的主机名是模型供应商时，下一步改什么？">
+改成请求云函数或自有后端，由那一层持有密钥。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 选择后端', description: '云开发、Supabase 或课程接口' },
   { title: '② 设计数据表', description: '定义一条核心业务数据' },

@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '自己的接口', detail: '前端请求 /api，不请求供应商' },
+  { title: '失败状态', detail: '超时有明确状态码' }
+]" />
+<CheckList storage-key="c-b-l06" :items="['构建产物里搜不到密钥', 'Network 主机名是自己的', '密钥文件被 git 忽略']" />
+<QuizCard question="密钥现在应该放在哪？">
+服务端环境变量。前端包和仓库正文里都不应该出现。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '定接口', description: '写清输入、输出和错误规则' },
   { title: '让 AI 写', description: '生成分层后端代码' },

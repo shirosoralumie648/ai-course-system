@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '三参数一行', detail: '分段、Top K、阈值、被丢掉的片段' },
+  { title: '答不了的问题', detail: '记下最高分' }
+]" />
+<CheckList storage-key="c-b-l08" :items="['过滤前后各一份命中列表', '分段长度从设置里抄下，不是估的']" />
+<QuizCard question="阈值留在 0 时，营业时间为什么还会进提示词？">
+它仍在 Top K 里，0 分以上的片段不会被丢掉。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '整理资料', description: '准备业务文档和测试问题' },
   { title: '建知识库', description: '上传、切分并配置检索' },

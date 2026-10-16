@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 170" role="img">
+  <title>白底上的四组文字对比度</title>
+  <style>text.cap { font-family: sans-serif; font-size: 13px; fill: #1f2430; }</style>
+  <g transform="translate(16,16)">
+    <rect width="170" height="80" fill="#fff" stroke="#d0d5dd"/>
+    <text x="16" y="48" fill="#999" font-size="22" font-family="sans-serif">#999</text>
+    <text class="cap" x="0" y="112">2.85:1 不够</text>
+  </g>
+  <g transform="translate(202,16)">
+    <rect width="170" height="80" fill="#fff" stroke="#d0d5dd"/>
+    <text x="12" y="48" fill="#767676" font-size="22" font-family="sans-serif">#767676</text>
+    <text class="cap" x="0" y="112">4.54:1 刚过</text>
+  </g>
+  <g transform="translate(388,16)">
+    <rect width="170" height="80" fill="#fff" stroke="#d0d5dd"/>
+    <text x="16" y="48" fill="#444" font-size="22" font-family="sans-serif">#444</text>
+    <text class="cap" x="0" y="112">9.74:1 通过</text>
+  </g>
+  <g transform="translate(574,16)">
+    <rect width="170" height="80" fill="#3451b2"/>
+    <text x="16" y="48" fill="#fff" font-size="22" font-family="sans-serif">白字</text>
+    <text class="cap" x="0" y="112">7.08:1 通过</text>
+  </g>
+</svg>

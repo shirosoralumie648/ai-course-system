@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: 'manifest', detail: 'name、start_url、display、图标' },
+  { title: '离线文案', detail: '断网不是白屏' }
+]" />
+<CheckList storage-key="c-b-l11" :items="['缓存列表里没有接口响应', '决策矩阵写了为什么是 PWA']" />
+<QuizCard question="为什么不把带 token 的接口响应放进 Cache Storage？">
+缓存会把凭证留在这台设备上。只缓存页面壳。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 选择路径', description: '锁定一条核心用户流程' },
   { title: '② 填决策矩阵', description: '比较 Web、PWA、小程序、移动端' },

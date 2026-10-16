@@ -8,6 +8,16 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '可运行页面', detail: '至少三个区块，桌面和移动各一张图' },
+  { title: '路径对比', detail: '写明这次跑通的是哪一种' },
+  { title: '人工 diff', detail: '能看出你改过的行' }
+]" />
+<CheckList storage-key="c-b-l01" :items="['390 像素宽下区块不重叠', 'diff 不是只换了一张图', '三条路径都写了用或不用的证据']" />
+<QuizCard question="绝对定位导出在窄屏上重叠时，先改哪一项？">
+容器改成纵向 flex，删掉 left 和 top。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '准备原型', description: '整理设计稿、截图或页面规格' },
   { title: '路径一实验', description: '用多模态 AI 从图生成代码' },

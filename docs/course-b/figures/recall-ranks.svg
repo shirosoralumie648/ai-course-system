@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 280" role="img">
+  <title>五条查询的前五名</title>
+  <style>
+    text { font-family: sans-serif; font-size: 13px; fill: #1f2430; }
+    .hit { fill: #3451b2; }
+    .miss { fill: #fff; stroke: #3451b2; }
+    .cut { stroke: #c2410c; stroke-dasharray: 4 3; }
+  </style>
+  <text x="16" y="24" font-weight="700">蓝色是相关文档。竖线左边才计入 Recall@3。</text>
+  <line class="cut" x1="292" y1="40" x2="292" y2="262"/>
+  <text x="300" y="54" fill="#c2410c">第 3 名</text>
+  <g transform="translate(16,70)">
+    <text x="0" y="16">Q1</text>
+    <rect class="hit" x="48" y="0" width="64" height="24"/><text x="70" y="17" fill="#fff">A</text>
+    <rect class="miss" x="120" y="0" width="64" height="24"/><text x="144" y="17">B</text>
+    <rect class="hit" x="192" y="0" width="64" height="24"/><text x="216" y="17" fill="#fff">C</text>
+    <rect class="miss" x="264" y="0" width="64" height="24"/><text x="288" y="17">D</text>
+  </g>
+  <g transform="translate(16,110)">
+    <text x="0" y="16">Q2</text>
+    <rect class="miss" x="48" y="0" width="64" height="24"/><text x="72" y="17">A</text>
+    <rect class="hit" x="120" y="0" width="64" height="24"/><text x="144" y="17" fill="#fff">B</text>
+    <rect class="miss" x="192" y="0" width="64" height="24"/><text x="216" y="17">C</text>
+    <rect class="miss" x="264" y="0" width="64" height="24"/><text x="288" y="17">D</text>
+  </g>
+  <g transform="translate(16,150)">
+    <text x="0" y="16">Q3</text>
+    <rect class="miss" x="48" y="0" width="64" height="24"/><text x="72" y="17">A</text>
+    <rect class="miss" x="120" y="0" width="64" height="24"/><text x="144" y="17">B</text>
+    <rect class="miss" x="192" y="0" width="64" height="24"/><text x="216" y="17">C</text>
+    <rect class="miss" x="264" y="0" width="64" height="24"/><text x="288" y="17">D</text>
+    <rect class="hit" x="360" y="0" width="64" height="24"/><text x="384" y="17" fill="#fff">E</text>
+  </g>
+  <g transform="translate(16,190)">
+    <text x="0" y="16">Q4</text>
+    <rect class="miss" x="48" y="0" width="64" height="24"/><text x="72" y="17">D</text>
+    <rect class="miss" x="120" y="0" width="64" height="24"/><text x="144" y="17">A</text>
+    <rect class="miss" x="192" y="0" width="64" height="24"/><text x="216" y="17">B</text>
+    <rect class="hit" x="360" y="0" width="64" height="24"/><text x="384" y="17" fill="#fff">C</text>
+  </g>
+  <g transform="translate(16,230)">
+    <text x="0" y="16">Q5</text>
+    <rect class="hit" x="48" y="0" width="64" height="24"/><text x="72" y="17" fill="#fff">E</text>
+    <rect class="hit" x="120" y="0" width="64" height="24"/><text x="144" y="17" fill="#fff">A</text>
+    <rect class="miss" x="192" y="0" width="64" height="24"/><text x="216" y="17">B</text>
+    <rect class="miss" x="264" y="0" width="64" height="24"/><text x="288" y="17">D</text>
+  </g>
+</svg>

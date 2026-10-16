@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '规则', detail: '允许文件和禁止事项' },
+  { title: 'trace', detail: '人先看 diff 再运行' }
+]" />
+<CheckList storage-key="c-b-l15" :items="['原始测试数据还在', '失败日志没有被删']" />
+<QuizCard question="验收时学生请求的卡片里应该剩下哪一项活动？">
+暗房工作坊。a1 和 a3 仍在 time_conflict 日志里。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 盘点风险', description: '找出项目危险操作' },
   { title: '② 编写规则', description: '写 AGENTS.md 或等价文件' },

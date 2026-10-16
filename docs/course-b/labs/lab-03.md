@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: 'Auto Layout 对照', detail: '竖排、间距、Hug contents 各对应一项 CSS' },
+  { title: '素材筛选', detail: '写明哪一张因为对比不够被丢掉' }
+]" />
+<CheckList storage-key="c-b-l03" :items="['标题说明按钮在同一个 Frame', '说明文字深于 #999', '至少一张素材进了页面']" />
+<QuizCard question="#999 写在白色上，对比度大约是多少？">
+2.85 比 1，达不到普通正文的 4.5 比 1。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '搭原型', description: '用 Frame 和 Auto Layout 组织页面' },
   { title: '做组件', description: '创建按钮、卡片或输入框组件' },

@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '状态汇总', detail: 'paid 5 笔，合计 127.86' },
+  { title: 'RLS 三次结果', detail: '关闭、无策略、只读本人' }
+]" />
+<CheckList storage-key="c-b-l05" :items="['查询是写出来的 SQL', 'anon key 实验有三行结果', '事务失败后订单仍是 pending']" />
+<QuizCard question="ROLLBACK 之后，payments 应该有几行？">
+0 行。金额为 0 的插入被拒绝，同一事务里的订单更新也不留下。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '建项目', description: '创建 Supabase 项目并熟悉控制台' },
   { title: '设计表', description: '创建核心业务表和字段' },

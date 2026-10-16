@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '模拟器页面', detail: '能看见页面路径和 mock 数据' },
+  { title: '差异三行', detail: '导航、域名、登录' }
+]" />
+<CheckList storage-key="c-b-l12" :items="['小程序目录搜不到密钥', '写了没有账号时的替代证据']" />
+<QuizCard question="模型密钥为什么不能写进小程序的 config.js？">
+小程序包会下发到用户设备。密钥应留在后端。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 确认平台', description: '选择原生、Taro 或 uni-app' },
   { title: '② 建立页面', description: '实现一个核心页面' },

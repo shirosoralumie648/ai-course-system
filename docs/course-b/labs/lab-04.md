@@ -8,6 +8,19 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '退回前的 diff', detail: '能读出删了哪一行、加了哪一行' },
+  { title: '退回方式', detail: '未提交和已提交各用对命令' }
+]" />
+<TryIt command="git diff -- menu.py">
+-price = 18
++price = 0
+</TryIt>
+<CheckList storage-key="c-b-l04" :items="['报告里有 diff 原文', '没有对已推送提交使用 reset --hard']" />
+<QuizCard question="已经推送的坏提交，为什么用 revert 而不是 reset --hard？">
+revert 新增一笔倒回，别人拉下来还能看见。reset --hard 会改写已经公开的历史。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '建分支', description: '确认状态并创建实验分支' },
   { title: '定任务', description: '写清楚小功能和验收标准' },

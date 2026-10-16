@@ -8,6 +8,32 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '三参数记录', detail: '分段长度和重叠、Top K、拒答阈值' },
+  { title: '一次过滤前后', detail: '营业时间那条在提高阈值后消失' },
+  { title: '一条答不了的问题', detail: '记下最高分，确认低于阈值' }
+]" />
+
+```mermaid
+flowchart LR
+  doc["文档"]
+  chunk["切分与重叠"]
+  topk["Top K"]
+  gate["拒答阈值"]
+  answer["回答或拒答"]
+  doc --> chunk --> topk --> gate --> answer
+```
+
+<CheckList storage-key="c-b-w08" :items="['抄下分段长度和重叠', 'Top K 和阈值写进同一张表', '有一条问题被阈值丢掉']" />
+<GlossaryList :terms="[
+  { term: '切分', def: '一段里只放一件事，重叠用来接住被切断的句子' },
+  { term: 'Top K', def: '只把最靠前的 K 段交给模型' },
+  { term: '拒答阈值', def: '低于这个分数的片段不进入提示词' }
+]" />
+<QuizCard question="Top K 从 3 改成 1 时，退款问题还看得到换货说明吗？">
+看不到。换货说明是第 2 条。只留 Top 1 就只剩退款政策。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 小哲的新难题', description: 'AI 答不出业务问题，还会瞎编' },
   { title: '② 知识库与 RAG', description: '把外部资料喂给模型再回答' },
@@ -787,6 +813,8 @@ user input: {{user_text}}
 ---
 
 ## 交给第九周的三参数记录表
+
+<ShotPlaceholder tool="Dify 知识库的分段设置和 Retrieval Testing" caption="同一屏能看见分段最大长度、重叠长度，以及 Top K、Score Threshold。再用「可以退款吗」跑一次，第 3 条营业时间因为低于阈值没有出现在命中列表里。" />
 
 第九周会把切分、检索条数和拒答阈值从按钮拆成公式和代码。这一周先把平台里实际用过的三个数记下来，下周对着同一张表问「改这个数，召回会怎样」。三个参数分别是：
 

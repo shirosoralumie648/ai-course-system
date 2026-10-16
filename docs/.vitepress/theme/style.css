@@ -21,3 +21,26 @@
 .vp-doc a {
   transition: color 0.2s;
 }
+
+.course-module {
+  margin: 18px 0 22px;
+  padding: 16px 18px;
+  border: 1px solid var(--vp-c-divider);
+  border-left: 4px solid var(--vp-c-brand);
+  border-radius: 8px;
+  background: var(--vp-c-bg-soft);
+}
+.course-module .module-kicker {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--vp-c-brand);
+}
+.course-module pre {
+  margin: 8px 0 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+}

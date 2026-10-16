@@ -10,6 +10,29 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '规则文件', detail: '允许改的文件和禁止事项写死' },
+  { title: '人工门', detail: '人先看 diff，再运行脚本' },
+  { title: '一次 trace', detail: '任务、结果、剩余风险各一行' }
+]" />
+
+```mermaid
+flowchart LR
+  rule["写允许和禁止"]
+  agent["Agent 改推荐函数"]
+  human["人看 diff"]
+  run["运行脚本"]
+  rule --> agent --> human --> run
+```
+
+<CheckList storage-key="c-b-w15" :items="['没有改活动的原始时间', '没有放宽访客权限', '失败日志还在', '脚本在批准之后才运行']" />
+<ErrorLookup :rows="[
+  { symptom: '卡片变多了，失败日志空了', cause: 'Agent 改了测试数据来消除冲突', fix: 'restore 原始时间，只保留冲突则跳过的逻辑' }
+]" />
+<QuizCard question="人在 diff 里要确认哪两件事没有发生？">
+没有删掉 failure_log，也没有把访客改成可以读活动。
+</QuizCard>
+
 ## 上节课回顾
 
 第 14 周我们把产品的一条核心路径迁移到 PWA、小程序或移动端。那一周强调平台选择、路径压缩、失败状态和验证证据。它解决的问题是：你的产品能不能在另一个平台上保持清晰边界。
