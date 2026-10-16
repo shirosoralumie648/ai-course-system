@@ -8,6 +8,34 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一次对象查看', detail: 'cat-file 能看见 commit、tree、blob' },
+  { title: '一段 diff', detail: '退回之前先保存 AI 改了哪几行' },
+  { title: '退回记录', detail: '未提交用 restore，已提交用 revert' }
+]" />
+
+```mermaid
+flowchart TD
+  work["工作区被 AI 改坏"]
+  diff["先看 git diff"]
+  ask{"提交了吗"}
+  restore["git restore 回到 HEAD"]
+  revert["git revert 新增一笔"]
+  work --> diff --> ask
+  ask -->|没有| restore
+  ask -->|已经提交| revert
+```
+
+<TryIt command="git diff -- menu.py">
+-price = 18
++price = 0
++print("BUG: free burgers")
+</TryIt>
+<CheckList storage-key="c-b-w04" :items="['先看 diff 再 restore', '已推送的提交不用 reset --hard', 'PR 说明里写了验证命令']" />
+<QuizCard question="blob 和 commit 各存什么？">
+blob 存文件内容，不含文件名。commit 指向一棵 tree，并带上作者和说明。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 从 CLI 说起', description: '终端是什么，为什么后端离不开它' },
   { title: '② CLI AI 编程工具', description: 'Claude Code / Codex / OpenCode 配置与用法' },
@@ -1015,6 +1043,112 @@ Features: Add "Templates," "Themes & Personalization," and start developing "Clo
 > - 什么是 Git - 了解 Git 版本控制系统的核心概念
 >
 > 本节将重点介绍 GitHub 工作流和实际操作，上述基础知识可结合本周前半段的命令行内容一起理解。
+
+截图里的按钮先放着。Git 真正记住的不是「第 3 版对话」，而是下面这四种对象。
+
+![blob、tree、commit 和分支指针](figures/git-objects.svg)对象模型、分支和合并的说明来自 Pro Git 第二版：[Git 对象](https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1) 与 [分支简介](https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%AE%80%E4%BB%8B)。Pull Request 的审查角色来自 GitHub 文档：[About pull request reviews](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews)。
+
+### 4.1 一次提交里有什么
+
+在一个空目录里执行下面这一段。它不依赖课程仓库，跑完会留下一个只有一次提交的小仓库。
+
+```bash
+mkdir -p /tmp/git-objects-demo
+cd /tmp/git-objects-demo
+git init
+git config user.email "demo@example.com"
+git config user.name "Demo"
+printf 'price = 18\n' > menu.py
+git add menu.py
+git commit -m "add menu price"
+git rev-parse HEAD
+git cat-file -t HEAD
+git cat-file -p HEAD
+```
+
+`git cat-file -p HEAD` 打印出来的是一个 **commit 对象**。里面有一棵树的哈希、作者、以及说明 `add menu price`。那棵树是 **tree 对象**，可以用提交里的 `tree` 那一行继续看：
+
+```bash
+TREE=$(git rev-parse HEAD^{tree})
+git cat-file -p "$TREE"
+```
+
+树里有一行 `blob`，指向 `menu.py` 的内容。再看这个 blob：
+
+```bash
+BLOB=$(git rev-parse HEAD:menu.py)
+git cat-file -p "$BLOB"
+```
+
+输出就是 `price = 18`。四种对象的分工：
+
+| 对象 | 存什么 | 在这个例子里 |
+|---|---|---|
+| blob | 文件内容，不含文件名 | `price = 18` 这几个字节 |
+| tree | 文件名到 blob 或其他 tree 的对应 | `menu.py` → 上面的 blob |
+| commit | 指向一棵 tree，并指向父提交 | 第一笔提交没有 parent |
+| tag | 给某个 commit 起的固定名字 | 本示例先不用 |
+
+分支不是第五种对象。`main` 或 `master` 是一个会移动的指针，存在 `.git/HEAD` 和 `.git/refs/heads/` 里。新的提交产生后，当前分支指向新的 commit，旧的 commit 还在。
+
+### 4.2 分支、合并、以及 Pull Request 要看什么
+
+继续在同一个目录里：
+
+```bash
+git switch -c feature/tax
+printf 'price = 18\ntax = 0.06\n' > menu.py
+git add menu.py
+git commit -m "add tax rate"
+git switch -
+git merge --no-ff feature/tax -m "merge tax rate"
+git log --oneline --graph --decorate
+```
+
+`git switch -c` 从当前提交拉出 `feature/tax`。`--no-ff` 强制产生一个合并提交，这样图上能看见两个父提交。快进合并则只是把分支指针往前移，不产生新的合并提交。两种都是合并；看 `git log --graph` 才能分清这次走的是哪一种。
+
+推到 GitHub 之后，Pull Request 是请别人看这段分支，不是再做一次合并算法。审查时按这个顺序：
+
+1. 先看 PR 说明：要改什么行为，不改什么。
+2. 再看 diff：是否出现密钥、`.env`、与任务无关的文件。
+3. 然后看验证：作者跑了哪条命令，输出是什么。
+4. 最后才点 Approve、Comment 或 Request changes。GitHub 的这三种审查结论见上面的文档。
+
+<ShotPlaceholder tool="GitHub Pull Request 的 Files changed 页" caption="左侧是本次 diff，右上角有 Comment、Approve、Request changes。页面上要能看见被审查的文件名，以及这三种审查结论的按钮。" />
+
+没有验证记录的 Approve，只说明有人点了按钮。
+
+### 4.3 AI 改坏了一个文件：用 diff 退回去
+
+小哲让终端里的 AI 改菜单价格。AI 把 `price = 18` 写成了 `price = 0`，还加了一行不该有的打印。分两种情况退。
+
+**还没提交。** 坏改动只在工作区。先看 diff，再从 HEAD 这棵树把文件拿回来。`git restore` 从 Git 2.23 起可用，官方说明在 [git-restore](https://git-scm.com/docs/git-restore)。
+
+```bash
+cd /tmp/git-objects-demo
+printf 'price = 0\nprint("BUG: free burgers")\n' > menu.py
+git diff -- menu.py
+git restore --source=HEAD -- menu.py
+git diff -- menu.py
+cat menu.py
+```
+
+第一段 `git diff` 会显示删掉 `price = 18`、加上 `price = 0` 和那行 `print`。`git restore --source=HEAD` 之后，第二次 diff 没有输出，`cat` 回到 `price = 18`。不要在没看 diff 之前就 restore，否则你不知道 AI 到底改了哪几行。
+
+**已经提交。** 坏提交进了历史。不要用 `git reset --hard` 去抹掉已经推送的提交。用 `git revert` 新增一笔「把那次改动倒回去」的提交：
+
+```bash
+printf 'price = 0\n' > menu.py
+git add menu.py
+git commit -m "AI: set price to zero"
+git revert --no-edit HEAD
+git log --oneline
+cat menu.py
+```
+
+历史里会留下三笔：最初的价格、AI 把价格改成 0、以及一笔 Revert。文件内容回到 `price = 18`。远程上的同学拉下来时，也能看见这笔倒回，而不是一段被悄悄删掉的历史。
+
+如果 AI 一次改了五个文件，你只想退回其中一个，对那个文件单独 `git restore --source=HEAD -- path`（未提交）或 `git restore --source=HEAD~1 -- path` 后再单独提交（已提交、且坏改动就在上一笔）。先 `git diff HEAD~1 -- path`，确认要退的就是这一处。
 
 ---
 

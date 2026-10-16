@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '状态汇总', detail: 'paid 5 笔，合计 127.86' },
+  { title: 'RLS 三次结果', detail: '关闭、无策略、只读本人' }
+]" />
+<CheckList storage-key="c-b-l05" :items="['查询是写出来的 SQL', 'anon key 实验有三行结果', '事务失败后订单仍是 pending']" />
+<QuizCard question="ROLLBACK 之后，payments 应该有几行？">
+0 行。金额为 0 的插入被拒绝，同一事务里的订单更新也不留下。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '建项目', description: '创建 Supabase 项目并熟悉控制台' },
   { title: '设计表', description: '创建核心业务表和字段' },
@@ -164,3 +173,25 @@ VITE_SUPABASE_ANON_KEY=replace_me
 | RLS 验证 | 25 | 是否开启策略并完成隔离测试 |
 | Storage 实现 | 15 | 文件上传是否可用，权限说明是否合理 |
 | 安全与证据 | 15 | 密钥、截图、日志、diff 是否完整 |
+
+## 预期产物节选
+
+在你自己的表之外，用课程里的 `orders` 插入数据写出第二题的汇总，数字要和这张表一致：
+
+| status | order_count | total_amount |
+|---|---:|---:|
+| cancelled | 2 | 15.00 |
+| paid | 5 | 127.86 |
+| pending | 3 | 52.24 |
+| refunded | 1 | 14.50 |
+
+RLS 实验另交三行结果：关闭、开启但没有策略、开启且只允许 `authenticated` 读自己的 `owner_id`。
+
+## 一种常见失败和排查
+
+失败：为了让前端马上能 `select`，把 RLS 关着就提交了。用 anon key 调用时，两行不同 `owner_id` 的备注都会回来。排查：执行 `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`，不要先写一条 `USING (true)` 的策略。再用 anon key 调一次，确认返回空数组，然后才加上 `owner_id = auth.uid()`。
+
+## 思考题
+
+1. 宽表 `order_lines_wide` 里，Ada 的邮箱出现了两次。改邮箱时为什么会改漏？拆成 `customers` 之后，那句 `UPDATE` 改的是哪一行？
+2. 事务里 `INSERT` 的金额是 0，被 `CHECK (amount > 0)` 拒绝。`ROLLBACK` 之后，订单 1 的 `status` 和 `payments` 的行数各是什么？

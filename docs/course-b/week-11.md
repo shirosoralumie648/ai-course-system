@@ -8,6 +8,32 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '平台决策', detail: '写明为什么这条路径先做 PWA' },
+  { title: 'manifest', detail: '能看见 name、start_url、display、图标' },
+  { title: '离线证据', detail: '断网时有明确文案，不是白屏' }
+]" />
+
+```mermaid
+flowchart LR
+  open["打开页面"]
+  shell["缓存里的页面壳"]
+  api["接口"]
+  fail["离线或错误文案"]
+  open --> shell
+  shell --> api
+  api -->|失败| fail
+```
+
+<CheckList storage-key="c-b-w11" :items="['manifest 四个字段都在', '缓存里没有 Authorization', '断网截图有文案']" />
+<ErrorLookup :rows="[
+  { symptom: '缓存里出现了密钥或 token', cause: 'service worker 缓存了 API 响应', fix: '只缓存静态壳，去掉 API 路径' }
+]" />
+<ShotPlaceholder tool="Chrome 的安装应用提示和 Application 面板" caption="地址栏能安装，Application 里能看见 manifest。Cache Storage 里没有带 Authorization 的接口响应。" />
+<QuizCard question="断网文案是谁写出来的？">
+要么是 service worker 返回的页面，要么是页面脚本在 fetch 失败后写上的。报告里要写明是哪一种。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 小哲的新困惑', description: '网页做完了,然后呢' },
   { title: '② 认识平台全景', description: 'Web / 小程序 / App 各有命' },

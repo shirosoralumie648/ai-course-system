@@ -8,6 +8,19 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '退回前的 diff', detail: '能读出删了哪一行、加了哪一行' },
+  { title: '退回方式', detail: '未提交和已提交各用对命令' }
+]" />
+<TryIt command="git diff -- menu.py">
+-price = 18
++price = 0
+</TryIt>
+<CheckList storage-key="c-b-l04" :items="['报告里有 diff 原文', '没有对已推送提交使用 reset --hard']" />
+<QuizCard question="已经推送的坏提交，为什么用 revert 而不是 reset --hard？">
+revert 新增一笔倒回，别人拉下来还能看见。reset --hard 会改写已经公开的历史。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '建分支', description: '确认状态并创建实验分支' },
   { title: '定任务', description: '写清楚小功能和验收标准' },
@@ -157,3 +170,23 @@ git commit -m "lab-04: add verified workflow change"
 | AI 使用记录 | 20 | 是否记录计划、调整和人工判断 |
 | 验证质量 | 25 | 测试、构建或运行证据是否可信 |
 | 复盘质量 | 20 | 是否有具体工程收获 |
+
+## 预期产物节选
+
+改动说明里贴出退回之前的 diff，格式和 Week 04 的菜单例子一样能读出删了哪一行、加了哪一行：
+
+```diff
+-price = 18
++price = 0
+```
+
+若坏改动已经提交，再贴 `git log --oneline` 里那笔 Revert，而不是只说「我撤销了」。
+
+## 一种常见失败和排查
+
+失败：AI 改坏文件后直接 `git restore`，实验报告里没有 diff，老师看不到改过什么。排查：重新让工作区出现一次改动，先运行 `git diff -- 路径`，把输出保存进报告，再 `git restore --source=HEAD -- 路径`。已经推送的提交用 `git revert`，不要用 `git reset --hard` 删远程历史。
+
+## 思考题
+
+1. `git cat-file -p HEAD` 看到的是 commit。它里面的 tree 和 `menu.py` 那个 blob 各存什么？
+2. 未提交的改动和已经提交的改动，退回命令分别是什么？为什么已经推送的提交不该用 `reset --hard`？

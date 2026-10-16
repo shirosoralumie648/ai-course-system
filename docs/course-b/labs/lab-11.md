@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: 'manifest', detail: 'name、start_url、display、图标' },
+  { title: '离线文案', detail: '断网不是白屏' }
+]" />
+<CheckList storage-key="c-b-l11" :items="['缓存列表里没有接口响应', '决策矩阵写了为什么是 PWA']" />
+<QuizCard question="为什么不把带 token 的接口响应放进 Cache Storage？">
+缓存会把凭证留在这台设备上。只缓存页面壳。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 选择路径', description: '锁定一条核心用户流程' },
   { title: '② 填决策矩阵', description: '比较 Web、PWA、小程序、移动端' },
@@ -163,3 +172,16 @@
 | 功能验证 | 25 分 | 安装、离线、核心页面运行证据齐全 |
 | 安全与限制 | 20 分 | 缓存边界清楚，限制说明具体 |
 | 提交规范 | 10 分 | 链接、截图、日志和说明命名清晰 |
+
+## 预期产物节选
+
+`manifest` 里至少能看见 `name`、`start_url`、`display` 和一组图标。离线说明写明：核心页面的壳可以打开；推荐接口失败时显示 Week 11 要求的离线或错误状态，而不是白屏。
+
+## 一种常见失败和排查
+
+失败：service worker 把带模型密钥或用户 token 的响应缓存进了 Cache Storage。排查：在浏览器 Application 面板打开缓存，搜索 `Authorization` 或密钥。搜到了就从缓存列表里去掉 API 路径，只缓存静态壳。把修改后的缓存列表截图放进限制说明。
+
+## 思考题
+
+1. 你的平台决策矩阵里，为什么这条路径选 PWA，而不是先做小程序或 App？矩阵里的哪一行决定了这件事？
+2. 断网时你的页面展示的原文是什么？这段文案是 service worker 返回的，还是页面脚本在 `fetch` 失败后写的？

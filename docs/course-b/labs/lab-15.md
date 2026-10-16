@@ -6,6 +6,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '规则', detail: '允许文件和禁止事项' },
+  { title: 'trace', detail: '人先看 diff 再运行' }
+]" />
+<CheckList storage-key="c-b-l15" :items="['原始测试数据还在', '失败日志没有被删']" />
+<QuizCard question="验收时学生请求的卡片里应该剩下哪一项活动？">
+暗房工作坊。a1 和 a3 仍在 time_conflict 日志里。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 盘点风险', description: '找出项目危险操作' },
   { title: '② 编写规则', description: '写 AGENTS.md 或等价文件' },
@@ -164,3 +173,16 @@
 | Human Gate 与工具权限 | 25 分 | 危险操作识别完整，审批要求合理 |
 | 执行 trace | 20 分 | 有计划、审批、diff 或日志、验证和审查 |
 | 提交规范 | 10 分 | 材料完整，证据命名清晰 |
+
+## 预期产物节选
+
+trace 用 Week 15 那张表的六行。允许文件只写 `activity_trace.py`（或你项目里对应的一个文件）。禁止事项里要出现「不许改测试数据来消除冲突」和「不许放宽访客权限」。人的批准发生在运行脚本之前。
+
+## 一种常见失败和排查
+
+失败：Agent 把 `activities` 里 a1 的时间改到不冲突，于是卡片变多，失败日志却空了。这不是修好推荐，这是改掉了题目。排查：用 `git diff` 确认原始时间还在，冲突判断还在。若时间被改过，`git restore` 那几行，只保留推荐函数里「冲突则写入 failure_log 并跳过」的逻辑，然后重跑脚本。
+
+## 思考题
+
+1. 人工门放在运行脚本之前。人要在 diff 里确认哪两件事情没有发生？
+2. 验收标准要求学生请求的 cards 里还有谁？`failure_log` 里必须留下哪两个 `activity_id` 的 `time_conflict`？

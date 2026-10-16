@@ -8,6 +8,20 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '带 Auto Layout 的原型', detail: '标题、说明、按钮在同一个 Frame 里' },
+  { title: '对比度核对', detail: '说明文字不要停在浅灰 #999' },
+  { title: '两段导出代码', detail: '绝对定位一版，flex 一版' }
+]" />
+<CheckList storage-key="c-b-w03" :items="['标题明显大于说明', '三块内容共用左边缘', '间距用 8 的倍数', '白字放在 #3451b2 上']" />
+<ErrorLookup :rows="[
+  { symptom: '窄屏上按钮压住标题', cause: '导出结果是 absolute 和固定 left、top', fix: '改成纵向 flex，删掉绝对定位' },
+  { symptom: '说明文字发虚', cause: '#999 在白底上只有 2.85 比 1', fix: '正文改到 #444 或更深' }
+]" />
+<QuizCard question="按钮设成 Hug contents 之后，文字变长时宽度由谁决定？">
+由文字内容和左右内边距决定，不要再写死 width。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 为什么先用设计工具', description: '设计工具到底解决什么问题' },
   { title: '② Figma 入门', description: 'Frame / Auto Layout / 组件实操' },
@@ -177,6 +191,48 @@
 
 ![](week-03-images/image21.png)
 
+上面五步是在点工具。下面四条规则用来检查点完之后页面为什么看起来还是「散」。规则来自两份可以打开的材料：Adam Wathan 与 Steve Schoger 的 *Refactoring UI*（书的公开介绍在 [refactoringui.com](https://www.refactoringui.com/)），以及 W3C 的 [WCAG 2.2 对比度最低要求 1.4.3](https://www.w3.org/TR/WCAG22/#contrast-minimum)。
+
+#### 层级：一屏只有一个主角
+
+第 1 步把标题设成 96、加粗，第 2 步把说明文字缩小。这就是层级。读者的眼睛先要知道「这页是什么」，然后才是「可以做什么」。
+
+检查三件事：
+
+1. 标题、说明、按钮里，只有标题用最大的字号。
+2. 按钮是这一屏唯一的主操作。再放一个同样抢眼的按钮，层级就没了。
+3. 说明文字回答「这页帮谁做什么」，不要再写第二句口号。
+
+96 和 18 只是这一稿的起点。以后改字号时保持「标题明显大于说明」，不要两行都用 32。
+
+#### 对齐：文字和按钮共用一条边
+
+第 4 步用对齐工具把按钮文字放到矩形正中，解决的是按钮内部。页面本身还要有一条对齐边：标题的左边缘、说明的左边缘、按钮的左边缘落在同一条垂直线上。刚才如果副标题比标题多缩进了 10 像素，读者会觉得这块内容是歪的，即使每个元素单独看都没问题。
+
+Frame 的左内边距一旦定下来，新元素就贴着这条边放，不要再凭感觉拖一个新的 x 坐标。
+
+#### 间距：用同一套步长，不要每处都新写一个数
+
+第 2 步说「行高略放大一点」，还没有规定间距。给这一屏定一条 8 像素步长：标题和说明之间 16，说明和按钮之间 24，整块内容距离 Frame 边缘 48。8、16、24、48 都是 8 的倍数，导出到 CSS 时可以直接写成 `gap` 和 `padding`。
+
+Material Design 的间距说明也使用固定步长，而不是每个元素单独挑一个像素：[Understanding layout — spacing](https://m3.material.io/foundations/layout/understanding-layout/overview)。
+
+#### 对比：字要能从底色上读出来
+
+第 3 步给按钮「一个比较明显的填充颜色」。明显不够，还要过对比度。WCAG 2.2 的 1.4.3 规定：普通正文的文字和背景对比度至少 4.5:1，大号文字至少 3:1。按相对亮度公式 \((L_1+0.05)/(L_2+0.05)\) 计算：
+
+| 前景 | 背景 | 对比度 | 对普通正文 |
+|---|---|---:|---|
+| `#999999` | `#ffffff` | 2.85:1 | 不达到 4.5:1 |
+| `#767676` | `#ffffff` | 4.54:1 | 刚好过 4.5:1 |
+| `#444444` | `#ffffff` | 9.74:1 | 通过 |
+| `#111111` | `#ffffff` | 18.88:1 | 通过 |
+| `#ffffff` | `#3451b2` | 7.08:1 | 白字放在这个蓝底上通过 |
+
+所以占位稿里的浅灰说明文字不要停在 `#999`。按钮如果用 `#3451b2`，文字用白色，而不是再叠一层浅灰。对比度用 `(较亮亮度 + 0.05) / (较暗亮度 + 0.05)` 计算，相对亮度的定义就在 WCAG 2.2 的 1.4.3 同一条里。
+
+![白底上的四组文字](figures/contrast-pairs.svg)
+
 ### 2.4 善用 Auto Layout 整合元素
 
 如果所有元素只是随手拖拽，页面很快会乱。Figma 里一个很重要的概念就是 **Auto Layout** ，它可以把一组元素变成一个带规则的容器。
@@ -202,6 +258,56 @@
 ::: tip Auto Layout 就是 Flexbox
 小哲在这里第一次有了"我在写代码"的感觉：竖排还是横排，对应 `flex-direction`；间距对应 `gap`；内边距对应 `padding`；"Hug contents"对应的就是宽度由内容撑开。换句话说，你在 Figma 里调的每一个 Auto Layout 参数，几乎都能在 CSS 里找到对应项——这正是设计稿能转码的根本原因。
 :::
+
+Figma 对 Auto Layout 的官方说明在 [Create dynamic designs with auto layout](https://help.figma.com/hc/en-us/articles/360040451373-Create-dynamic-designs-with-auto-layout)。CSS 一侧对应 [MDN：Flexbox 的基本概念](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_flexible_box_layout/Basic_concepts_of_flexbox)。
+
+#### 同一屏导出代码：拖坐标，和 Auto Layout
+
+把上面那一屏用两种方式交给「设计转代码」。左边是绝对定位，右边是刚才的 Auto Layout 参数。两段都是完整 HTML，保存成 `.html` 用浏览器打开即可。
+
+拖拽导出时，工具通常把每个图层写成 `position: absolute` 加上它当时的 `left` / `top`：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <body>
+    <div style="position:relative;width:1440px;height:900px;background:#fff;">
+      <div style="position:absolute;left:80px;top:120px;font-size:16px;color:#999;">My Portfolio</div>
+      <p style="position:absolute;left:93px;top:210px;color:#bbb;">一句话说明</p>
+      <div style="position:absolute;left:400px;top:80px;width:200px;height:48px;background:#ccc;"></div>
+    </div>
+  </body>
+</html>
+```
+
+这段能打开，但标题只有 16px，说明文字是 `#bbb`（比上面的 `#999` 更淡），按钮跑到了标题右上方。窗口变窄时，1440 像素的画布不会重排。
+
+按本周的层级、对齐、间距和对比改完，再让 Auto Layout 竖排、间距 16、内边距 48，导出应接近：
+
+```html
+<!doctype html>
+<html lang="zh-CN">
+  <body style="margin:0;background:#f6f7fb;">
+    <main style="max-width:720px;margin:0 auto;padding:48px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;">
+      <h1 style="margin:0;font-size:48px;line-height:1.1;color:#111;">My Portfolio</h1>
+      <p style="margin:0;font-size:18px;line-height:1.5;color:#444;">一句话说明这个页面做什么。</p>
+      <a href="#start" style="background:#3451b2;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;">Get Started</a>
+    </main>
+  </body>
+</html>
+```
+
+对照关系：
+
+| Auto Layout | CSS | 这一屏的值 |
+|---|---|---|
+| 竖排 | `flex-direction: column` | 标题、说明、按钮从上到下 |
+| 左对齐 | `align-items: flex-start` | 三条内容共用左边缘 |
+| 间距 16 | `gap: 16px` | 元素之间不再手写 top |
+| 内边距 | `padding: 48px 24px` | 内容不贴着窗口边 |
+| Hug contents | 不写死按钮的 width | 文字变长时按钮跟着变 |
+
+作业里要交的不是「哪次导出更漂亮」这句话，而是这两段代码，并指出绝对定位那一版违反了哪一条规则。
 
 ### 2.5 将按钮变为可复用组件
 

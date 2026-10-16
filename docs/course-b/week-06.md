@@ -8,6 +8,30 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '后端路由', detail: '浏览器只请求你自己的 /api，不请求模型供应商' },
+  { title: '密钥位置', detail: '密钥在服务端环境变量，仓库里搜不到' },
+  { title: '一次失败响应', detail: '上游超时时你的接口有明确状态码' }
+]" />
+
+```mermaid
+flowchart LR
+  browser["浏览器"]
+  api["你的 /api"]
+  model["模型供应商"]
+  browser -->|"没有密钥"| api -->|"密钥只在这里"| model
+```
+
+<CheckList storage-key="c-b-w06" :items="['前端源码里没有供应商密钥', 'Network 里的主机名是自己的接口', '失败时有状态码而不是空白']" />
+<ErrorLookup :rows="[
+  { symptom: '构建产物里能搜到 sk-', cause: '密钥写进了前端包', fix: '调用挪到后端，前端只访问相对路径' },
+  { symptom: '页面一直转圈', cause: '没有处理上游超时', fix: '给请求加超时，并把错误变成你自己的状态码' }
+]" />
+<ShotPlaceholder tool="浏览器 Network 面板" caption="选中那一次对话请求，Request URL 的主机是你自己的站点或 localhost，不是 api.openai.com 一类供应商域名。请求头里没有供应商密钥。" />
+<QuizCard question="为什么页面可以公开，密钥却不能放在页面里？">
+页面源码和构建产物任何人都能下载。密钥放进去就等于公开。浏览器只应该调用你的后端。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 小哲的盗刷账单', description: '前端直连 AI 是怎么翻车的' },
   { title: '② API 与前后端分离', description: '餐厅比喻：接口就是服务员' },

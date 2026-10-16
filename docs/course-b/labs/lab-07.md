@@ -8,6 +8,18 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '自检', detail: '打印 self-check ok' },
+  { title: '订单金额', detail: '来自服务端价格，不来自按钮上的 amount' }
+]" />
+<TryIt command="node billing-server.mjs --self-check">
+self-check ok
+</TryIt>
+<CheckList storage-key="c-b-l07" :items="['成功页没有直接开通会员', '同一事件处理两次只生效一次']" />
+<QuizCard question="line item 里为什么不能有浏览器传来的 amount？">
+价格由服务端的 price id 决定。浏览器传来的金额不能进入 line_items。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '定义商品', description: '确定价格、权益和订单状态' },
   { title: '接 Checkout', description: '后端创建 Stripe Session' },
@@ -155,3 +167,23 @@ Stripe test mode 应保存：
 | Zeabur 部署 | 25 | 公网链接、构建日志和环境变量是否正确 |
 | 线上走查 | 15 | 主路径是否在线可用 |
 | 复盘证据 | 15 | 截图、日志、diff 和踩坑记录是否完整 |
+
+## 预期产物节选
+
+本地先交这段自检的输出，再交 Stripe 测试模式或模拟支付的订单状态截图：
+
+```text
+node billing-server.mjs --self-check
+self-check ok
+```
+
+订单表里的金额列来自 Checkout Session 的 `amount_total` 或模拟支付里由服务端写死的价格，不来自按钮上的 `amount` 参数。
+
+## 一种常见失败和排查
+
+失败：用户打开 `/success` 就把会员改成 active。没有 Webhook 的时候，直接访问这个地址也会开通。排查：把开通逻辑移到签名通过之后的 `checkout.session.completed`。用同一 `event.id` 投递两次，第二次应走重复分支，会员天数不加。把两次处理的日志贴进报告。
+
+## 思考题
+
+1. `lineItemFromRequest({ plan: "monthly", amount: 1 })` 的返回值里为什么没有 `amount`？真正扣款的 price id 从哪来？
+2. 同一 `event.id` 第二次到达时，`claimEvent` 返回什么？为什么这时仍要给 Stripe 回 HTTP 200，而不是 500？

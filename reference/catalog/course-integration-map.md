@@ -1,8 +1,8 @@
 # Course Integration Map
 
-This map connects the current course system to the reference library. It covers
-both visible Course B directions in the current repo: full-stack AI product
-development and agentic development.
+This map connects the current course system to the reference library. Course B
+is the 16-week full-stack sidebar in `docs/.vitepress/config.mjs`. Agent
+engineering is Week 15 of that same course, not a second calendar.
 
 ## Course A: Product Prototype + Claude Code
 
@@ -18,34 +18,28 @@ development and agentic development.
 | Spec coding and long-running tasks | Week 13-14 | `agentic-coding/spec-kit`, `agentic-coding/openhands`, `agentic-coding/swe-agent` | Add a spec-to-plan-to-diff exercise with a bounded task and explicit stop rule. |
 | Agent SDK and Agent Teams | Week 15-16 | `ai-engineering/openai-agents-python`, `agentic-coding/browser-use`, `rag/langgraph` | Add role boundaries, handoff diagrams, and a small multi-agent trace example. |
 
-## Course B: Full-Stack AI Product Track
+## Course B: AI 全栈开发实战（16 周，与侧边栏一致）
 
-| Course area | Current weeks | References to inspect | Improvement ideas |
+公开页面上的周次以 `docs/.vitepress/config.mjs` 里 `/course-b/` 的「每周教程」为准。下面这张表取代以前把 Course B 拆成「全栈轨」和「Agent 轨」、并且都只排到 Week 12 的两张旧表。
+
+| Sidebar week | Topic | References to inspect | What the chapter now asks students to hand in |
 | --- | --- | --- | --- |
-| Design to code | Week 01-03 | `fullstack-ai/shadcn-ui`, Refactoring UI, Design of Everyday Things | Add design critique rubrics and "before/after AI UI refinement" examples. |
-| CLI and Git | Week 04 | `courses/missing-semester`, Software Engineering at Google | Add shell/git drills that directly support later agent workflows. |
-| Database and backend | Week 05 | `fullstack-ai/supabase`, Designing Data-Intensive Applications | Add schema migration, auth/RLS, storage, and edge function reference examples. |
-| AI API integration | Week 06 | `fullstack-ai/vercel-ai`, `ai-engineering/openai-cookbook`, `ai-engineering/openai-agents-python` | Separate frontend streaming, backend key safety, and tool-calling examples. |
-| Payments and deployment | Week 07 | `fullstack-ai/stripe-checkout-one-time`, `fullstack-ai/stripe-subscription-use-cases`, `production-apps/dub` | Add webhook verification and "backend owns price IDs" as a hard rule. |
-| Dify and knowledge base | Week 08 | `rag/dify`, Dify docs | Add retrieval testing logs, chunking experiments, and workflow export review. |
-| RAG | Week 09-10 | `rag/rag-from-scratch`, `rag/llama-index`, `rag/haystack`, `rag/graph-rag`, Firecrawl | Add a ladder from naive RAG to chunking, reranking, evals, and graph retrieval. |
-| Cross-platform | Week 11 | `cross-platform/expo`, `cross-platform/taro`, `cross-platform/uni-app` | Add a decision matrix: web app, mobile app, mini-program, or PWA. |
-| Final product | Week 12 | `production-apps/cal-com`, `production-apps/dub`, `production-apps/twenty`, `production-apps/medplum` | Use production apps to teach architecture reading, domain modeling, and tradeoffs. |
-
-## Course B: Agentic Development Track
-
-| Course area | Current calendar weeks | References to inspect | Improvement ideas |
-| --- | --- | --- | --- |
-| Agentic development intro | Week 01 | `agentic-coding/openhands`, `agentic-coding/swe-agent`, `agentic-coding/aider` | Use real agent repos to contrast chatbot, copilot, coding agent, and workflow. |
-| Claude Code and Codex basics | Week 02-03 | `agentic-coding/anthropic-courses`, `ai-engineering/openai-cookbook`, `agentic-coding/gemini-cli` | Add comparable logs across multiple coding agents and CLI permission models. |
-| Context engineering | Week 04 | `agentic-coding/continue`, OpenAI Cookbook selected examples | Add examples of good/bad context packs and retrieval-backed context selection. |
-| Rules files | Week 05 | `agentic-coding/spec-kit`, current `docs/course-b/templates` | Add rule linting: concrete, enforceable, scoped, testable. |
-| Permissions, hooks, safety | Week 06 | `mcp/mcp-servers`, Claude Code docs, Web Application Security | Add threat cases for tools, file writes, dependency changes, API keys. |
-| Skill design | Week 07 | `agentic-coding/anthropic-courses`, Agent Skills course | Add one exemplar skill and one deliberately bad skill for review. |
-| MCP | Week 08-09 | `mcp/mcp-servers`, `mcp/mcp-typescript-sdk` | Add minimal MCP server interface design plus risk annotation per tool. |
-| Agent team | Week 10 | `rag/langgraph`, `ai-engineering/openai-agents-python` | Add role handoffs, state diagrams, and failure loops. |
-| Tests, review, CI | Week 11 | Software Engineering at Google, Google SRE, `agentic-coding/spec-kit` | Add explicit evidence artifacts: test command, review checklist, CI gate, human gate. |
-| Final defense | Week 12 | `production-apps/*`, `agentic-coding/*` | Require process trace, diff review, test proof, and a short architecture walk-through. |
+| Week 01 | 从设计到代码 | `fullstack-ai/shadcn-ui`, Refactoring UI | 三种路径对比，加上一处人工修订 diff |
+| Week 02 | 组件库与多产品 UI | `fullstack-ai/shadcn-ui` | 同一套 token 被两个页面复用 |
+| Week 03 | Figma 与设计资产 | [WCAG 2.2 对比度 1.4.3](https://www.w3.org/TR/WCAG22/#contrast-minimum), [Figma Auto Layout](https://help.figma.com/hc/en-us/articles/360040451373-Create-dynamic-designs-with-auto-layout) | 层级、对齐、间距、对比，以及绝对定位导出和 flex 导出的对照 |
+| Week 04 | 现代 CLI 与 Git | [Pro Git：Git 对象](https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-Git-%E5%AF%B9%E8%B1%A1), [git-restore](https://git-scm.com/docs/git-restore) | blob / tree / commit、分支合并，以及 AI 改坏文件后的 diff 与 revert |
+| Week 05 | 数据库与 Supabase | [Supabase RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [PostgreSQL 事务](https://www.postgresql.org/docs/current/tutorial-transactions.html) | 三道 `orders` 查询、RLS 关闭时 anon key 的读法、订单事务回滚 |
+| Week 06 | 接入 AI 接口 | `fullstack-ai/vercel-ai`, `ai-engineering/openai-cookbook` | 后端持有密钥、流式响应和错误处理 |
+| Week 07 | 支付与部署 | [Stripe Webhooks](https://docs.stripe.com/webhooks), [重复事件](https://docs.stripe.com/webhooks#handle-duplicate-events) | 支付状态图、签名校验、`event.id` 幂等、金额只来自服务端 price |
+| Week 08 | Dify 知识库 | Dify 文档, `rag/dify` | 切分、top-k、拒答阈值三参数记录表，交给 Week 09 |
+| Week 09 | RAG 入门 | [RAGAS](https://arxiv.org/abs/2309.15217), [RGB](https://arxiv.org/abs/2309.01431) | 五题手算 Recall@3 与 MRR，以及最小 RAG 改阈值前后的六行记录 |
+| Week 10 | 高级 RAG 与企业知识库 | `rag/llama-index`, `rag/langgraph` | 一条客服对话走完切分、重排、拒答和转人工 |
+| Week 11 | 跨平台 PWA | `cross-platform/expo` 仅作对照；本周正文是 PWA | manifest、service worker、离线与安装 |
+| Week 12 | 小程序入门 | `cross-platform/taro`, `cross-platform/uni-app` | 页面结构、开发者工具、发布边界 |
+| Week 13 | 小程序后端 | 微信云开发文档 | 云函数、云数据库、登录态；模型密钥留在后端 |
+| Week 14 | 跨平台整合 | 同上，加一条迁移记录 | 请求 `req_act_20261016_0142` 的平台、数据库和失败日志 |
+| Week 15 | Agent 工程 | `docs/course-b/templates`, `agentic-coding/spec-kit` | 只允许修改 `activity_trace.py` 的规则、人工门和 trace |
+| Week 16 | 期末评审 | `production-apps/cal-com`, `production-apps/dub` | 证据索引逐列指回同一条请求，而不是另起一个项目 |
 
 ## Course C: Enterprise AI Operations System
 
@@ -72,9 +66,9 @@ guidance, or company policy.
 
 ## Gaps To Consider Next
 
-- Current Course B has two overlapping identities: full-stack AI product and
-  agentic development. Decide whether to split them into two courses or make one
-  an advanced module.
+- Course B now follows one 16-week sidebar. Week 15 is the Agent engineering
+  week inside that calendar. Do not revive a second 12-week Agent track with
+  different week numbers.
 - Add small local sample projects for each major reference category so students
   do not need to learn from huge production repositories first.
 - Add "reference reading" assignments: students inspect one cloned project and

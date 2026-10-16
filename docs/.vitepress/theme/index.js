@@ -19,6 +19,13 @@ import AiChatMessage from './components/AiChatMessage.vue'
 import TextType from './components/TextType.vue'
 import RiskMatrix from './components/RiskMatrix.vue'
 import MermaidChart from './components/MermaidChart.vue'
+import OutcomePreview from './components/OutcomePreview.vue'
+import CheckList from './components/CheckList.vue'
+import ErrorLookup from './components/ErrorLookup.vue'
+import TryIt from './components/TryIt.vue'
+import QuizCard from './components/QuizCard.vue'
+import GlossaryList from './components/GlossaryList.vue'
+import ShotPlaceholder from './components/ShotPlaceholder.vue'
 
 export default {
   extends: DefaultTheme,
@@ -41,5 +48,12 @@ export default {
     app.component('TextType', TextType)
     app.component('RiskMatrix', RiskMatrix)
     app.component('MermaidChart', MermaidChart)
+    app.component('OutcomePreview', OutcomePreview)
+    app.component('CheckList', CheckList)
+    app.component('ErrorLookup', ErrorLookup)
+    app.component('TryIt', TryIt)
+    app.component('QuizCard', QuizCard)
+    app.component('GlossaryList', GlossaryList)
+    app.component('ShotPlaceholder', ShotPlaceholder)
   }
 }

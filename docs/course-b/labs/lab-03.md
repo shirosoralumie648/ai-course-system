@@ -8,6 +8,15 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: 'Auto Layout 对照', detail: '竖排、间距、Hug contents 各对应一项 CSS' },
+  { title: '素材筛选', detail: '写明哪一张因为对比不够被丢掉' }
+]" />
+<CheckList storage-key="c-b-l03" :items="['标题说明按钮在同一个 Frame', '说明文字深于 #999', '至少一张素材进了页面']" />
+<QuizCard question="#999 写在白色上，对比度大约是多少？">
+2.85 比 1，达不到普通正文的 4.5 比 1。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '搭原型', description: '用 Frame 和 Auto Layout 组织页面' },
   { title: '做组件', description: '创建按钮、卡片或输入框组件' },
@@ -151,3 +160,25 @@
 | 素材生成 | 25 | prompt、数量、风格一致性是否达标 |
 | 前端接入 | 15 | 素材是否真实进入页面并显示正常 |
 | 证据完整性 | 15 | 截图、清单、diff 是否齐全 |
+
+## 预期产物节选
+
+Auto Layout 区域在说明里写成一张对照，而不是只贴一张选中图层的截图：
+
+| Figma / MasterGo | 你的页面 |
+|---|---|
+| 竖排 | `flex-direction: column` |
+| 间距 16 | `gap: 16px` |
+| Hug contents | 按钮不写死 width |
+| 文字 `#111` 在白色上 | 对比度高于 4.5:1 |
+
+素材筛选说明要写明哪一张被放进了页面，哪一张因为对比不够被丢掉。
+
+## 一种常见失败和排查
+
+失败：标题、说明和按钮都在画布上，但没有放进同一个 Frame，导出后三者的 x 坐标互不相干。排查：在图层面板里看三者的父级是不是同一个 Frame。不是的话，先拖进 Frame，再给这个 Frame 加 Auto Layout，然后重新导出。把导出前后的父级截图一起交。
+
+## 思考题
+
+1. `#999999` 写在白色上，对比度约 2.85:1。你的说明文字用的是哪个色值，它过不过 WCAG 2.2 普通正文的 4.5:1？
+2. 你的按钮如果改成 Hug contents，文字从 `Get Started` 变成八个汉字时，宽度由谁决定？请指出 Auto Layout 的那一项设置。

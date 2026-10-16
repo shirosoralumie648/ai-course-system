@@ -8,6 +8,34 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '三条路径笔记', detail: '每条写强项、弱项，以及这次为什么用或不用' },
+  { title: '可运行页面', detail: '本地打开，桌面和窄屏各留一张图' },
+  { title: '人工修订 diff', detail: '标出你改过的坐标或文案' }
+]" />
+
+```mermaid
+flowchart LR
+  shot["截图或设计稿"]
+  multi["路径一 多模态"]
+  plugin["路径二 平台导出"]
+  mcp["路径三 MCP"]
+  page["浏览器里的页面"]
+  shot --> multi --> page
+  shot --> plugin --> page
+  shot --> mcp --> page
+```
+
+<CheckList storage-key="c-b-w01" :items="['写完三条路径的取舍', '页面在 390 像素宽下不重叠', 'diff 里能指出人改的行']" />
+<GlossaryList :terms="[
+  { term: '多模态', def: '把设计图交给模型生成代码，不读取图层树' },
+  { term: '导出', def: '设计工具按图层写出 HTML 或 CSS' },
+  { term: 'MCP', def: '让编程助手直接读设计文件，而不是只看一张截图' }
+]" />
+<QuizCard question="三条路径里，哪一条不读取 Figma 的图层树？">
+多模态路径只看截图。图层名、Auto Layout 和组件关系它看不到，所以间距和层级经常要人再改。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 三种路径概览', description: '从原型到代码有哪几条路' },
   { title: '② 路径一：多模态 AI', description: '一张图直接出代码' },

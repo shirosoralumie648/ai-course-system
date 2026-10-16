@@ -8,6 +8,26 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一次调用日志', detail: '能看见输入和返回' },
+  { title: '密钥位置', detail: '密钥在云函数或服务器，不在小程序包' },
+  { title: '登录态说明', detail: '写明用的是 openid、Supabase 用户，还是 demo 用户' }
+]" />
+
+```mermaid
+flowchart LR
+  mini["小程序"]
+  fn["云函数或自有后端"]
+  model["模型"]
+  mini -->|"只看见函数名"| fn -->|"密钥在这里"| model
+```
+
+<CheckList storage-key="c-b-w13" :items="['网络面板的主机不是模型供应商', '日志里有输入和输出', '未登录时的拒绝或公开列表写清楚了']" />
+<ShotPlaceholder tool="云函数调用日志" caption="一条记录里能看见本次入参和返回 JSON。密钥打码。" />
+<QuizCard question="小程序网络面板里如果出现模型供应商的主机名，说明什么？">
+调用没有留在云函数或你的后端，密钥有机会下发到客户端。应改成客户端只请求你的函数。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 为什么需要后端', description: '前端的边界与后端的职责' },
   { title: '② 认识微信云开发', description: 'CloudBase 控制台逐项拆解' },

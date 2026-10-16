@@ -8,6 +8,32 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一份 token 表', detail: '颜色和间距用名字，两个页面引用同一份' },
+  { title: '三个可复用组件', detail: '至少有一个同时出现在两个页面' },
+  { title: '复用截图', detail: '两页并排，能看出按钮和标题来自同一套值' }
+]" />
+
+```mermaid
+flowchart LR
+  token["token 颜色与间距"]
+  comp["组件"]
+  pageA["页面 A"]
+  pageB["页面 B"]
+  token --> comp
+  comp --> pageA
+  comp --> pageB
+```
+
+<CheckList storage-key="c-b-w02" :items="['两个页面的按钮来自同一个组件', '改一处 token，两页一起变', '没有同时引入两套组件库']" />
+<ErrorLookup :rows="[
+  { symptom: '两页按钮颜色接近但不相同', cause: '各写了一个十六进制，没有共用 token', fix: '删掉页面里的色值，改成引用同一份 token' },
+  { symptom: 'import 来自两个组件包', cause: '为了赶页面又装了一套库', fix: '留下一套，另一页改调用它' }
+]" />
+<QuizCard question="只改 token 里的按钮色，应该有几个页面跟着变？">
+两个。如果只有一页变了，另一页还写着自己的色值。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 看小哲的样式困境', description: '两个项目,样式全不一致' },
   { title: '② 认识组件库', description: '界面世界的「宜家」' },

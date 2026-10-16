@@ -10,6 +10,29 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '规则文件', detail: '允许改的文件和禁止事项写死' },
+  { title: '人工门', detail: '人先看 diff，再运行脚本' },
+  { title: '一次 trace', detail: '任务、结果、剩余风险各一行' }
+]" />
+
+```mermaid
+flowchart LR
+  rule["写允许和禁止"]
+  agent["Agent 改推荐函数"]
+  human["人看 diff"]
+  run["运行脚本"]
+  rule --> agent --> human --> run
+```
+
+<CheckList storage-key="c-b-w15" :items="['没有改活动的原始时间', '没有放宽访客权限', '失败日志还在', '脚本在批准之后才运行']" />
+<ErrorLookup :rows="[
+  { symptom: '卡片变多了，失败日志空了', cause: 'Agent 改了测试数据来消除冲突', fix: 'restore 原始时间，只保留冲突则跳过的逻辑' }
+]" />
+<QuizCard question="人在 diff 里要确认哪两件事没有发生？">
+没有删掉 failure_log，也没有把访客改成可以读活动。
+</QuizCard>
+
 ## 上节课回顾
 
 第 14 周我们把产品的一条核心路径迁移到 PWA、小程序或移动端。那一周强调平台选择、路径压缩、失败状态和验证证据。它解决的问题是：你的产品能不能在另一个平台上保持清晰边界。
@@ -1240,6 +1263,31 @@ trace 包含任务、允许文件、审批、diff、测试命令和剩余风险�
 ```
 
 然后展示 trace 文件的一页即可。不要放 20 张聊天截图。
+
+## 纵向追踪：谁可以改这条请求的代码
+
+第 14 周的 `activity_trace.py` 已经把 `req_act_20261016_0142` 跑完：时间冲突被记进 `failure_log`，访客得到 403，重复报名得到 409。这一周不再换一个故事。Agent 只被允许修「冲突活动仍可能被推荐」这一处，如果推荐函数以后又把冲突活动放进 `cards`。
+
+规则文件里写死范围：
+
+```markdown
+## 任务
+- 请求：req_act_20261016_0142
+- 允许修改：activity_trace.py 里的 recommend
+- 禁止：改 activities 的原始时间来让冲突消失；把 guest 改成可以读活动；删掉 failure_log
+- 验收：python3 activity_trace.py 的学生请求仍只返回 a2；failure_log 里仍有 a1 和 a3 的 time_conflict
+```
+
+人工门放在跑脚本之前。人先看 diff，确认没有删日志、没有放宽 `role != "student"` 这个判断，再执行脚本。执行 trace 就填这一张，供第 16 周的证据索引引用：
+
+| 项 | 记录 |
+|---|---|
+| 任务 | 保持冲突活动不进入 cards |
+| 允许文件 | `activity_trace.py` |
+| 禁止 | 改测试数据、放宽访客权限、删除失败日志 |
+| 人的批准 | 看完 diff 后才运行 `python3 activity_trace.py` |
+| 结果 | 学生请求的 cards 只有暗房工作坊；日志保留 time_conflict 与 permission_denied |
+| 剩余风险 | 忙闲时间写在函数内部，还没有变成数据库里的课表 |
 
 ## 26. 本周回顾
 

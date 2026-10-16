@@ -10,6 +10,20 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '一条请求号', detail: 'req_act_20261016_0142 或你自己的等价编号' },
+  { title: '数据库命中', detail: 'db_ids 是 a1、a2、a3' },
+  { title: '失败日志', detail: '时间冲突、403、409 各有记录' }
+]" />
+<CheckList storage-key="c-b-w14" :items="['只迁移兴趣到报名这一条', '访客得到 403', '重复报名得到 409', '卡片里没有冲突活动']" />
+<ErrorLookup :rows="[
+  { symptom: '小程序里出现了管理后台', cause: '把不迁移的页面也搬了过去', fix: '删掉后台和支付，只留推荐和报名' },
+  { symptom: '冲突活动仍出现在卡片里', cause: '模型草稿没有经过时间判断', fix: '冲突只写进 failure_log，不放进 cards' }
+]" />
+<QuizCard question="a1 为什么出现在 db_ids 里，却不出现在 cards 里？">
+数据库按摄影标签查到了它。它和用户已有的 18:00 到 20:30 重叠，所以被记成 time_conflict，没有返回给小程序。
+</QuizCard>
+
 ## 上节课回顾
 
 第 13 周我们做的是"小程序后端开发"，重点不是把所有业务都放进云开发，而是看清楚小程序生态里哪些事情必须由后端承担：身份识别、数据库读写、文件上传、内容审核、支付签名、权限控制和日志追踪。
@@ -1293,6 +1307,89 @@ Web 管理后台和统计没有迁移。
 ```
 
 这段 40 秒就能讲清，比展示 5 张无说明截图更有效。
+
+## 纵向追踪：同一条报名请求
+
+![同一条请求穿过数据库、模型和失败日志](figures/activity-trace.svg)
+
+<ShotPlaceholder tool="微信开发者工具里的三条界面" caption="成功：返回暗房工作坊卡片。空：兴趣没有匹配活动。错误：同一用户再次报名得到 409，或访客调用得到 403。三张图都要带请求号 req_act_20261016_0142。" />
+
+第 14、15、16 周的证据表都指向同一条请求 `req_act_20261016_0142`。产品是已经在第 14.2 节出现的「AI 校园活动助手」。这一周只记录请求穿过哪个平台；第 15 周记录谁被允许改代码；第 16 周把这些记录填进答辩索引。
+
+请求从微信小程序发出，兴趣是「摄影」。后端用下面这段不依赖第三方包的 Python 把数据库、权限、模型草稿和失败日志串起来。保存为 `activity_trace.py`，执行 `python3 activity_trace.py`。
+
+```python
+activities = [
+    {"id": "a1", "title": "摄影社夜巡", "tag": "摄影", "start": "2026-10-16T19:00", "end": "2026-10-16T21:00"},
+    {"id": "a2", "title": "暗房工作坊", "tag": "摄影", "start": "2026-10-18T14:00", "end": "2026-10-18T16:00"},
+    {"id": "a3", "title": "校庆彩排", "tag": "摄影", "start": "2026-10-16T18:30", "end": "2026-10-16T20:00"},
+]
+registrations = [{"user_id": "demo-user", "activity_id": "a9"}]
+failure_log = []
+
+def overlaps(left, right):
+    return left["start"] < right["end"] and right["start"] < left["end"]
+
+def recommend(request):
+    if request["role"] != "student":
+        failure_log.append({
+            "request_id": request["id"],
+            "reason": "permission_denied",
+            "op": "read_activities",
+        })
+        return {"status": 403, "cards": []}
+    rows = [row for row in activities if row["tag"] == request["interest"]]
+    busy = {"start": "2026-10-16T18:00", "end": "2026-10-16T20:30"}
+    draft = rows[:2] + [row for row in rows if row["id"] == "a3"]
+    accepted = []
+    seen = set()
+    for row in draft:
+        if overlaps(row, busy):
+            failure_log.append({
+                "request_id": request["id"],
+                "reason": "time_conflict",
+                "activity_id": row["id"],
+            })
+            continue
+        if row["id"] not in seen:
+            accepted.append(row)
+            seen.add(row["id"])
+    return {
+        "status": 200,
+        "request_id": request["id"],
+        "db_ids": [row["id"] for row in rows],
+        "cards": [{"id": row["id"], "title": row["title"]} for row in accepted],
+        "model": "server-side-only",
+    }
+
+def register(user_id, activity_id):
+    if any(item["user_id"] == user_id and item["activity_id"] == activity_id for item in registrations):
+        return 409
+    registrations.append({"user_id": user_id, "activity_id": activity_id})
+    return 201
+
+student = {"id": "req_act_20261016_0142", "role": "student", "interest": "摄影"}
+print(recommend(student))
+print(register("demo-user", "a2"))
+print(register("demo-user", "a2"))
+print(recommend({"id": "req_act_20261016_0142", "role": "guest", "interest": "摄影"}))
+print(failure_log)
+```
+
+学生身份的推荐返回状态 200。数据库命中 `a1`、`a2`、`a3`。模型草稿把 `a1` 和 `a3` 也算进去，但两者都和用户已有的 18:00–20:30 冲突，失败日志记下 `time_conflict`。最终卡片只剩 `a2` 暗房工作坊。模型名字段写成 `server-side-only`：小程序不保存模型密钥，调用发生在后端。
+
+`register("demo-user", "a2")` 第一次返回 201，第二次返回 409。报名接口拒绝重复写入。访客角色再调 `recommend` 得到 403，失败日志追加 `permission_denied`。
+
+这一周的跨平台记录表加一行，指向这次运行：
+
+| 字段 | 记录 |
+|---|---|
+| 请求 | `req_act_20261016_0142` |
+| 平台 | 小程序发起，HTTPS 打到测试后端；管理后台不在这条路径上 |
+| 数据库 | `activities` 中 tag 为摄影的三行 |
+| 模型 | 后端生成草稿，冲突活动不返回给小程序 |
+| 权限 | `student` 可读活动；`guest` 被拒绝 |
+| 失败日志 | `a1`、`a3` 时间冲突；访客读取被拒绝；重复报名 409 |
 
 ## 24. 本周回顾
 

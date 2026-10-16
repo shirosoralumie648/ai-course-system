@@ -6,6 +6,14 @@
 
 </ChapterIntroduction>
 
+<OutcomePreview :items="[
+  { title: '证据索引', detail: '请求号、数据库、权限、日志、Agent 各一行' }
+]" />
+<CheckList storage-key="c-b-l16" :items="['先讲请求号', '403 和没进卡片的原因分开写']" />
+<QuizCard question="索引的权限一行对应哪一次调用？">
+访客再调推荐，返回 403，原因是 permission_denied。
+</QuizCard>
+
 <StepBar :active="0" :items="[
   { title: '① 整理材料', description: '收集链接、截图、日志和报告' },
   { title: '② 准备 Demo', description: '设计 2 分钟核心演示' },
@@ -184,3 +192,24 @@ Demo 只演示一条最核心路径：
 | 工程质量 | 15 分 | README、运行命令、环境变量示例、错误处理完整 |
 | Agent 与风险边界 | 10 分 | Rules、Human Gate、trace 和风险说明具体 |
 | 答辩表现 | 10 分 | 能回答技术取舍、失败样本和下一步计划 |
+
+## 预期产物节选
+
+Evidence Index 里单独有一行请求号，并且每一列都能指回同一次输出：
+
+| 证据 | 指向 |
+|---|---|
+| 数据库 | `db_ids`：a1、a2、a3 |
+| 模型 | `model` 为 `server-side-only`，卡片中没有 a1 和 a3 |
+| 权限 | 访客得到 403，原因 `permission_denied` |
+| 失败日志 | `time_conflict` 与重复报名 409 |
+| Agent | 允许修改的文件与「先看 diff 再运行」 |
+
+## 一种常见失败和排查
+
+失败：答辩稿写「我们做了一个活动助手，体验很好」，索引里没有请求号，评委无法对照脚本。排查：从 `activity_trace.py` 的打印里抄请求号、状态码和日志原因，填进索引的六行。讲的时候先说请求号，再说哪两张卡片被日志拿掉。
+
+## 思考题
+
+1. 证据索引的「权限」一行，对应脚本里的哪一次调用，返回的状态码是多少？
+2. 为什么「卡片里没有 a1」和「数据库没查到 a1」是两件不同的事？你的索引把它们放在哪两行？
